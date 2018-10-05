@@ -14,9 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma message "You may need to add LAYOUT_planck_grid to your keymap layers - see default for an example"
+//#pragma message "You may need to add LAYOUT_planck_grid to your keymap layers - see default for an example"
 #include "planck.h"
 #include "action_layer.h"
+#include "kc_prefixer.h"
 
 extern keymap_config_t keymap_config;
 
@@ -75,10 +76,9 @@ enum planck_keycodes {
 // Tap once: ]. Hold: RGUI. Tap twice: }
 #define KC_TGUI TD(TD_RBRC_RGUI_RCBR)
 
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  [_COLEMAK] = KC_KEYMAP(
+  [_COLEMAK] = KC_PREFIX(LAYOUT_planck_grid,
   //-----+----+----+----+----+----+----+----+----+----+----+----
      TAB , Q  , W  , F  , P  , G  , J  , L  , U  , Y  ,SCLN,BSPC,
   //-----+----+----+----+----+----+----+----+----+----+----+----
@@ -89,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      LCTL,LGUI,WOBL,LALT,LENT, SPC, SPC,RASE,SDEL,TALT,TGUI,RCTL
   ),
 
-  [_QWERTY] = KC_KEYMAP(
+  [_QWERTY] = KC_PREFIX(LAYOUT_planck_grid,
   //-----+----+----+----+----+----+----+----+----+----+----+----
      TAB , Q  , W  , E  , R  , T  , Y  , U  , I  , O  , P  ,BSPC,
   //-----+----+----+----+----+----+----+----+----+----+----+----
@@ -100,33 +100,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      LCTL,LGUI,WOBL,LALT,LENT, SPC, SPC,RASE,RALT,SAPP,RGUI,RCTL
   ),
 
-  [_LOWER] = KC_KEYMAP(
+  [_LOWER] = KC_PREFIX(LAYOUT_planck_grid,
      GRV ,EXLM, AT ,HASH, DLR,PERC,CIRC,AMPR,ASTR,LPRN,RPRN,____,
      ____,LPRN,RPRN,LBRC,RBRC,XXXX,LEFT,DOWN, UP ,RGHT,XXXX,MINS,
      ____,BSLS,TILD,PIPE,EQL ,UNDS,HOME,PGDN,PGUP,END ,BSLS,____,
      ____,____,____,____,____,____,____,____,____,____,____,____
   ),
 
-  [_LEANDOWN] = KC_KEYMAP(
+  [_LEANDOWN] = KC_PREFIX(LAYOUT_planck_grid,
      GRV ,EXLM, AT ,HASH, DLR,PERC,CIRC,AMPR,ASTR,LPRN,RPRN,____,
      ____,LPRN,RPRN,LBRC,RBRC,LCBR,LCBR,DLR ,PERC,CIRC,____,____,
      ____,BSLS,TILD,PIPE,EQL ,UNDS,HOME,EXLM, AT ,HASH,BSLS,____,
      ____,____,____,____,____,____,____,____,LEFT,DOWN, UP ,RGHT
   ),
 
-  [_RAISE] = KC_KEYMAP(
+  [_RAISE] = KC_PREFIX(LAYOUT_planck_grid,
      GRV ,  1 ,  2 ,  3 ,  4 ,  5 ,  6 ,  7 ,  8 ,  9 ,  0 ,____,
      ____,LPRN,RPRN,LCBR,RCBR,XXXX,XXXX,  4 ,  5 ,  6 ,PPLS,MINS,
      ____,BSLS,TILD,PIPE,EQL ,UNDS,XXXX,  1 ,  2 ,  3 ,PAST,____,
      ____,____,____,____,____,____,____,____,____,____,____,____
   ),
 
-  [_WOBBLE] = KC_KEYMAP(
-     GRV , F1 , F2 , F3 , F4 , NO ,MUTE,VOLD,VOLU, NO , NO , DEL,
-         , F5 , F6 , F7 , F8 , NO ,MPRV,MPLY,MSTP,MNXT, NO ,BSLS,
-         , F9 , F10, F11, F12, NO , NO , NO , NO , INS,PSCR,    ,
-         ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,
-  ),
+  // [_WOBBLE] = KC_PREFIX(LAYOUT_planck_grid,
+  //    GRV , F1 , F2 , F3 , F4 , NO ,MUTE,VOLD,VOLU, NO , NO , DEL,
+  //        , F5 , F6 , F7 , F8 , NO ,MPRV,MPLY,MSTP,MNXT, NO ,BSLS,
+  //        , F9 , F10, F11, F12, NO , NO , NO , NO , INS,PSCR,    ,
+  //        ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,
+  // ),
 
 /* Adjust (Lower + Raise)
  * ,-----------------------------------------------------------------------------------.
