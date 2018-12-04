@@ -1,6 +1,4 @@
 # Directory common source files exist
-TOP_DIR ?= .
-
 include $(TOP_DIR)/message.mk
 
 TMK_DIR = tmk_core

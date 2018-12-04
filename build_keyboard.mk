@@ -12,6 +12,8 @@ endif
 
 .DEFAULT_GOAL := all
 
+TOP_DIR ?= .
+
 include $(TOP_DIR)/common.mk
 
 # Set the filename for the final firmware binary
