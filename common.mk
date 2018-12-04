@@ -1,20 +1,22 @@
-include message.mk
-
 # Directory common source files exist
-TOP_DIR = .
+TOP_DIR ?= .
+
+include $(TOP_DIR)/message.mk
+
 TMK_DIR = tmk_core
-TMK_PATH = $(TMK_DIR)
-LIB_PATH = lib
+TMK_PATH = $(TOP_DIR)/$(TMK_DIR)
+LIB_PATH = $(TOP_DIR)/lib
 
 QUANTUM_DIR = quantum
-QUANTUM_PATH = $(QUANTUM_DIR)
+QUANTUM_PATH = $(TOP_DIR)/$(QUANTUM_DIR)
 
 DRIVER_DIR = drivers
-DRIVER_PATH = $(DRIVER_DIR)
+DRIVER_PATH = $(TOP_DIR)/$(DRIVER_DIR)
 
 BUILD_DIR := .build
 
-COMMON_VPATH := $(TOP_DIR)
+COMMON_VPATH := .
+COMMON_VPATH += $(TOP_DIR)
 COMMON_VPATH += $(TMK_PATH)
 COMMON_VPATH += $(QUANTUM_PATH)
 COMMON_VPATH += $(QUANTUM_PATH)/keymap_extras
