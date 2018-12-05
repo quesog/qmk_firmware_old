@@ -4,7 +4,9 @@ endif
 
 .DEFAULT_GOAL := all
 
-include common.mk
+TOP_DIR ?= .
+
+include $(TOP_DIR)/common.mk
 
 TARGET=test/$(TEST)
 
@@ -17,7 +19,7 @@ OUTPUTS := $(TEST_OBJ)/$(TEST) $(GTEST_OUTPUT)
 GTEST_INC := \
 	$(LIB_PATH)/googletest/googletest/include\
 	$(LIB_PATH)/googletest/googlemock/include\
-	
+
 GTEST_INTERNAL_INC :=\
 	$(LIB_PATH)/googletest/googletest\
 	$(LIB_PATH)/googletest/googlemock
@@ -27,7 +29,7 @@ $(GTEST_OUTPUT)_SRC :=\
 	googletest/src/gtest_main.cc\
 	googlemock/src/gmock-all.cc
 
-$(GTEST_OUTPUT)_DEFS := 
+$(GTEST_OUTPUT)_DEFS :=
 $(GTEST_OUTPUT)_INC := $(GTEST_INC) $(GTEST_INTERNAL_INC)
 
 LDFLAGS += -lstdc++ -lpthread -shared-libgcc
@@ -43,14 +45,14 @@ VPATH += $(COMMON_VPATH)
 PLATFORM:=TEST
 
 ifneq ($(filter $(FULL_TESTS),$(TEST)),)
-include tests/$(TEST)/rules.mk
+include $(TOP_DIR)/tests/$(TEST)/rules.mk
 endif
 
-include common_features.mk
+include $(TOP_DIR)/common_features.mk
 include $(TMK_PATH)/common.mk
 include $(QUANTUM_PATH)/serial_link/tests/rules.mk
 ifneq ($(filter $(FULL_TESTS),$(TEST)),)
-include build_full_test.mk
+include $(TOP_DIR)/build_full_test.mk
 endif
 
 $(TEST_OBJ)/$(TEST)_SRC := $($(TEST)_SRC)
