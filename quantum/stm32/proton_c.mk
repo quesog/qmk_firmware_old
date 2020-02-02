@@ -7,9 +7,6 @@ WS2812_DRIVER = bitbang
 # Force task driven PWM until ARM can provide automatic configuration
 BACKLIGHT_DRIVER = software
 
-# TODO: is this the right default?
-SERIAL_DRIVER = uart
-
 # The rest of these settings shouldn't change
 
 ## chip/board settings
