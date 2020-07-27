@@ -198,14 +198,14 @@ inline static void serial_low(void) { writePinLow(SERIAL_PIN_TX); }
 inline static void serial_high(void) ALWAYS_INLINE;
 inline static void serial_high(void) { writePinHigh(SERIAL_PIN_TX); }
 
-void soft_serial_initiator_init(SSTD_t *sstd_table, int sstd_table_size) {
+void serial_initiator_init(SSTD_t *sstd_table, int sstd_table_size) {
     Transaction_table      = sstd_table;
     Transaction_table_size = (uint8_t)sstd_table_size;
     serial_output();
     serial_high();
 }
 
-void soft_serial_target_init(SSTD_t *sstd_table, int sstd_table_size) {
+void serial_target_init(SSTD_t *sstd_table, int sstd_table_size) {
     Transaction_table      = sstd_table;
     Transaction_table_size = (uint8_t)sstd_table_size;
     serial_input_with_pullup();
@@ -386,7 +386,7 @@ ISR(SERIAL_PIN_INTERRUPT) {
 /////////
 //  start transaction by initiator
 //
-// int  soft_serial_transaction(int sstd_index)
+// int  serial_transaction(int sstd_index)
 //
 // Returns:
 //    TRANSACTION_END
@@ -394,10 +394,10 @@ ISR(SERIAL_PIN_INTERRUPT) {
 //    TRANSACTION_DATA_ERROR
 // this code is very time dependent, so we need to disable interrupts
 #    ifndef SERIAL_USE_MULTI_TRANSACTION
-int soft_serial_transaction(void) {
+int serial_transaction(void) {
     SSTD_t *trans = Transaction_table;
 #    else
-int soft_serial_transaction(int sstd_index) {
+int serial_transaction(int sstd_index) {
     if (sstd_index > Transaction_table_size) return TRANSACTION_TYPE_ERROR;
     SSTD_t *trans = &Transaction_table[sstd_index];
 #    endif
@@ -480,7 +480,7 @@ int soft_serial_transaction(int sstd_index) {
 }
 
 #    ifdef SERIAL_USE_MULTI_TRANSACTION
-int soft_serial_get_and_clean_status(int sstd_index) {
+int serial_get_and_clean_status(int sstd_index) {
     SSTD_t *trans = &Transaction_table[sstd_index];
     cli();
     int retval     = *trans->status;

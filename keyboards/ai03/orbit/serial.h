@@ -32,9 +32,9 @@ typedef struct _SSTD_t  {
 #define TID_LIMIT( table ) (sizeof(table) / sizeof(SSTD_t))
 
 // initiator is transaction start side
-void soft_serial_initiator_init(SSTD_t *sstd_table, int sstd_table_size);
+void serial_initiator_init(SSTD_t *sstd_table, int sstd_table_size);
 // target is interrupt accept side
-void soft_serial_target_init(SSTD_t *sstd_table, int sstd_table_size);
+void serial_target_init(SSTD_t *sstd_table, int sstd_table_size);
 
 // initiator resullt
 #define TRANSACTION_END 0
@@ -42,9 +42,9 @@ void soft_serial_target_init(SSTD_t *sstd_table, int sstd_table_size);
 #define TRANSACTION_DATA_ERROR  0x2
 #define TRANSACTION_TYPE_ERROR  0x4
 #ifndef SERIAL_USE_MULTI_TRANSACTION
-int  soft_serial_transaction(void);
+int  serial_transaction(void);
 #else
-int  soft_serial_transaction(int sstd_index);
+int  serial_transaction(int sstd_index);
 #endif
 
 // target status
@@ -58,5 +58,5 @@ int  soft_serial_transaction(int sstd_index);
 //    or TRANSACTION_ACCEPTED
 #define TRANSACTION_ACCEPTED 0x8
 #ifdef SERIAL_USE_MULTI_TRANSACTION
-int  soft_serial_get_and_clean_status(int sstd_index);
+int  serial_get_and_clean_status(int sstd_index);
 #endif

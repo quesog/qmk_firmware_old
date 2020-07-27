@@ -42,12 +42,12 @@ SSTD_t transactions[] = {
 
 void serial_master_init(void)
 {
-    soft_serial_initiator_init(transactions, TID_LIMIT(transactions));
+    serial_initiator_init(transactions, TID_LIMIT(transactions));
 }
 
 void serial_slave_init(void)
 {
-    soft_serial_target_init(transactions, TID_LIMIT(transactions));
+    serial_target_init(transactions, TID_LIMIT(transactions));
 }
 
 // 0 => no error
@@ -59,7 +59,7 @@ int serial_update_buffers(int master_update)
     static int need_retry = 0;
 
     if( s_change_old != s_change_new ) {
-        smatstatus = soft_serial_transaction(GET_SLAVE_BUFFER);
+        smatstatus = serial_transaction(GET_SLAVE_BUFFER);
         if( smatstatus == TRANSACTION_END ) {
             s_change_old = s_change_new;
 #ifdef CONSOLE_ENABLE
@@ -75,9 +75,9 @@ int serial_update_buffers(int master_update)
     }
 
     if( !master_update && !need_retry) {
-        status = soft_serial_transaction(GET_SLAVE_STATUS);
+        status = serial_transaction(GET_SLAVE_STATUS);
     } else {
-        status = soft_serial_transaction(PUT_MASTER_GET_SLAVE_STATUS);
+        status = serial_transaction(PUT_MASTER_GET_SLAVE_STATUS);
     }
     if( status == TRANSACTION_END ) {
         s_change_new = slave_buffer_change_count;

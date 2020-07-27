@@ -192,9 +192,9 @@ SSTD_t transactions[] = {
 #    endif
 };
 
-void transport_master_init(void) { soft_serial_initiator_init(transactions, TID_LIMIT(transactions)); }
+void transport_master_init(void) { serial_initiator_init(transactions, TID_LIMIT(transactions)); }
 
-void transport_slave_init(void) { soft_serial_target_init(transactions, TID_LIMIT(transactions)); }
+void transport_slave_init(void) { serial_target_init(transactions, TID_LIMIT(transactions)); }
 
 #    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_SPLIT)
 
@@ -203,7 +203,7 @@ void transport_slave_init(void) { soft_serial_target_init(transactions, TID_LIMI
 void transport_rgblight_master(void) {
     if (rgblight_get_change_flags()) {
         rgblight_get_syncinfo((rgblight_syncinfo_t *)&serial_rgblight.rgblight_sync);
-        if (soft_serial_transaction(PUT_RGBLIGHT) == TRANSACTION_END) {
+        if (serial_transaction(PUT_RGBLIGHT) == TRANSACTION_END) {
             rgblight_clear_change_flags();
         }
     }
@@ -223,12 +223,12 @@ void transport_rgblight_slave(void) {
 
 bool transport_master(matrix_row_t matrix[]) {
 #    ifndef SERIAL_USE_MULTI_TRANSACTION
-    if (soft_serial_transaction() != TRANSACTION_END) {
+    if (serial_transaction() != TRANSACTION_END) {
         return false;
     }
 #    else
     transport_rgblight_master();
-    if (soft_serial_transaction(GET_SLAVE_MATRIX) != TRANSACTION_END) {
+    if (serial_transaction(GET_SLAVE_MATRIX) != TRANSACTION_END) {
         return false;
     }
 #    endif

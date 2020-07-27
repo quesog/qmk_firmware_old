@@ -98,7 +98,7 @@ static SerialConfig sdcfg = {
     (SERIAL_USART_CR3)     // CR3
 };
 
-void handle_soft_serial_slave(void);
+void handle_serial_slave(void);
 
 /*
  * This thread runs on the slave and responds to transactions initiated
@@ -110,7 +110,7 @@ static THD_FUNCTION(SlaveThread, arg) {
     chRegSetThreadName("slave_transport");
 
     while (true) {
-        handle_soft_serial_slave();
+        handle_serial_slave();
     }
 }
 
@@ -142,21 +142,21 @@ void usart_slave_init(void) {
 static SSTD_t* Transaction_table      = NULL;
 static uint8_t Transaction_table_size = 0;
 
-void soft_serial_initiator_init(SSTD_t* sstd_table, int sstd_table_size) {
+void serial_initiator_init(SSTD_t* sstd_table, int sstd_table_size) {
     Transaction_table      = sstd_table;
     Transaction_table_size = (uint8_t)sstd_table_size;
 
     usart_master_init();
 }
 
-void soft_serial_target_init(SSTD_t* sstd_table, int sstd_table_size) {
+void serial_target_init(SSTD_t* sstd_table, int sstd_table_size) {
     Transaction_table      = sstd_table;
     Transaction_table_size = (uint8_t)sstd_table_size;
 
     usart_slave_init();
 }
 
-void handle_soft_serial_slave(void) {
+void handle_serial_slave(void) {
     uint8_t sstd_index = sdGet(&SERIAL_USART_DRIVER);  // first chunk is always transaction id
     SSTD_t* trans      = &Transaction_table[sstd_index];
 
@@ -180,17 +180,17 @@ void handle_soft_serial_slave(void) {
 /////////
 //  start transaction by initiator
 //
-// int  soft_serial_transaction(int sstd_index)
+// int  serial_transaction(int sstd_index)
 //
 // Returns:
 //    TRANSACTION_END
 //    TRANSACTION_NO_RESPONSE
 //    TRANSACTION_DATA_ERROR
 #ifndef SERIAL_USE_MULTI_TRANSACTION
-int soft_serial_transaction(void) {
+int serial_transaction(void) {
     uint8_t sstd_index = 0;
 #else
-int soft_serial_transaction(int index) {
+int serial_transaction(int index) {
     uint8_t sstd_index = index;
 #endif
 

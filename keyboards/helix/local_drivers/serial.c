@@ -96,10 +96,10 @@ SSTD_t transactions[] = {
 };
 
 void serial_master_init(void)
-{ soft_serial_initiator_init(transactions, TID_LIMIT(transactions)); }
+{ serial_initiator_init(transactions, TID_LIMIT(transactions)); }
 
 void serial_slave_init(void)
-{ soft_serial_target_init(transactions, TID_LIMIT(transactions)); }
+{ serial_target_init(transactions, TID_LIMIT(transactions)); }
 
 // 0 => no error
 // 1 => slave did not respond
@@ -107,7 +107,7 @@ void serial_slave_init(void)
 int serial_update_buffers()
 {
     int result;
-    result = soft_serial_transaction();
+    result = serial_transaction();
     return result;
 }
 
@@ -273,7 +273,7 @@ void serial_high(void) {
   SERIAL_PIN_PORT |= SERIAL_PIN_MASK;
 }
 
-void soft_serial_initiator_init(SSTD_t *sstd_table, int sstd_table_size)
+void serial_initiator_init(SSTD_t *sstd_table, int sstd_table_size)
 {
     Transaction_table = sstd_table;
     Transaction_table_size = (uint8_t)sstd_table_size;
@@ -281,7 +281,7 @@ void soft_serial_initiator_init(SSTD_t *sstd_table, int sstd_table_size)
     serial_high();
 }
 
-void soft_serial_target_init(SSTD_t *sstd_table, int sstd_table_size)
+void serial_target_init(SSTD_t *sstd_table, int sstd_table_size)
 {
     Transaction_table = sstd_table;
     Transaction_table_size = (uint8_t)sstd_table_size;
@@ -466,7 +466,7 @@ ISR(SERIAL_PIN_INTERRUPT) {
 /////////
 //  start transaction by initiator
 //
-// int  soft_serial_transaction(int sstd_index)
+// int  serial_transaction(int sstd_index)
 //
 // Returns:
 //    TRANSACTION_END
@@ -474,10 +474,10 @@ ISR(SERIAL_PIN_INTERRUPT) {
 //    TRANSACTION_DATA_ERROR
 // this code is very time dependent, so we need to disable interrupts
 #ifndef SERIAL_USE_MULTI_TRANSACTION
-int  soft_serial_transaction(void) {
+int  serial_transaction(void) {
   SSTD_t *trans = Transaction_table;
 #else
-int  soft_serial_transaction(int sstd_index) {
+int  serial_transaction(int sstd_index) {
   if( sstd_index > Transaction_table_size )
       return TRANSACTION_TYPE_ERROR;
   SSTD_t *trans = &Transaction_table[sstd_index];
@@ -563,7 +563,7 @@ int  soft_serial_transaction(int sstd_index) {
 }
 
 #ifdef SERIAL_USE_MULTI_TRANSACTION
-int soft_serial_get_and_clean_status(int sstd_index) {
+int serial_get_and_clean_status(int sstd_index) {
     SSTD_t *trans = &Transaction_table[sstd_index];
     cli();
     int retval = *trans->status;
