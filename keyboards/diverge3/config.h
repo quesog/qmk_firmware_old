@@ -58,8 +58,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* serial.c configuration for split keyboard */
 #define SOFT_SERIAL_PIN D0
 
-#ifndef SELECT_SOFT_SERIAL_SPEED
-#define SELECT_SOFT_SERIAL_SPEED 3
+#ifndef SELECT_SERIAL_SPEED
+#define SELECT_SERIAL_SPEED 3
 #endif
 
 /* define if matrix has ghost (lacks anti-ghosting diodes) */

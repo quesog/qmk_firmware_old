@@ -54,7 +54,7 @@
  */
 #define SPLIT_HAND_PIN B3
 #define SOFT_SERIAL_PIN B6
-#define SELECT_SOFT_SERIAL_SPEED 0
+#define SELECT_SERIAL_SPEED 0
 
 #define RGB_DI_PIN B4
 #define RGBLED_NUM 24

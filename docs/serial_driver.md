@@ -26,7 +26,7 @@ SERIAL_DRIVER = bitbang
 Configure the driver via your config.h:
 ```c
 #define SOFT_SERIAL_PIN D0  // or D1, D2, D3, E6
-#define SELECT_SOFT_SERIAL_SPEED 1 // or 0, 2, 3, 4, 5
+#define SELECT_SERIAL_SPEED 1 // or 0, 2, 3, 4, 5
                                    //  0: about 189kbps (Experimental only)
                                    //  1: about 137kbps (default)
                                    //  2: about 75kbps
@@ -51,7 +51,7 @@ SERIAL_DRIVER = usart
 Configure the hardware via your config.h:
 ```c
 #define SOFT_SERIAL_PIN B6  // USART TX pin
-#define SELECT_SOFT_SERIAL_SPEED 1 // or 0, 2, 3, 4, 5
+#define SELECT_SERIAL_SPEED 1 // or 0, 2, 3, 4, 5
                                    //  0: about 460800 baud
                                    //  1: about 230400 baud (default)
                                    //  2: about 115200 baud

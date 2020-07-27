@@ -76,7 +76,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                           23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12}
 
 #define SOFT_SERIAL_PIN D0
-#define SELECT_SOFT_SERIAL_SPEED 1
+#define SELECT_SERIAL_SPEED 1
 /*Sets the protocol speed when using serial communication*/
 //Speeds:
 //0: about 189kbps (Experimental only)

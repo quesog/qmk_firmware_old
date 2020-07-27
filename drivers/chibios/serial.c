@@ -22,8 +22,8 @@
 #    define wait_us(x) chSysPolledDelayX(US2RTC(STM32_SYSCLK, x))
 #endif
 
-#ifndef SELECT_SOFT_SERIAL_SPEED
-#    define SELECT_SOFT_SERIAL_SPEED 1
+#ifndef SELECT_SERIAL_SPEED
+#    define SELECT_SERIAL_SPEED 1
 // TODO: correct speeds...
 //  0: about 189kbps (Experimental only)
 //  1: about 137kbps (default)
@@ -34,20 +34,20 @@
 #endif
 
 // Serial pulse period in microseconds. At the moment, going lower than 12 causes communication failure
-#if SELECT_SOFT_SERIAL_SPEED == 0
+#if SELECT_SERIAL_SPEED == 0
 #    define SERIAL_DELAY 12
-#elif SELECT_SOFT_SERIAL_SPEED == 1
+#elif SELECT_SERIAL_SPEED == 1
 #    define SERIAL_DELAY 16
-#elif SELECT_SOFT_SERIAL_SPEED == 2
+#elif SELECT_SERIAL_SPEED == 2
 #    define SERIAL_DELAY 24
-#elif SELECT_SOFT_SERIAL_SPEED == 3
+#elif SELECT_SERIAL_SPEED == 3
 #    define SERIAL_DELAY 32
-#elif SELECT_SOFT_SERIAL_SPEED == 4
+#elif SELECT_SERIAL_SPEED == 4
 #    define SERIAL_DELAY 48
-#elif SELECT_SOFT_SERIAL_SPEED == 5
+#elif SELECT_SERIAL_SPEED == 5
 #    define SERIAL_DELAY 64
 #else
-#    error invalid SELECT_SOFT_SERIAL_SPEED value
+#    error invalid SELECT_SERIAL_SPEED value
 #endif
 
 inline static void serial_delay(void) { wait_us(SERIAL_DELAY); }

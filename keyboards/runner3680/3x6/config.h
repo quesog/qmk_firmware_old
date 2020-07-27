@@ -59,7 +59,7 @@
 #define RGBLIGHT_LIMIT_VAL 100
 
 #define SOFT_SERIAL_PIN D2
-#define SELECT_SOFT_SERIAL_SPEED 1
+#define SELECT_SERIAL_SPEED 1
 /*Sets the protocol speed when using serial communication*/
 //Speeds:
 //0: about 189kbps (Experimental only)

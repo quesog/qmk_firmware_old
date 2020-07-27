@@ -50,7 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //#define USE_I2C
 
-#define SELECT_SOFT_SERIAL_SPEED 1
+#define SELECT_SERIAL_SPEED 1
 
 #define UNUSED_PINS
 

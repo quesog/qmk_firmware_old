@@ -173,7 +173,7 @@ SPLIT_TRANSPORT = custom
 ただし、キーボード上でシリアルおよび I<sup>2</sup>C を使っている場合は、これを設定し、D0 および D1 以外の値に設定する必要があります (これらは I<sup>2</sup>C 通信のために使われます)。
 
 ```c
-#define SELECT_SOFT_SERIAL_SPEED {#}`
+#define SELECT_SERIAL_SPEED {#}`
 ```
 
 シリアル通信に問題がある場合は、この値を変更して、シリアル用の通信速度を制御することができます。デフォルトは1で、可能な値は以下の通りです:

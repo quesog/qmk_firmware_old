@@ -275,7 +275,7 @@ There are a few different ways to set handedness for split keyboards (listed in 
 * `#define RGBLED_SPLIT { 6, 6 }`
   * See [RGB Light Configuration](#rgb-light-configuration)
 
-* `#define SELECT_SOFT_SERIAL_SPEED <speed>` (default speed is 1)
+* `#define SELECT_SERIAL_SPEED <speed>` (default speed is 1)
   * Sets the protocol speed when using serial communication
   * Speeds:
     * 0: about 189kbps (Experimental only)
