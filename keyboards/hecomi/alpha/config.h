@@ -45,16 +45,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROW_PINS { C6,D7,E6,B4,B5 }
 #define MATRIX_COL_PINS { F4,F5,F6,F7,B1,B3,B2,B6 }
 #define UNUSED_PINS
-#define SOFT_SERIAL_PIN D1 // or D1, D2, D3, E6
+#define SERIAL_PIN_TX D1 // or D1, D2, D3, E6
 //#define USE_I2C
 
 /* COL2ROW, ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 /*
- * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, an3 define SOFT_SERIAL_PIN.
+ * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, an3 define SERIAL_PIN_TX.
  */
-//#define SOFT_SERIAL_PIN D0 // or D1, D2, D3, E6
+//#define SERIAL_PIN_TX D0 // or D1, D2, D3, E6
 
 // #define BACKLIGHT_PIN B7
 // #define BACKLIGHT_BREATHING
@@ -62,7 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  #define RGB_DI_PIN D4
  #ifdef RGB_DI_PIN
-   #define RGBLED_NUM 16 
+   #define RGBLED_NUM 16
    #define RGBLIGHT_HUE_STEP 8
    #define RGBLIGHT_SAT_STEP 8
    #define RGBLIGHT_VAL_STEP 8

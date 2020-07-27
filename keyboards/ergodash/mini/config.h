@@ -71,7 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_SPLIT
 #define RGBLED_SPLIT { 10, 10 }    // Number of LEDs
 
-#define SOFT_SERIAL_PIN D0
+#define SERIAL_PIN_TX D0
 #define SELECT_SERIAL_SPEED 1
 /*Sets the protocol speed when using serial communication*/
 //Speeds:

@@ -18,42 +18,42 @@
 #include <stdbool.h>
 #include "serial.h"
 
-#ifdef SOFT_SERIAL_PIN
+#ifdef SERIAL_PIN_TX
 
 #ifdef __AVR_ATmega32U4__
   // if using ATmega32U4 I2C, can not use PD0 and PD1 in soft serial.
   #ifdef USE_AVR_I2C
-    #if SOFT_SERIAL_PIN == D0 || SOFT_SERIAL_PIN == D1
+    #if SERIAL_PIN_TX == D0 || SERIAL_PIN_TX == D1
       #error Using ATmega32U4 I2C, so can not use PD0, PD1
     #endif
   #endif
 
-  #if SOFT_SERIAL_PIN >= D0 && SOFT_SERIAL_PIN <= D3
+  #if SERIAL_PIN_TX >= D0 && SERIAL_PIN_TX <= D3
     #define SERIAL_PIN_DDR   DDRD
     #define SERIAL_PIN_PORT  PORTD
     #define SERIAL_PIN_INPUT PIND
-    #if SOFT_SERIAL_PIN == D0
+    #if SERIAL_PIN_TX == D0
       #define SERIAL_PIN_MASK _BV(PD0)
       #define EIMSK_BIT       _BV(INT0)
       #define EICRx_BIT       (~(_BV(ISC00) | _BV(ISC01)))
       #define SERIAL_PIN_INTERRUPT INT0_vect
-    #elif  SOFT_SERIAL_PIN == D1
+    #elif  SERIAL_PIN_TX == D1
       #define SERIAL_PIN_MASK _BV(PD1)
       #define EIMSK_BIT       _BV(INT1)
       #define EICRx_BIT       (~(_BV(ISC10) | _BV(ISC11)))
       #define SERIAL_PIN_INTERRUPT INT1_vect
-    #elif  SOFT_SERIAL_PIN == D2
+    #elif  SERIAL_PIN_TX == D2
       #define SERIAL_PIN_MASK _BV(PD2)
       #define EIMSK_BIT       _BV(INT2)
       #define EICRx_BIT       (~(_BV(ISC20) | _BV(ISC21)))
       #define SERIAL_PIN_INTERRUPT INT2_vect
-    #elif  SOFT_SERIAL_PIN == D3
+    #elif  SERIAL_PIN_TX == D3
       #define SERIAL_PIN_MASK _BV(PD3)
       #define EIMSK_BIT       _BV(INT3)
       #define EICRx_BIT       (~(_BV(ISC30) | _BV(ISC31)))
       #define SERIAL_PIN_INTERRUPT INT3_vect
     #endif
-  #elif  SOFT_SERIAL_PIN == E6
+  #elif  SERIAL_PIN_TX == E6
     #define SERIAL_PIN_DDR   DDRE
     #define SERIAL_PIN_PORT  PORTE
     #define SERIAL_PIN_INPUT PINE
@@ -62,7 +62,7 @@
     #define EICRx_BIT        (~(_BV(ISC60) | _BV(ISC61)))
     #define SERIAL_PIN_INTERRUPT INT6_vect
   #else
-  #error invalid SOFT_SERIAL_PIN value
+  #error invalid SERIAL_PIN_TX value
   #endif
 
 #else

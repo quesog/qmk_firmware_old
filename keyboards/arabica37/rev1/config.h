@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DESCRIPTION     A split keyboard with 3x6 column staggered keys, 1 pinkie key and 3 thumb keys
 
 #define USE_SERIAL
-#define SOFT_SERIAL_PIN D2
+#define SERIAL_PIN_TX D2
 
 /* key matrix size */
 // Rows are doubled-up

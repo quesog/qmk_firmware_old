@@ -25,7 +25,7 @@ SERIAL_DRIVER = bitbang
 
 Configure the driver via your config.h:
 ```c
-#define SOFT_SERIAL_PIN D0  // or D1, D2, D3, E6
+#define SERIAL_PIN_TX D0  // or D1, D2, D3, E6
 #define SELECT_SERIAL_SPEED 1 // or 0, 2, 3, 4, 5
                                    //  0: about 189kbps (Experimental only)
                                    //  1: about 137kbps (default)
@@ -42,7 +42,7 @@ Configure the driver via your config.h:
 Along with the generic options above, you must also turn on the `PAL_USE_CALLBACKS` feature in your halconf.h.
 
 ### USART Half-duplex
-Targeting STM32 boards where communication is offloaded to a USART hardware device. The advantage is that this provides fast and accurate timings. `SOFT_SERIAL_PIN` for this driver is the configured USART TX pin. **The TX pin must have appropriate pull-up resistors**. To configure it, add this to your rules.mk:
+Targeting STM32 boards where communication is offloaded to a USART hardware device. The advantage is that this provides fast and accurate timings. `SERIAL_PIN_TX` for this driver is the configured USART TX pin. **The TX pin must have appropriate pull-up resistors**. To configure it, add this to your rules.mk:
 
 ```make
 SERIAL_DRIVER = usart
@@ -50,7 +50,7 @@ SERIAL_DRIVER = usart
 
 Configure the hardware via your config.h:
 ```c
-#define SOFT_SERIAL_PIN B6  // USART TX pin
+#define SERIAL_PIN_TX B6  // USART TX pin
 #define SELECT_SERIAL_SPEED 1 // or 0, 2, 3, 4, 5
                                    //  0: about 460800 baud
                                    //  1: about 230400 baud (default)

@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Use I2C or Serial */
 #define USE_SERIAL
-#define SOFT_SERIAL_PIN D2
+#define SERIAL_PIN_TX D2
 
 /* Select hand configuration */
 #define MASTER_LEFT

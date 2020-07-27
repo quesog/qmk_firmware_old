@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEBOUNCE 5
 
 /* serial.c configuration for split keyboard */
-#define SOFT_SERIAL_PIN D2
+#define SERIAL_PIN_TX D2
 #define SPLIT_HAND_PIN B6
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */

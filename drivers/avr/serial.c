@@ -18,13 +18,13 @@
 #include <stdbool.h>
 #include "serial.h"
 
-#ifdef SOFT_SERIAL_PIN
+#ifdef SERIAL_PIN_TX
 
 #    if defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega16U4__) || defined(__AVR_ATmega32U4__)
 // if using ATmegaxxU4 I2C, can not use PD0 and PD1 in soft serial.
 #        ifdef USE_AVR_I2C
-#            if SOFT_SERIAL_PIN == D0 || SOFT_SERIAL_PIN == D1
-#                error Using ATmegaxxU4 I2C, so can not use PD0, PD1
+#            if SERIAL_PIN_TX == D0 || SERIAL_PIN_TX == D1
+#                error Using ATmega32U4 I2C, so can not use PD0, PD1
 #            endif
 #        endif
 
@@ -34,30 +34,30 @@
 #        define writePinLow(pin) (PORTx_ADDRESS(pin) &= ~_BV((pin)&0xF))
 #        define readPin(pin) ((bool)(PINx_ADDRESS(pin) & _BV((pin)&0xF)))
 
-#        if SOFT_SERIAL_PIN >= D0 && SOFT_SERIAL_PIN <= D3
-#            if SOFT_SERIAL_PIN == D0
+#        if SERIAL_PIN_TX >= D0 && SERIAL_PIN_TX <= D3
+#            if SERIAL_PIN_TX == D0
 #                define EIMSK_BIT _BV(INT0)
 #                define EICRx_BIT (~(_BV(ISC00) | _BV(ISC01)))
 #                define SERIAL_PIN_INTERRUPT INT0_vect
-#            elif SOFT_SERIAL_PIN == D1
+#            elif SERIAL_PIN_TX == D1
 #                define EIMSK_BIT _BV(INT1)
 #                define EICRx_BIT (~(_BV(ISC10) | _BV(ISC11)))
 #                define SERIAL_PIN_INTERRUPT INT1_vect
-#            elif SOFT_SERIAL_PIN == D2
+#            elif SERIAL_PIN_TX == D2
 #                define EIMSK_BIT _BV(INT2)
 #                define EICRx_BIT (~(_BV(ISC20) | _BV(ISC21)))
 #                define SERIAL_PIN_INTERRUPT INT2_vect
-#            elif SOFT_SERIAL_PIN == D3
+#            elif SERIAL_PIN_TX == D3
 #                define EIMSK_BIT _BV(INT3)
 #                define EICRx_BIT (~(_BV(ISC30) | _BV(ISC31)))
 #                define SERIAL_PIN_INTERRUPT INT3_vect
 #            endif
-#        elif (defined(__AVR_ATmega16U4__) || defined(__AVR_ATmega32U4__)) && SOFT_SERIAL_PIN == E6
+#        elif (defined(__AVR_ATmega16U4__) || defined(__AVR_ATmega32U4__)) && SERIAL_PIN_TX == E6
 #            define EIMSK_BIT _BV(INT6)
 #            define EICRx_BIT (~(_BV(ISC60) | _BV(ISC61)))
 #            define SERIAL_PIN_INTERRUPT INT6_vect
 #        else
-#            error invalid SOFT_SERIAL_PIN value
+#            error invalid SERIAL_PIN_TX value
 #        endif
 
 #    else
@@ -183,20 +183,20 @@ inline static void serial_delay_half2(void) ALWAYS_INLINE;
 inline static void serial_delay_half2(void) { _delay_us(SERIAL_DELAY_HALF2); }
 
 inline static void serial_output(void) ALWAYS_INLINE;
-inline static void serial_output(void) { setPinOutput(SOFT_SERIAL_PIN); }
+inline static void serial_output(void) { setPinOutput(SERIAL_PIN_TX); }
 
 // make the serial pin an input with pull-up resistor
 inline static void serial_input_with_pullup(void) ALWAYS_INLINE;
-inline static void serial_input_with_pullup(void) { setPinInputHigh(SOFT_SERIAL_PIN); }
+inline static void serial_input_with_pullup(void) { setPinInputHigh(SERIAL_PIN_TX); }
 
 inline static uint8_t serial_read_pin(void) ALWAYS_INLINE;
-inline static uint8_t serial_read_pin(void) { return !!readPin(SOFT_SERIAL_PIN); }
+inline static uint8_t serial_read_pin(void) { return !!readPin(SERIAL_PIN_TX); }
 
 inline static void serial_low(void) ALWAYS_INLINE;
-inline static void serial_low(void) { writePinLow(SOFT_SERIAL_PIN); }
+inline static void serial_low(void) { writePinLow(SERIAL_PIN_TX); }
 
 inline static void serial_high(void) ALWAYS_INLINE;
-inline static void serial_high(void) { writePinHigh(SOFT_SERIAL_PIN); }
+inline static void serial_high(void) { writePinHigh(SERIAL_PIN_TX); }
 
 void soft_serial_initiator_init(SSTD_t *sstd_table, int sstd_table_size) {
     Transaction_table      = sstd_table;
@@ -212,7 +212,7 @@ void soft_serial_target_init(SSTD_t *sstd_table, int sstd_table_size) {
 
     // Enable INT0-INT3,INT6
     EIMSK |= EIMSK_BIT;
-#    if SOFT_SERIAL_PIN == E6
+#    if SERIAL_PIN_TX == E6
     // Trigger on falling edge of INT6
     EICRB &= EICRx_BIT;
 #    else

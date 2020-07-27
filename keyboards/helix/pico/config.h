@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define USE_MATRIX_I2C
 
 /* Soft Serial defines */
-#define SOFT_SERIAL_PIN D2
+#define SERIAL_PIN_TX D2
 #define SERIAL_SLAVE_BUFFER_LENGTH  ((MATRIX_ROWS)/2)
 #define SERIAL_MASTER_BUFFER_LENGTH ((MATRIX_ROWS)/2)
 

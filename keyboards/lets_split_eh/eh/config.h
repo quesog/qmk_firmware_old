@@ -36,11 +36,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGB_DI_PIN B2
 #define RGBLED_NUM 12    // Number of LEDs (each hand)
 #define RGBLED_SPLIT { 6, 6 }
-#define RGBLIGHT_ANIMATIONS 
+#define RGBLIGHT_ANIMATIONS
 
 /* Split Defines */
 #define SPLIT_HAND_PIN D3
-#define SOFT_SERIAL_PIN D0
+#define SERIAL_PIN_TX D0
 
 // The 'EH' has previously forced use of I2C so this default has been kept
 // however users can undef to use serial

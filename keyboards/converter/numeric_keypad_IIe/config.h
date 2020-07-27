@@ -97,5 +97,5 @@ http://wiki.apple2.org/index.php?title=Pinouts#Apple_.2F.2Fe_Numeric_Keypad_conn
 #define MATRIX_COL_PINS { D1, D0, D4, C6, D7, E6 }
 #define UNUSED_PINS
 #define DIODE_DIRECTION COL2ROW
-#define SOFT_SERIAL_PIN D0
+#define SERIAL_PIN_TX D0
 #define DEBOUNCE 5

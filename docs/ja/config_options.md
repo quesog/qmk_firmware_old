@@ -260,7 +260,7 @@ QMK での全ての利用可能な設定にはデフォルトがあります。�
 * `#define USE_I2C`
   * Serial の代わりに I2C を使う場合 (デフォルトは serial)
 
-* `#define SOFT_SERIAL_PIN D0`
+* `#define SERIAL_PIN_TX D0`
   * serial を使う場合、これを定義します。`D0` あるいは `D1`,`D2`,`D3`,`E6`。
 
 * `#define MATRIX_ROW_PINS_RIGHT { <row pins> }`

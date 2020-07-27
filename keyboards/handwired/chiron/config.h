@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_HAND_PIN D2
 
 // Pro Micro Pins       RX1
-#define SOFT_SERIAL_PIN D0
+#define SERIAL_PIN_TX D0
 
 #define DIODE_DIRECTION COL2ROW
 

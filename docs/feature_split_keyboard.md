@@ -50,7 +50,7 @@ However, USB cables, SATA cables, and even just 4 wires have been known to be us
 
 The 3 wires of the TRS/TRRS cable need to connect GND, VCC, and D0 (aka PDO or pin 3) between the two Pro Micros. 
 
-?> Note that the pin used here is actually set by `SOFT_SERIAL_PIN` below.
+?> Note that the pin used here is actually set by `SERIAL_PIN_TX` below.
 
 ![serial wiring](https://i.imgur.com/C3D1GAQ.png)
 
@@ -160,7 +160,7 @@ Because not every split keyboard is identical, there are a number of additional 
 This enables I<sup>2</sup>C support for split keyboards. This isn't strictly for communication, but can be used for OLED or other I<sup>2</sup>C-based devices. 
 
 ```c
-#define SOFT_SERIAL_PIN D0
+#define SERIAL_PIN_TX D0
 ```
 
 This sets the pin to be used for serial communication. If you're not using serial, you shouldn't need to define this.  

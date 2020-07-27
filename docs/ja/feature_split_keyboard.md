@@ -55,7 +55,7 @@ QMK ファームウェアには、任意のキーボードで使用可能な一�
 
 2つの Pro Micro 間で GND、Vcc、D0 (別名 PDO あるいは pin 3) を TRS/TRRS ケーブルの3本のワイヤで接続します。
 
-?> ここで使われるピンは実際には以下の `SOFT_SERIAL_PIN` によって設定されることに注意してください。
+?> ここで使われるピンは実際には以下の `SERIAL_PIN_TX` によって設定されることに注意してください。
 
 ![シリアル配線](https://i.imgur.com/C3D1GAQ.png)
 
@@ -165,7 +165,7 @@ SPLIT_TRANSPORT = custom
 これは分割キーボードの I<sup>2</sup>C サポートを有効にします。これは厳密には通信用ではありませんが、OLED あるいは I<sup>2</sup>C ベースのデバイスに使うことができます。
 
 ```c
-#define SOFT_SERIAL_PIN D0
+#define SERIAL_PIN_TX D0
 ```
 
 これはシリアル通信用に使われるピンを設定します。シリアルを使っていない場合は、これを定義する必要はありません。

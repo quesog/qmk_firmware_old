@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DESCRIPTION High-end compact ergonomic keyboard
 
 /* key matrix size */
-#define MATRIX_ROWS 8 // Double the rows for split 
+#define MATRIX_ROWS 8 // Double the rows for split
 #define MATRIX_COLS 6
 
 /*
@@ -51,9 +51,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DIODE_DIRECTION COL2ROW
 
 /*
- * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SOFT_SERIAL_PIN.
+ * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SERIAL_PIN_TX.
  */
-#define SOFT_SERIAL_PIN D0  // or D1, D2, D3, E6
+#define SERIAL_PIN_TX D0  // or D1, D2, D3, E6
 #define SPLIT_HAND_PIN D5
 #define SPLIT_USB_DETECT
 #define SPLIT_USB_TIMEOUT 2500

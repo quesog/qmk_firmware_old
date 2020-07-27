@@ -39,9 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DIODE_DIRECTION COL2ROW
 
 /*
- * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SOFT_SERIAL_PIN.
+ * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SERIAL_PIN_TX.
  */
-#define SOFT_SERIAL_PIN D3
+#define SERIAL_PIN_TX D3
 #define SPLIT_HAND_PIN D1
 
 #define RGB_DI_PIN B6

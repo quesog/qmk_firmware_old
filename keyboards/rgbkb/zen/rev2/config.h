@@ -45,7 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENCODERS_PAD_B  { D2 }
 
 #define RGB_DI_PIN         B6
-#define SOFT_SERIAL_PIN    D3
+#define SERIAL_PIN_TX    D3
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW

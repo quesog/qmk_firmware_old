@@ -53,11 +53,11 @@
 inline static void serial_delay(void) { wait_us(SERIAL_DELAY); }
 inline static void serial_delay_half(void) { wait_us(SERIAL_DELAY / 2); }
 inline static void serial_delay_blip(void) { wait_us(1); }
-inline static void serial_output(void) { setPinOutput(SOFT_SERIAL_PIN); }
-inline static void serial_input(void) { setPinInputHigh(SOFT_SERIAL_PIN); }
-inline static bool serial_read_pin(void) { return !!readPin(SOFT_SERIAL_PIN); }
-inline static void serial_low(void) { writePinLow(SOFT_SERIAL_PIN); }
-inline static void serial_high(void) { writePinHigh(SOFT_SERIAL_PIN); }
+inline static void serial_output(void) { setPinOutput(SERIAL_PIN_TX); }
+inline static void serial_input(void) { setPinInputHigh(SERIAL_PIN_TX); }
+inline static bool serial_read_pin(void) { return !!readPin(SERIAL_PIN_TX); }
+inline static void serial_low(void) { writePinLow(SERIAL_PIN_TX); }
+inline static void serial_high(void) { writePinHigh(SERIAL_PIN_TX); }
 
 void interrupt_handler(void *arg);
 
@@ -69,7 +69,7 @@ static THD_FUNCTION(Thread1, arg) {
     (void)arg;
     chRegSetThreadName("blinker");
     while (true) {
-        palWaitLineTimeout(SOFT_SERIAL_PIN, TIME_INFINITE);
+        palWaitLineTimeout(SERIAL_PIN_TX, TIME_INFINITE);
         interrupt_handler(NULL);
     }
 }
@@ -91,7 +91,7 @@ void soft_serial_target_init(SSTD_t *sstd_table, int sstd_table_size) {
 
     serial_input();
 
-    palEnablePadEvent(PAL_PORT(SOFT_SERIAL_PIN), PAL_PAD(SOFT_SERIAL_PIN), PAL_EVENT_MODE_FALLING_EDGE);
+    palEnablePadEvent(PAL_PORT(SERIAL_PIN_TX), PAL_PAD(SERIAL_PIN_TX), PAL_EVENT_MODE_FALLING_EDGE);
     chThdCreateStatic(waThread1, sizeof(waThread1), HIGHPRIO, Thread1, NULL);
 }
 

@@ -32,8 +32,8 @@
 #    define SERIAL_USART_CR3 0
 #endif
 
-#ifdef SOFT_SERIAL_PIN
-#    define SERIAL_USART_TX_PIN SOFT_SERIAL_PIN
+#ifdef SERIAL_PIN_TX
+#    define SERIAL_USART_TX_PIN SERIAL_PIN_TX
 #endif
 
 #ifndef SELECT_SERIAL_SPEED

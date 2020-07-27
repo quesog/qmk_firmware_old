@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config_common.h"
 
-#ifndef SOFT_SERIAL_PIN
-#define SOFT_SERIAL_PIN D2
+#ifndef SERIAL_PIN_TX
+#define SERIAL_PIN_TX D2
 #define SERIAL_USE_MULTI_TRANSACTION
 #endif
 

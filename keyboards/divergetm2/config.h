@@ -59,7 +59,7 @@
 #define LOCKING_RESYNC_ENABLE
 
 /* serial.c configuration for split keyboard */
-#define SOFT_SERIAL_PIN D0
+#define SERIAL_PIN_TX D0
 
 /*
  * Magic Key Options

@@ -33,7 +33,7 @@
 /* communication between sides */
 #define USE_SERIAL
 #define SERIAL_USE_MULTI_TRANSACTION
-#define SOFT_SERIAL_PIN D2
+#define SERIAL_PIN_TX D2
 
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION

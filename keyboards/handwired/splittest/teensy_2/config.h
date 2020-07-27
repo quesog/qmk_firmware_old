@@ -25,7 +25,7 @@
 #define MATRIX_ROW_PINS { F5 }
 #define MATRIX_COL_PINS { F7 }
 #define SPLIT_HAND_PIN F0
-#define SOFT_SERIAL_PIN D1
+#define SERIAL_PIN_TX D1
 
 /* ws2812 RGB LED */
 #define RGB_DI_PIN D3

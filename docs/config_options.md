@@ -262,7 +262,7 @@ There are a few different ways to set handedness for split keyboards (listed in 
 * `#define USE_I2C`
   * For using I2C instead of Serial (defaults to serial)
 
-* `#define SOFT_SERIAL_PIN D0`
+* `#define SERIAL_PIN_TX D0`
   * When using serial, define this. `D0` or `D1`,`D2`,`D3`,`E6`.
 
 * `#define MATRIX_ROW_PINS_RIGHT { <row pins> }`

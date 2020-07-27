@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config_common.h"
 
 #define SPLIT_HAND_PIN B4
-#define SOFT_SERIAL_PIN D0
+#define SERIAL_PIN_TX D0
 
 /* USB Device descriptor parameter */
 #define DEVICE_VER      0x0002

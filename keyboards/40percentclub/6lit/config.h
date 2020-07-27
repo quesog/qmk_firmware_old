@@ -29,7 +29,7 @@
 #define USE_SERIAL
 
 /* serial.c configuration for split keyboard */
-#define SOFT_SERIAL_PIN D0
+#define SERIAL_PIN_TX D0
 
 /* Select hand configuration */
 #define MASTER_LEFT
