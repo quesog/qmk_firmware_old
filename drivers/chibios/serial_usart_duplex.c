@@ -25,7 +25,7 @@
 #endif
 
 #ifndef SERIAL_USART_CR2
-#    define SERIAL_USART_CR2 0x0  // 1 stop bits
+#    define SERIAL_USART_CR2 USART_CR2_STOP_1  // 1 stop bits
 #endif
 
 #ifndef SERIAL_USART_CR3
@@ -72,16 +72,43 @@
 
 #define HANDSHAKE_MAGIC 7
 
+static void rxchar(UARTDriver* uartp, uint16_t c);
+
 /*
  * UART driver configuration structure. Only the blocking DMA enabled API is used,
  * therefore all callback functions are set to NULL.
  */
-static UARTConfig uart_config = {NULL, NULL, NULL, NULL, NULL, (SERIAL_USART_SPEED), (SERIAL_USART_CR1), (SERIAL_USART_CR2), (SERIAL_USART_CR3)};
+static UARTConfig uart_config = {.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = rxchar, .rxerr_cb = NULL, .speed = (SERIAL_USART_SPEED), .cr1 = (SERIAL_USART_CR1), .cr2 = (SERIAL_USART_CR2), .cr3 = (SERIAL_USART_CR3)};
 
 static SSTD_t* Transaction_table      = NULL;
 static uint8_t Transaction_table_size = 0;
+extern mutex_t transactions_mutex;
 
-void handle_transactions_target(void);
+static volatile uint8_t handshake = 0xFF;
+
+static thread_reference_t tp_initiator = NULL;
+static thread_reference_t tp_target    = NULL;
+
+static msg_t mailbox_buffer[8];
+MAILBOX_DECL(transaction_mailbox, &mailbox_buffer, 8);
+static msg_t mailbox_receive_buffer[8];
+MAILBOX_DECL(transaction_received_mailbox, &mailbox_receive_buffer, 8);
+
+int start_transaction(uint8_t sstd_index);
+int receive_transaction(uint8_t sstd_index);
+
+/*
+ * This callback is invoked when a character is received but the application
+ * was not ready to receive it, the character is passed as parameter.
+ * Receive transaction table index from initiator, which doubles as basic handshake token. */
+static void rxchar(UARTDriver* uartp, uint16_t c) {
+    (void)uartp;
+    (void)c;
+    chSysLockFromISR();
+    handshake = (uint8_t)c;
+    chEvtSignalI(tp_target, (eventmask_t)1);
+    chSysUnlockFromISR();
+}
 
 __attribute__((weak)) void usart_init(void) {
 #if defined(USE_GPIOV1)
@@ -93,42 +120,17 @@ __attribute__((weak)) void usart_init(void) {
 #endif
 }
 
-/*
- * This thread runs on the target half and reacts to transactions init from the initiator.
- */
-static THD_WORKING_AREA(waTargetThread, 512);
-static THD_FUNCTION(TargetThread, arg) {
-    (void)arg;
-    chRegSetThreadName("target_usart_tx_rx");
-
-    while (true) {
-        handle_transactions_target();
-    }
-}
-
-void serial_target_init(SSTD_t* const sstd_table, int sstd_table_size) {
-    Transaction_table      = sstd_table;
-    Transaction_table_size = (uint8_t)sstd_table_size;
-    usart_init();
-
-    uartStart(&SERIAL_USART_DRIVER, &uart_config);
-    chThdCreateStatic(waTargetThread, sizeof(waTargetThread), HIGHPRIO, TargetThread, NULL);
-}
-
 /**
  * @brief React to transactions started by the initiator.
  * This version uses duplex send and receive usart pheriphals and DMA backed transfers.
  */
-void inline handle_transactions_target(void) {
-    uint8_t sstd_index  = 0xFF;
-    size_t  buffer_size = (size_t)sizeof(sstd_index);
-    msg_t   msg         = 0;
-
-    /* Receive transaction table index from initiator, which doubles as basic handshake token. */
-    uartReceiveTimeout(&SERIAL_USART_DRIVER, &buffer_size, &sstd_index, TIME_MS2I(SERIAL_TIMEOUT_HANDSHAKE));
+int receive_transaction(uint8_t sstd_index) {
+    // println("Receiving!");
+    size_t buffer_size = (size_t)sizeof(sstd_index);
+    msg_t  msg         = 0;
 
     if (sstd_index > Transaction_table_size) {
-        return;
+        return TRANSACTION_TYPE_ERROR;
     }
 
     SSTD_t* trans = &Transaction_table[sstd_index];
@@ -137,13 +139,15 @@ void inline handle_transactions_target(void) {
      to signal that the target is ready to receive possible transaction buffers  */
     sstd_index ^= HANDSHAKE_MAGIC;
     buffer_size = (size_t)sizeof(sstd_index);
-    msg         = uartSendTimeout(&SERIAL_USART_DRIVER, &buffer_size, &sstd_index, TIME_MS2I(SERIAL_TIMEOUT_HANDSHAKE));
+    msg         = uartSendFullTimeout(&SERIAL_USART_DRIVER, &buffer_size, &sstd_index, TIME_MS2I(SERIAL_TIMEOUT_HANDSHAKE));
 
     if (msg != MSG_OK) {
         if (trans->status) {
             *trans->status = TRANSACTION_NO_RESPONSE;
         }
-        return;
+
+        println("Receive: Handshake Failed!");
+        return TRANSACTION_NO_RESPONSE;
     }
 
     /* Receive transaction buffer from the initiator. If this transaction requires it.*/
@@ -154,7 +158,9 @@ void inline handle_transactions_target(void) {
             if (trans->status) {
                 *trans->status = TRANSACTION_NO_RESPONSE;
             }
-            return;
+
+            println("Receive: Receive Failed!");
+            return TRANSACTION_NO_RESPONSE;
         }
     }
 
@@ -166,39 +172,70 @@ void inline handle_transactions_target(void) {
             if (trans->status) {
                 *trans->status = TRANSACTION_NO_RESPONSE;
             }
-            return;
+
+            println("Receive: Send Failed!");
+            return TRANSACTION_NO_RESPONSE;
         }
     }
 
     if (trans->status) {
         *trans->status = TRANSACTION_ACCEPTED;
     }
+
+    return TRANSACTION_ACCEPTED;
 }
 
-void serial_initiator_init(SSTD_t* const sstd_table, int sstd_table_size) {
-    Transaction_table      = sstd_table;
-    Transaction_table_size = (uint8_t)sstd_table_size;
-    usart_init();
-    uartStart(&SERIAL_USART_DRIVER, &uart_config);
-}
-
-/**
- * @brief Start transaction from the initiator to the target.
- * This version uses duplex send and receive usart pheriphals and DMA backed transfers.
- *
- * @param index Transaction Table index of the transaction to start.
- * @return int TRANSACTION_NO_RESPONSE in case of Timeout.
- *             TRANSACTION_TYPE_ERROR in case of invalid transaction index.
- *             TRANSACTION_END in case of success.
+/*
+ * This thread i
  */
-#ifndef SERIAL_USE_MULTI_TRANSACTION
-int serial_transaction(void) {
-    uint8_t sstd_index = 0;
-#else
-int serial_transaction(int index) {
-    uint8_t sstd_index = index;
-#endif
+static THD_WORKING_AREA(waInitiatorThread, 512);
+static THD_FUNCTION(InitiatorThread, arg) {
+    (void)arg;
+    chRegSetThreadName("initiator_usart_tx_rx");
 
+    tp_initiator = chThdGetSelfX();
+
+    uint8_t sstd_index = 0xFF;
+    while (true) {
+        msg_t msg = chMBFetchTimeout(&transaction_mailbox, (msg_t*)(&sstd_index), TIME_INFINITE);
+
+        if (msg == MSG_OK) {
+            chMtxLock(&transactions_mutex);
+            for (int8_t error_count = 0; error_count < 3; error_count++) {
+                if (start_transaction(sstd_index) == TRANSACTION_END) {
+                    break;
+                }
+            };
+            chMtxUnlockAll();
+        }
+    }
+}
+
+/*
+ * This thread runs on the target half and reacts to transactions init from the initiator.
+ */
+static THD_WORKING_AREA(waTargetThread, 512);
+static THD_FUNCTION(TargetThread, arg) {
+    (void)arg;
+    chRegSetThreadName("target_usart_tx_rx");
+
+    tp_target = chThdGetSelfX();
+
+    while (true) {
+        chEvtWaitAny((eventmask_t)1);
+
+        chMtxLock(&transactions_mutex);
+        int msg = receive_transaction(handshake);
+        chMtxUnlockAll();
+        if (msg == TRANSACTION_ACCEPTED) {
+            chSysLock();
+            chMBPostI(&transaction_received_mailbox, (msg_t)handshake);
+            chSysUnlock();
+        }
+    }
+}
+
+int start_transaction(uint8_t sstd_index) {
     if (sstd_index > Transaction_table_size) {
         return TRANSACTION_TYPE_ERROR;
     }
@@ -211,13 +248,11 @@ int serial_transaction(int index) {
     uartSendFullTimeout(&SERIAL_USART_DRIVER, &buffer_size, &sstd_index, TIME_MS2I(SERIAL_TIMEOUT_HANDSHAKE));
 
     uint8_t sstd_index_shake = 0xFF;
-    buffer_size              = (size_t)sizeof(sstd_index_shake);
-
     /* Receive the handshake token from the target. The token was XORed by the target as a simple checksum.
      If the tokens match, the initiator will start to send and receive possible transaction buffers. */
     msg = uartReceiveTimeout(&SERIAL_USART_DRIVER, &buffer_size, &sstd_index_shake, TIME_MS2I(SERIAL_TIMEOUT_HANDSHAKE));
     if (msg != MSG_OK || (sstd_index_shake != (sstd_index ^ HANDSHAKE_MAGIC))) {
-        dmsg("Handshake Failed");
+        println("Send: Handshake Failed");
         return TRANSACTION_NO_RESPONSE;
     }
 
@@ -226,7 +261,7 @@ int serial_transaction(int index) {
     if (buffer_size) {
         msg = uartSendFullTimeout(&SERIAL_USART_DRIVER, &buffer_size, trans->initiator2target_buffer, TIME_MS2I(SERIAL_TIMEOUT_BUFFER));
         if (msg != MSG_OK) {
-            dmsg("Send Failed");
+            println("Send: Send Failed");
             return TRANSACTION_NO_RESPONSE;
         }
     }
@@ -236,10 +271,39 @@ int serial_transaction(int index) {
     if (buffer_size) {
         msg = uartReceiveTimeout(&SERIAL_USART_DRIVER, &buffer_size, trans->target2initiator_buffer, TIME_MS2I(SERIAL_TIMEOUT_BUFFER));
         if (msg != MSG_OK) {
-            dmsg("Receive Failed");
+            println("Send: Receive Failed");
             return TRANSACTION_NO_RESPONSE;
         }
     }
 
     return TRANSACTION_END;
+}
+
+/**
+ * @brief Start transaction from the initiator to the target.
+ * This version uses duplex send and receive usart pheriphals and DMA backed transfers.
+ *
+ * @param index Transaction Table index of the transaction to start.
+ * @return int TRANSACTION_NO_RESPONSE in case of Timeout.
+ *             TRANSACTION_TYPE_ERROR in case of invalid transaction index.
+ *             TRANSACTION_END in case of success.
+ */
+int serial_transaction(int sstd_index) {
+    chSysLock();
+    msg_t msg = chMBPostI(&transaction_mailbox, (msg_t)sstd_index);
+    chSysUnlock();
+    if (msg == MSG_OK) {
+        return TRANSACTION_END;
+    } else {
+        return TRANSACTION_NO_RESPONSE;
+    }
+}
+
+void serial_init(SSTD_t* const sstd_table, int sstd_table_size) {
+    Transaction_table      = sstd_table;
+    Transaction_table_size = (uint8_t)sstd_table_size;
+    usart_init();
+    uartStart(&SERIAL_USART_DRIVER, &uart_config);
+    chThdCreateStatic(waInitiatorThread, sizeof(waInitiatorThread), NORMALPRIO + 1, InitiatorThread, NULL);
+    chThdCreateStatic(waTargetThread, sizeof(waTargetThread), NORMALPRIO + 2, TargetThread, NULL);
 }

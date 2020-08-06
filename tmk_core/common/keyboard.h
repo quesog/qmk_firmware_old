@@ -38,6 +38,15 @@ typedef struct {
     uint16_t time;
 } keyevent_t;
 
+typedef union {
+    struct {
+        uint8_t matrix_changed : 1;
+        uint8_t encoder_changed : 1;
+        uint8_t wpm_changed : 1;
+    };
+    uint8_t all;
+} keyboard_state_t;
+
 /* equivalent test of keypos_t */
 #define KEYEQ(keya, keyb) ((keya).row == (keyb).row && (keya).col == (keyb).col)
 

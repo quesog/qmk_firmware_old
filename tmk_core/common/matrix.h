@@ -48,6 +48,8 @@ void matrix_setup(void);
 void matrix_init(void);
 /* scan all key states on matrix */
 uint8_t matrix_scan(void);
+
+void matrix_post_scan(void);
 /* whether modified from previous scan. used after matrix_scan. */
 bool matrix_is_modified(void) __attribute__((deprecated));
 /* whether a switch is on */

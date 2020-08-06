@@ -41,12 +41,12 @@ void soft_serial_target_init(SSTD_t *sstd_table, int sstd_table_size);
 #define TRANSACTION_NO_RESPONSE 0x1
 #define TRANSACTION_DATA_ERROR 0x2
 #define TRANSACTION_TYPE_ERROR 0x4
+
 #ifndef SERIAL_USE_MULTI_TRANSACTION
 int soft_serial_transaction(void);
 #else
 int soft_serial_transaction(int sstd_index);
 #endif
-
 // target status
 // *SSTD_t.status has
 //   initiator:

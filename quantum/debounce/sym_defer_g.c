@@ -28,7 +28,7 @@ static bool debouncing = false;
 
 #if DEBOUNCE > 0
 static uint16_t debouncing_time;
-void            debounce(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, bool changed) {
+bool            debounce(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, bool changed) {
     if (changed) {
         debouncing      = true;
         debouncing_time = timer_read();
@@ -39,13 +39,16 @@ void            debounce(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_
             cooked[i] = raw[i];
         }
         debouncing = false;
+        return true;
     }
+    return false;
 }
 #else  // no debouncing.
 void debounce(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, bool changed) {
     for (int i = 0; i < num_rows; i++) {
         cooked[i] = raw[i];
     }
+    return true;
 }
 #endif
 
