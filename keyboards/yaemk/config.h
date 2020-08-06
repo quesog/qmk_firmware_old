@@ -87,9 +87,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SERIAL_TIMEOUT_HANDSHAKE 1
 #define SERIAL_TIMEOUT_BUFFER 5
 
-//#define SERIAL_USART_SPEED 921600
+#define SERIAL_USART_SPEED 921600
 //#define SERIAL_USART_SPEED 4500000
-#define SERIAL_USART_SPEED 2250000
+//#define SERIAL_USART_SPEED 2250000
 //#define SERIAL_SPEED 0
 #define SERIAL_USART_DRIVER UARTD1  // USART driver of TX pin. default: SD1
 #define SERIAL_USART_TX_PAL_MODE 7  // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 7
