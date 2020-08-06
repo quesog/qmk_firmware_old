@@ -68,7 +68,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGB_MATRIX_VAL_STEP 6  // number of steps to increment the brightness by
 #endif
 
-#define WS2812_TRST_US  80
+#define WS2812_TRST_US 300
 #define WS2812_PWM_DRIVER PWMD2               // default: PWMD2
 #define WS2812_PWM_CHANNEL 3                  // default: 2
 #define WS2812_PWM_PAL_MODE 2                 // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 2
