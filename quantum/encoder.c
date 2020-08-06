@@ -53,8 +53,10 @@ static uint8_t encoder_value[NUMBER_OF_ENCODERS * 2] = {0};
 // row offsets for each hand
 static uint8_t thisHand, thatHand;
 #else
-static uint8_t encoder_value[NUMBER_OF_ENCODERS] = {0};
+static uint8_t          encoder_value[NUMBER_OF_ENCODERS] = {0};
 #endif
+
+extern keyboard_state_t keyboard_state;
 
 __attribute__((weak)) void encoder_update_user(int8_t index, bool clockwise) {}
 
@@ -92,10 +94,11 @@ static void encoder_update(int8_t index, uint8_t state) {
 #endif
     encoder_pulses[i] += encoder_LUT[state & 0xF];
     if (encoder_pulses[i] >= ENCODER_RESOLUTION) {
+        keyboard_state.encoder_changed = true;
         encoder_value[index]++;
         encoder_update_kb(index, ENCODER_COUNTER_CLOCKWISE);
-    }
-    if (encoder_pulses[i] <= -ENCODER_RESOLUTION) {  // direction is arbitrary here, but this clockwise
+    } else if (encoder_pulses[i] <= -ENCODER_RESOLUTION) {  // direction is arbitrary here, but this clockwise
+        keyboard_state.encoder_changed = true;
         encoder_value[index]--;
         encoder_update_kb(index, ENCODER_CLOCKWISE);
     }

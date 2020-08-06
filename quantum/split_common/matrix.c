@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "transport.h"
 
-#define ERROR_DISCONNECT_COUNT 5
-
 #define ROWS_PER_HAND (MATRIX_ROWS / 2)
 
 #ifdef DIRECT_PINS
@@ -38,6 +36,8 @@ static pin_t col_pins[MATRIX_COLS] = MATRIX_COL_PINS;
 /* matrix state(1:on, 0:off) */
 extern matrix_row_t raw_matrix[MATRIX_ROWS];  // raw values
 extern matrix_row_t matrix[MATRIX_ROWS];      // debounced values
+
+extern keyboard_state_t keyboard_state;
 
 // row offsets for each hand
 uint8_t thisHand, thatHand;
@@ -242,25 +242,8 @@ void matrix_init(void) {
 
 void matrix_post_scan(void) {
     if (is_keyboard_master()) {
-        static uint8_t error_count;
-
-        if (!transport_master(matrix + thatHand)) {
-            error_count++;
-
-            if (error_count > ERROR_DISCONNECT_COUNT) {
-                // reset other half if disconnected
-                for (int i = 0; i < ROWS_PER_HAND; ++i) {
-                    matrix[thatHand + i] = 0;
-                }
-            }
-        } else {
-            error_count = 0;
-        }
-
         matrix_scan_quantum();
     } else {
-        transport_slave(matrix + thisHand);
-
         matrix_slave_scan_user();
     }
 }
@@ -280,8 +263,8 @@ uint8_t matrix_scan(void) {
     }
 #endif
 
-    debounce(raw_matrix, matrix + thisHand, ROWS_PER_HAND, changed);
+    keyboard_state.matrix_changed = debounce(raw_matrix, matrix + thisHand, ROWS_PER_HAND, changed);
 
     matrix_post_scan();
-    return (uint8_t)changed;
+    return (uint8_t)keyboard_state.matrix_changed;
 }

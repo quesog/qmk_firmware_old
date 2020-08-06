@@ -5,7 +5,13 @@
 #include "matrix.h"
 #include "quantum.h"
 
+#define ERROR_DISCONNECT_COUNT 5
 #define ROWS_PER_HAND (MATRIX_ROWS / 2)
+
+extern matrix_row_t matrix[MATRIX_ROWS];  // debounced values
+// row offsets for each hand
+extern uint8_t          thisHand, thatHand;
+extern keyboard_state_t keyboard_state;
 
 #ifdef RGBLIGHT_ENABLE
 #    include "rgblight.h"
@@ -128,6 +134,12 @@ void transport_slave_init(void) { i2c_slave_init(SLAVE_I2C_ADDRESS); }
 
 #    include "serial.h"
 
+extern mailbox_t transaction_received_mailbox;
+void             react_received_primary(matrix_row_t matrix[]);
+void             react_received_secondary(void);
+void             transport_secondary(matrix_row_t matrix[]);
+bool             transport_primary(void);
+
 typedef struct _Serial_s2m_buffer_t {
     // TODO: if MATRIX_COLS > 8 change to uint8_t packed_matrix[] for pack/unpack
     matrix_row_t smatrix[ROWS_PER_HAND];
@@ -169,20 +181,30 @@ volatile Serial_m2s_buffer_t serial_m2s_buffer = {};
 uint8_t volatile status0                       = 0;
 
 enum serial_transaction_id {
-    GET_SLAVE_MATRIX = 0,
+    SEND_METADATA_TO_SECONDARY = 0,
+    SEND_MATRIX_TO_PRIMARY,
 #    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_SPLIT)
     PUT_RGBLIGHT,
 #    endif
 };
 
+MUTEX_DECL(transactions_mutex);
 SSTD_t transactions[] = {
-    [GET_SLAVE_MATRIX] =
+    [SEND_METADATA_TO_SECONDARY] =
         {
             (uint8_t *)&status0,
             sizeof(serial_m2s_buffer),
             (uint8_t *)&serial_m2s_buffer,
+            0,
+            NULL,
+        },
+    [SEND_MATRIX_TO_PRIMARY] =
+        {
+            (uint8_t *)&status0,
             sizeof(serial_s2m_buffer),
             (uint8_t *)&serial_s2m_buffer,
+            0,
+            NULL,
         },
 #    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_SPLIT)
     [PUT_RGBLIGHT] =
@@ -192,15 +214,14 @@ SSTD_t transactions[] = {
 #    endif
 };
 
-void transport_master_init(void) { serial_initiator_init(transactions, TID_LIMIT(transactions)); }
-
-void transport_slave_init(void) { serial_target_init(transactions, TID_LIMIT(transactions)); }
+void transport_master_init(void) { serial_init(transactions, TID_LIMIT(transactions)); }
+void transport_slave_init(void) { serial_init(transactions, TID_LIMIT(transactions)); }
 
 #    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_SPLIT)
 
 // rgblight synchronization information communication.
 
-void transport_rgblight_master(void) {
+void transport_rgblight_primary(void) {
     if (rgblight_get_change_flags()) {
         rgblight_get_syncinfo((rgblight_syncinfo_t *)&serial_rgblight.rgblight_sync);
         if (serial_transaction(PUT_RGBLIGHT) == TRANSACTION_END) {
@@ -209,7 +230,7 @@ void transport_rgblight_master(void) {
     }
 }
 
-void transport_rgblight_slave(void) {
+void transport_rgblight_secondary(void) {
     if (status_rgblight == TRANSACTION_ACCEPTED) {
         rgblight_update_sync((rgblight_syncinfo_t *)&serial_rgblight.rgblight_sync, false);
         status_rgblight = TRANSACTION_END;
@@ -217,60 +238,127 @@ void transport_rgblight_slave(void) {
 }
 
 #    else
-#        define transport_rgblight_master()
-#        define transport_rgblight_slave()
+#        define transport_rgblight_primary()
+#        define transport_rgblight_secondary()
 #    endif
 
-bool transport_master(matrix_row_t matrix[]) {
-#    ifndef SERIAL_USE_MULTI_TRANSACTION
-    if (serial_transaction() != TRANSACTION_END) {
-        return false;
+void transport_task(void) {
+    if (is_keyboard_master()) {
+        static uint8_t error_count;
+        transport_rgblight_primary();
+        if (!transport_primary()) {
+            error_count++;
+            // TODO ERROR HANDLING DOES NOTHING ATM
+            if (error_count > ERROR_DISCONNECT_COUNT) {
+                // reset other half if disconnected
+                for (int i = 0; i < ROWS_PER_HAND; ++i) {
+                    matrix[thatHand + i] = 0;
+                }
+            }
+        } else {
+            error_count = 0;
+        }
+        react_received_primary(matrix + thatHand);
+    } else {
+        transport_rgblight_secondary();
+        transport_secondary(matrix + thisHand);
+        react_received_secondary();
     }
-#    else
-    transport_rgblight_master();
-    if (serial_transaction(GET_SLAVE_MATRIX) != TRANSACTION_END) {
-        return false;
-    }
-#    endif
+}
 
-    // TODO:  if MATRIX_COLS > 8 change to unpack()
-    for (int i = 0; i < ROWS_PER_HAND; ++i) {
-        matrix[i] = serial_s2m_buffer.smatrix[i];
-    }
+bool transport_primary(void) {
+    chMtxLock(&transactions_mutex);
 
+    bool           send_meta           = false;
 #    ifdef BACKLIGHT_ENABLE
-    // Write backlight level for slave to read
-    serial_m2s_buffer.backlight_level = is_backlight_enabled() ? get_backlight_level() : 0;
-#    endif
-
-#    ifdef ENCODER_ENABLE
-    encoder_update_raw((uint8_t *)serial_s2m_buffer.encoder_state);
+    static uint8_t backlight_level_old = 0;
+    serial_m2s_buffer.backlight_level  = is_backlight_enabled() ? get_backlight_level() : 0;
+    send_meta                          = backlight_level_old != serial_m2s_buffer.backlight_level;
 #    endif
 
 #    ifdef WPM_ENABLE
-    // Write wpm to slave
-    serial_m2s_buffer.current_wpm = get_current_wpm();
+    static uint8_t wpm_old             = 0;
+    serial_m2s_buffer.current_wpm      = get_current_wpm();
+    send_meta                          = send_meta || wpm_old != serial_m2s_buffer.current_wpm;
 #    endif
+
+    chMtxUnlockAll();
+
+    if (send_meta) {
+        if (serial_transaction(SEND_METADATA_TO_SECONDARY) != TRANSACTION_END) {
+            // return;
+        }
+    }
     return true;
 }
 
-void transport_slave(matrix_row_t matrix[]) {
-    transport_rgblight_slave();
-    // TODO: if MATRIX_COLS > 8 change to pack()
-    for (int i = 0; i < ROWS_PER_HAND; ++i) {
-        serial_s2m_buffer.smatrix[i] = matrix[i];
-    }
-#    ifdef BACKLIGHT_ENABLE
-    backlight_set(serial_m2s_buffer.backlight_level);
-#    endif
-
+void transport_secondary(matrix_row_t matrix[]) {
+    if (keyboard_state.matrix_changed || keyboard_state.encoder_changed) {
+        chMtxLock(&transactions_mutex);
+        // TODO: if MATRIX_COLS > 8 change to pack()
+        for (int i = 0; i < ROWS_PER_HAND; ++i) {
+            serial_s2m_buffer.smatrix[i] = matrix[i];
+        }
 #    ifdef ENCODER_ENABLE
-    encoder_state_raw((uint8_t *)serial_s2m_buffer.encoder_state);
+        //  if (keyboard_state.encoder_changed) {
+        encoder_state_raw((uint8_t *)serial_s2m_buffer.encoder_state);
+        //   }
 #    endif
+        chMtxUnlockAll();
+        if (serial_transaction(SEND_MATRIX_TO_PRIMARY) != TRANSACTION_END) {
+            // return;
+        }
+    }
+}
+
+// React on the primary half to received transactions
+void react_received_primary(matrix_row_t matrix[]) {
+    uint8_t sstd_index;
+    chSysLock();
+    msg_t msg = chMBFetchI(&transaction_received_mailbox, (msg_t *)(&sstd_index));
+    chSysUnlock();
+
+    if (msg != MSG_OK) {
+        return;
+    }
+
+    // Primary Received Matrix Changes from the Secondary Half, so we have to update our Matrix with the changes
+    if (sstd_index == SEND_MATRIX_TO_PRIMARY) {
+        chMtxLock(&transactions_mutex);
+
+        // TODO:  if MATRIX_COLS > 8 change to unpack()
+        for (int i = 0; i < ROWS_PER_HAND; ++i) {
+            matrix[i] = serial_s2m_buffer.smatrix[i];
+        }
+#    ifdef ENCODER_ENABLE
+        encoder_update_raw((uint8_t *)serial_s2m_buffer.encoder_state);
+#    endif
+        chMtxUnlockAll();
+    }
+}
+
+void react_received_secondary(void) {
+    uint8_t sstd_index;
+    chSysLock();
+    msg_t msg = chMBFetchI(&transaction_received_mailbox, (msg_t *)(&sstd_index));
+    chSysUnlock();
+
+    if (msg != MSG_OK) {
+        return;
+    }
+
+    if (sstd_index == SEND_METADATA_TO_SECONDARY) {
+        chMtxLock(&transactions_mutex);
 
 #    ifdef WPM_ENABLE
-    set_current_wpm(serial_m2s_buffer.current_wpm);
+        set_current_wpm(serial_m2s_buffer.current_wpm);
 #    endif
+
+#    ifdef BACKLIGHT_ENABLE
+        backlight_set(serial_m2s_buffer.backlight_level);
+#    endif
+        chMtxUnlockAll();
+    }
 }
 
 #endif

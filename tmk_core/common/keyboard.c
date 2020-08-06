@@ -95,7 +95,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef DIP_SWITCH_ENABLE
 #    include "dip_switch.h"
 #endif
-
+#ifdef SPLIT_KEYBOARD
+#    include "transport.h"
+#endif
 // Only enable this if console is enabled to print to
 #if defined(DEBUG_MATRIX_SCAN_RATE) && defined(CONSOLE_ENABLE)
 static uint32_t matrix_timer      = 0;
@@ -115,6 +117,8 @@ void matrix_scan_perf_task(void) {
 #else
 #    define matrix_scan_perf_task()
 #endif
+
+keyboard_state_t keyboard_state;
 
 #ifdef MATRIX_HAS_GHOST
 extern const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS];
@@ -305,14 +309,19 @@ void keyboard_task(void) {
     static uint8_t      led_status    = 0;
     matrix_row_t        matrix_row    = 0;
     matrix_row_t        matrix_change = 0;
+    keyboard_state.all                = 0;
+
 #ifdef QMK_KEYS_PER_SCAN
     uint8_t keys_processed = 0;
 #endif
+    /*uint8_t matrix_scan_res =*/ matrix_scan();
 
-#if defined(OLED_DRIVER_ENABLE) && !defined(OLED_DISABLE_TIMEOUT)
-    uint8_t ret = matrix_scan();
-#else
-    matrix_scan();
+#ifdef ENCODER_ENABLE
+    encoder_read();
+#endif
+
+#ifdef SPLIT_KEYBOARD
+    transport_task();
 #endif
 
     if (should_process_keypress()) {
@@ -368,10 +377,6 @@ MATRIX_LOOP_END:
 #    endif
 #endif
 
-#ifdef ENCODER_ENABLE
-    encoder_read();
-#endif
-
 #ifdef QWIIC_ENABLE
     qwiic_task();
 #endif
@@ -380,7 +385,9 @@ MATRIX_LOOP_END:
     oled_task();
 #    ifndef OLED_DISABLE_TIMEOUT
     // Wake up oled if user is using those fabulous keys!
-    if (ret) oled_on();
+    if (matrix_scan_res) {
+        oled_on();
+    }
 #    endif
 #endif
 

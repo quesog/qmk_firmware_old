@@ -35,17 +35,14 @@ typedef struct _SSTD_t {
 void serial_initiator_init(SSTD_t *sstd_table, int sstd_table_size);
 // target is interrupt accept side
 void serial_target_init(SSTD_t *sstd_table, int sstd_table_size);
+void serial_init(SSTD_t *sstd_table, int sstd_table_size);
 
 // initiator result
 #define TRANSACTION_END 0
 #define TRANSACTION_NO_RESPONSE 0x1
 #define TRANSACTION_DATA_ERROR 0x2
 #define TRANSACTION_TYPE_ERROR 0x4
-#ifndef SERIAL_USE_MULTI_TRANSACTION
-int serial_transaction(void);
-#else
 int serial_transaction(int sstd_index);
-#endif
 
 // target status
 // *SSTD_t.status has

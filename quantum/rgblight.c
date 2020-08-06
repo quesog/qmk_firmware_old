@@ -951,7 +951,7 @@ void rgblight_task(void) {
                 tick_flag = false;
                 if (timer_elapsed(report_last_timer) >= 30000) {
                     report_last_timer = timer_read();
-                    dprintf("rgblight animation tick report to slave\n");
+                    println("rgblight animation tick");
                     RGBLIGHT_SPLIT_ANIMATION_TICK;
                 }
             }

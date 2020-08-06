@@ -61,7 +61,7 @@ void debounce_init(uint8_t num_rows) {
     }
 }
 
-void debounce(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, bool changed) {
+bool debounce(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, bool changed) {
     uint8_t current_time = wrapping_timer_read();
     if (counters_need_update) {
         update_debounce_counters_and_transfer_if_expired(raw, cooked, num_rows, current_time);
@@ -70,17 +70,20 @@ void debounce(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, bool 
     if (changed) {
         start_debounce_counters(raw, cooked, num_rows, current_time);
     }
+    return true;//TODO correct logic
 }
 
-void update_debounce_counters_and_transfer_if_expired(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, uint8_t current_time) {
+bool update_debounce_counters_and_transfer_if_expired(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, uint8_t current_time) {
     counters_need_update                 = false;
     debounce_counter_t *debounce_pointer = debounce_counters;
+    bool matrix_needs_update = false;
     for (uint8_t row = 0; row < num_rows; row++) {
         for (uint8_t col = 0; col < MATRIX_COLS; col++) {
             if (*debounce_pointer != DEBOUNCE_ELAPSED) {
                 if (TIMER_DIFF(current_time, *debounce_pointer, MAX_DEBOUNCE) >= DEBOUNCE) {
                     *debounce_pointer = DEBOUNCE_ELAPSED;
                     cooked[row]       = (cooked[row] & ~(ROW_SHIFTER << col)) | (raw[row] & (ROW_SHIFTER << col));
+                    matrix_needs_update = true;
                 } else {
                     counters_need_update = true;
                 }
@@ -88,6 +91,7 @@ void update_debounce_counters_and_transfer_if_expired(matrix_row_t raw[], matrix
             debounce_pointer++;
         }
     }
+    return matrix_needs_update;
 }
 
 void start_debounce_counters(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, uint8_t current_time) {
