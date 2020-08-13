@@ -342,14 +342,14 @@ bool transport_primary(matrix_row_t matrix[]) {
 
     sync_timer_update(timer_read32());
 
-    uint32_t sync_timer_new = sync_timer_read32();
-    if ((serial_m2s_buffer.sync_timer - sync_timer_new) > 1000) {
-        serial_m2s_buffer.sync_timer = sync_timer_new;
+    if (sync_timer_elapsed32(serial_m2s_buffer.sync_timer) > 1000) {
+        serial_m2s_buffer.sync_timer = sync_timer_read32();
         send_meta                    = true;
     }
     chMtxUnlock(&transactions_mutex);
 
     if (send_meta) {
+        println("send_meta");
         if (serial_transaction(SEND_METADATA_TO_SECONDARY) != TRANSACTION_END) {
             // return;
         }
@@ -403,7 +403,11 @@ void react_received_primary(matrix_row_t matrix[]) {
 }
 
 void react_received_secondary(matrix_row_t matrix[]) {
-    uint8_t sstd_index;
+    static int32_t timer_diff = 0;
+    uint8_t        sstd_index;
+    // todo timer sync task
+    sync_timer_update(timer_read32() + timer_diff);
+
     chSysLock();
     msg_t msg = chMBFetchI(&transaction_received_mailbox, (msg_t *)(&sstd_index));
     chSysUnlock();
@@ -415,7 +419,7 @@ void react_received_secondary(matrix_row_t matrix[]) {
     if (sstd_index == SEND_METADATA_TO_SECONDARY) {
         chMtxLock(&transactions_mutex);
 
-        sync_timer_update(serial_m2s_buffer.sync_timer);  // todo offset calculation
+        timer_diff = timer_read32() - serial_m2s_buffer.sync_timer;  // todo offset calculation
 
 #    ifdef WPM_ENABLE
         set_current_wpm(serial_m2s_buffer.current_wpm);
