@@ -44,7 +44,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_LIMIT_VAL 192
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS RGBLIGHT_LIMIT_VAL
 #define RGB_MATRIX_SPLIT RGBLED_SPLIT
-#define SPLIT_TRANSPORT_MIRROR
+//#define SPLIT_TRANSPORT_MIRROR
+#define RGB_MATRIX_LED_PROCESS_LIMIT (DRIVER_LED_TOTAL + 4) / 5 // limits the number of LEDs to process in an animation per task run (increases keyboard responsiveness)
+#define RGB_MATRIX_LED_FLUSH_LIMIT 16 // limits in milliseconds how frequently an animation will update the LEDs. 16 (16ms) is equivalent to limiting to 60fps (increases keyboard responsiveness)
 
 #ifdef RGBLIGHT_ENABLE
 //#    define RGBLIGHT_ANIMATIONS

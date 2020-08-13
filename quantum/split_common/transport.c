@@ -336,7 +336,6 @@ bool transport_primary(matrix_row_t matrix[]) {
         send_meta = true;
         wpm_old   = serial_m2s_buffer.current_wpm;
     }
-
 #    endif
 
     sync_timer_update(timer_read32());
@@ -348,7 +347,6 @@ bool transport_primary(matrix_row_t matrix[]) {
     chMtxUnlock(&transactions_mutex);
 
     if (send_meta) {
-        println("send_meta");
         if (serial_transaction(SEND_METADATA_TO_SECONDARY) != TRANSACTION_END) {
             // return;
         }
