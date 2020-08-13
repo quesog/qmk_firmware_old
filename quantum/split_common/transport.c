@@ -282,7 +282,7 @@ bool transport_primary(void) {
     send_meta                          = send_meta || wpm_old != serial_m2s_buffer.current_wpm;
 #    endif
 
-    chMtxUnlockAll();
+    chMtxUnlock(&transactions_mutex);
 
     if (send_meta) {
         if (serial_transaction(SEND_METADATA_TO_SECONDARY) != TRANSACTION_END) {
@@ -304,7 +304,7 @@ void transport_secondary(matrix_row_t matrix[]) {
         encoder_state_raw((uint8_t *)serial_s2m_buffer.encoder_state);
         //   }
 #    endif
-        chMtxUnlockAll();
+        chMtxUnlock(&transactions_mutex);
         if (serial_transaction(SEND_MATRIX_TO_PRIMARY) != TRANSACTION_END) {
             // return;
         }
@@ -333,7 +333,7 @@ void react_received_primary(matrix_row_t matrix[]) {
 #    ifdef ENCODER_ENABLE
         encoder_update_raw((uint8_t *)serial_s2m_buffer.encoder_state);
 #    endif
-        chMtxUnlockAll();
+        chMtxUnlock(&transactions_mutex);
     }
 }
 
@@ -357,7 +357,7 @@ void react_received_secondary(void) {
 #    ifdef BACKLIGHT_ENABLE
         backlight_set(serial_m2s_buffer.backlight_level);
 #    endif
-        chMtxUnlockAll();
+        chMtxUnlock(&transactions_mutex);
     }
 }
 

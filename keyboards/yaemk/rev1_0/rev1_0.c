@@ -6,3 +6,5 @@ __attribute__((weak)) bool is_keyboard_left(void) {
     bool isleft = readPin(SPLIT_HAND_PIN);
     return isleft;
 }
+
+void board_init(void) { AFIO->MAPR |= AFIO_MAPR_USART1_REMAP; }

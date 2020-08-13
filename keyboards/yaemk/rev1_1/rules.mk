@@ -4,7 +4,7 @@ MCU = STM32F103
 # GENERIC STM32F103C8T6 board - stm32duino bootloader
 OPT_DEFS = -DCORTEX_VTOR_INIT=0x2000
 MCU_LDSCRIPT = STM32F103xB_stm32duino_bootloader
-BOARD = STM32_F103_STM32DUINO
+BOARD = YAEMK
 STM32_BOOTLOADER_ADDRESS = 0x80000000
 
 DFU_ARGS = -d 1eaf:0003 -a2 -R
@@ -14,16 +14,14 @@ DFU_SUFFIX_ARGS = -v 1eaf -p 0003
 SRC =	led_config.c
 LTO_ENABLE = yes
 EXTRAFLAGS += -Ofast
-#EXTRAFLAGS += -O0
-#EXTRAFLAGS += -g
 OPT_DEFS += -DSTM32_DMA_REQUIRED=TRUE
 
 #BOOTMAGIC_ENABLE = yes	# Virtual DIP switch configuration
 MOUSEKEY_ENABLE = yes	# Mouse keys
 EXTRAKEY_ENABLE = yes	# Audio control and System control
-CONSOLE_ENABLE = yes	# Console for debug
-COMMAND_ENABLE = yes    # Commands for debug and configuration
-SLEEP_LED_ENABLE = yes  # Breathing sleep LED during USB suspend
+CONSOLE_ENABLE = no	# Console for debug
+COMMAND_ENABLE = no    # Commands for debug and configuration
+SLEEP_LED_ENABLE = no  # Breathing sleep LED during USB suspend
 NKRO_ENABLE = yes	      # USB Nkey Rollover
 BACKLIGHT_ENABLE = no
 RGBLIGHT_ENABLE = yes

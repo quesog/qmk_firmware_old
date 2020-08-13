@@ -314,7 +314,12 @@ void keyboard_task(void) {
 #ifdef QMK_KEYS_PER_SCAN
     uint8_t keys_processed = 0;
 #endif
-    /*uint8_t matrix_scan_res =*/ matrix_scan();
+
+#ifdef OLED_DRIVER_ENABLE
+    uint8_t matrix_scan_res = matrix_scan();
+#else
+    matrix_scan();
+#endif
 
 #ifdef ENCODER_ENABLE
     encoder_read();
