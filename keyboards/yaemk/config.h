@@ -18,11 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 /* USB Device descriptor parameter */
-#define VENDOR_ID 0x4B4B // KK
-#define PRODUCT_ID 0x5941 // YA
+#define VENDOR_ID 0x4B4B   // KK
+#define PRODUCT_ID 0x5941  // YA
 #define DEVICE_VER 0x0001
 #define MANUFACTURER YAEMK
-
 
 /* key matrix size */
 #define MATRIX_ROWS 10
@@ -48,14 +47,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_TRANSPORT_MIRROR
 
 #ifdef RGBLIGHT_ENABLE
-#    define RGBLIGHT_ANIMATIONS
-#    define RGBLIGHT_EFFECT_SNAKE
+//#    define RGBLIGHT_ANIMATIONS
+//#define RGBLIGHT_EFFECT_ALTERNATING
+#    define RGBLIGHT_EFFECT_BREATHING
+//#define RGBLIGHT_EFFECT_CHRISTMAS
+//#define RGBLIGHT_EFFECT_KNIGHT
+#    define RGBLIGHT_EFFECT_RAINBOW_MOOD
+#    define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+//#define RGBLIGHT_EFFECT_RGB_TEST
+//#define RGBLIGHT_EFFECT_SNAKE
+#    define RGBLIGHT_EFFECT_STATIC_GRADIENT
+#    define RGBLIGHT_EFFECT_TWINKLE
+
+//#    define RGBLIGHT_EFFECT_SNAKE
 #    define RGBLIGHT_HUE_STEP 3  // number of steps to cycle through the hue by
 #    define RGBLIGHT_SAT_STEP 6  // number of steps to increment the saturation by
 #    define RGBLIGHT_VAL_STEP 6  // number of steps to increment the brightness by
 
 //  #define RGBLIGHT_EFFECT_RGB_TEST
-#    define RGBLIGHT_SLEEP  //  the RGB lighting will be switched off when the host goes to sleep
+//#    define RGBLIGHT_SLEEP  //  the RGB lighting will be switched off when the host goes to sleep
 #endif
 
 #ifdef RGB_MATRIX_ENABLE
@@ -68,7 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGB_MATRIX_VAL_STEP 6  // number of steps to increment the brightness by
 #endif
 
-#define WS2812_TRST_US 300
+#define WS2812_TRST_US 80
 #define WS2812_PWM_DRIVER PWMD2               // default: PWMD2
 #define WS2812_PWM_CHANNEL 3                  // default: 2
 #define WS2812_PWM_PAL_MODE 2                 // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 2
@@ -94,7 +104,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SERIAL_USART_DRIVER UARTD1  // USART driver of TX pin. default: SD1
 #define SERIAL_USART_TX_PAL_MODE 7  // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 7
 
-
 /* Set 0 if debouncing isn't needed */
-#define DEBOUNCE 5
+#define DEBOUNCE 4
 #define TAPPING_TOGGLE 2

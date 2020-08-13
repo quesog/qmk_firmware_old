@@ -24,11 +24,12 @@
     { A7 }
 
 #define SPLIT_HAND_PIN B9
-
-#define I2C_DRIVER I2CD2
-#define GPIOB_I2C2_SCL B10  // pin 21
-#define GPIOB_I2C2_SDA B11  // pin 22
-
+//#define I2C_DRIVER I2CD2
+//#define I2C1_BANK GPIOB
+//#define I2C1_SCL 10  // pin 21
+//#define I2C1_SDA 11  // pin 22
+//#define OLED_DISPLAY_ADDRESS 0x3C
+//#    define OLED_IC OLED_IC_SH1106
+#define OLED_DISPLAY_128X64
 #ifdef OLED_DRIVER_ENABLE
-#    define OLED_DISPLAY_128X64
 #endif
