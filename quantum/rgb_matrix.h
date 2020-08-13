@@ -198,6 +198,10 @@ void        rgb_matrix_set_flags(led_flags_t flags);
 #    define rgblight_increase_speed_noeeprom rgb_matrix_increase_speed_noeeprom
 #    define rgblight_decrease_speed rgb_matrix_decrease_speed
 #    define rgblight_decrease_speed_noeeprom rgb_matrix_decrease_speed_noeeprom
+#    define rgblight_get_change_flags rgb_matrix_get_change_flags
+#    define rgblight_clear_change_flags rgb_matrix_clear_change_flags
+#    define rgblight_get_syncinfo rgb_matrix_get_syncinfo
+#    define rgblight_update_sync(s, w) rgb_matrix_update_sync(s)
 #endif
 
 typedef struct {
@@ -218,11 +222,35 @@ extern rgb_config_t rgb_matrix_config;
 extern bool         g_suspend_state;
 extern uint32_t     g_rgb_timer;
 extern led_config_t g_led_config;
+#ifdef RGB_MATRIX_SPLIT
+extern uint8_t change_flags;
+#endif
 #ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
 extern last_hit_t g_last_hit_tracker;
 #endif
 #ifdef RGB_MATRIX_FRAMEBUFFER_EFFECTS
 extern uint8_t g_rgb_frame_buffer[MATRIX_ROWS][MATRIX_COLS];
+#endif
+
+#ifdef RGB_MATRIX_SPLIT
+
+#define RGB_MATRIX_STATUS_CHANGE_MODE (1 << 0)
+#define RGB_MATRIX_STATUS_CHANGE_HSVS (1 << 1)
+#define RGB_MATRIX_STATUS_CHANGE_FLAG (1 << 2)
+// #define RGB_MATRIX_STATUS_CHANGE_TIMER (1 << 3)
+
+typedef struct _rgb_matrix_syncinfo_t {
+    rgb_config_t config;
+    led_flags_t effect_flags;
+    uint8_t change_flags;
+} rgb_matrix_syncinfo_t;
+
+/* for master side */
+uint8_t rgb_matrix_get_change_flags(void);
+void rgb_matrix_clear_change_flags(void);
+void rgb_matrix_get_syncinfo(rgb_matrix_syncinfo_t *syncinfo);
+/* for split keyboard slave side */
+void rgb_matrix_update_sync(rgb_matrix_syncinfo_t *syncinfo);
 #endif
 
 #endif
