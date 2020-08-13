@@ -18,6 +18,9 @@
 
 #include "rgb_matrix.h"
 #include "progmem.h"
+#ifdef SPLIT_KEYBOARD
+#include "split_util.h"
+#endif
 #include "config.h"
 #include "eeprom.h"
 #include <string.h>
@@ -115,6 +118,21 @@ const point_t k_rgb_matrix_center = RGB_MATRIX_CENTER;
 #    define RGB_MATRIX_STARTUP_SPD UINT8_MAX / 2
 #endif
 
+// split things
+#ifdef RGB_MATRIX_SPLIT
+/* for split keyboard */
+#    define RGB_MATRIX_SPLIT_SET_CHANGE_MODE change_flags |= RGB_MATRIX_STATUS_CHANGE_MODE
+#    define RGB_MATRIX_SPLIT_SET_CHANGE_HSVS change_flags |= RGB_MATRIX_STATUS_CHANGE_HSVS
+#    define RGB_MATRIX_SPLIT_SET_CHANGE_MODEHSVS change_flags |= (RGB_MATRIX_STATUS_CHANGE_MODE | RGB_MATRIX_STATUS_CHANGE_HSVS)
+#    define RGB_MATRIX_SPLIT_SET_CHANGE_FLAG change_flags |= RGB_MATRIX_STATUS_CHANGE_FLAG
+uint8_t change_flags = 0xFF;
+#else
+#    define RGB_MATRIX_SPLIT_SET_CHANGE_MODE
+#    define RGB_MATRIX_SPLIT_SET_CHANGE_HSVS
+#    define RGB_MATRIX_SPLIT_SET_CHANGE_MODEHSVS
+#    define RGB_MATRIX_SPLIT_SET_CHANGE_FLAG
+#endif
+
 // globals
 bool         g_suspend_state = false;
 rgb_config_t rgb_matrix_config;  // TODO: would like to prefix this with g_ for global consistancy, do this in another pr
@@ -140,6 +158,10 @@ static uint32_t rgb_timer_buffer;
 #ifdef RGB_MATRIX_KEYREACTIVE_ENABLED
 static last_hit_t last_hit_buffer;
 #endif  // RGB_MATRIX_KEYREACTIVE_ENABLED
+
+#ifdef RGB_MATRIX_SPLIT
+const uint8_t k_rgb_matrix_split[2] = RGB_MATRIX_SPLIT;
+#endif
 
 void eeconfig_read_rgb_matrix(void) { eeprom_read_block(&rgb_matrix_config, EECONFIG_RGB_MATRIX, sizeof(rgb_matrix_config)); }
 
@@ -178,9 +200,22 @@ uint8_t rgb_matrix_map_row_column_to_led(uint8_t row, uint8_t column, uint8_t *l
 
 void rgb_matrix_update_pwm_buffers(void) { rgb_matrix_driver.flush(); }
 
-void rgb_matrix_set_color(int index, uint8_t red, uint8_t green, uint8_t blue) { rgb_matrix_driver.set_color(index, red, green, blue); }
+void rgb_matrix_set_color(int index, uint8_t red, uint8_t green, uint8_t blue) {
+#ifdef RGB_MATRIX_SPLIT
+    if (!isLeftHand && index >= k_rgb_matrix_split[0])
+        rgb_matrix_driver.set_color(index - k_rgb_matrix_split[0], red, green, blue);
+    else if (isLeftHand && index < k_rgb_matrix_split[0])
+#endif
+        rgb_matrix_driver.set_color(index, red, green, blue);
+}
 
-void rgb_matrix_set_color_all(uint8_t red, uint8_t green, uint8_t blue) { rgb_matrix_driver.set_color_all(red, green, blue); }
+void rgb_matrix_set_color_all(uint8_t red, uint8_t green, uint8_t blue) {
+#ifdef RGB_MATRIX_SPLIT
+    for (uint8_t i = 0; i < DRIVER_LED_TOTAL; i++) rgb_matrix_set_color(i, red, green, blue);
+#else
+    rgb_matrix_driver.set_color_all(red, green, blue);
+#endif
+}
 
 bool process_rgb_matrix(uint16_t keycode, keyrecord_t *record) {
 #if RGB_DISABLE_TIMEOUT > 0
@@ -264,9 +299,9 @@ static bool rgb_matrix_none(effect_params_t *params) {
 
 static void rgb_task_timers(void) {
 #if defined(RGB_MATRIX_KEYREACTIVE_ENABLED) || RGB_DISABLE_TIMEOUT > 0
-    uint32_t deltaTime = timer_elapsed32(rgb_timer_buffer);
+    uint32_t deltaTime = sync_timer_elapsed32(rgb_timer_buffer);
 #endif  // defined(RGB_MATRIX_KEYREACTIVE_ENABLED) || RGB_DISABLE_TIMEOUT > 0
-    rgb_timer_buffer = timer_read32();
+    rgb_timer_buffer = sync_timer_read32();
 
     // Update double buffer timers
 #if RGB_DISABLE_TIMEOUT > 0
@@ -294,7 +329,7 @@ static void rgb_task_timers(void) {
 
 static void rgb_task_sync(void) {
     // next task
-    if (timer_elapsed32(g_rgb_timer) >= RGB_MATRIX_LED_FLUSH_LIMIT) rgb_task_state = STARTING;
+    if (sync_timer_elapsed32(g_rgb_timer) >= RGB_MATRIX_LED_FLUSH_LIMIT) rgb_task_state = STARTING;
 }
 
 static void rgb_task_start(void) {
@@ -469,6 +504,7 @@ void rgb_matrix_toggle_eeprom_helper(bool write_to_eeprom) {
         eeconfig_update_rgb_matrix();
     }
     dprintf("rgb matrix toggle [%s]: rgb_matrix_config.enable = %u\n", (write_to_eeprom) ? "EEPROM" : "NOEEPROM", rgb_matrix_config.enable);
+    RGB_MATRIX_SPLIT_SET_CHANGE_MODE;
 }
 void rgb_matrix_toggle_noeeprom(void) { rgb_matrix_toggle_eeprom_helper(false); }
 void rgb_matrix_toggle(void) { rgb_matrix_toggle_eeprom_helper(true); }
@@ -481,6 +517,7 @@ void rgb_matrix_enable(void) {
 void rgb_matrix_enable_noeeprom(void) {
     if (!rgb_matrix_config.enable) rgb_task_state = STARTING;
     rgb_matrix_config.enable = 1;
+    RGB_MATRIX_SPLIT_SET_CHANGE_MODE;
 }
 
 void rgb_matrix_disable(void) {
@@ -491,6 +528,7 @@ void rgb_matrix_disable(void) {
 void rgb_matrix_disable_noeeprom(void) {
     if (rgb_matrix_config.enable) rgb_task_state = STARTING;
     rgb_matrix_config.enable = 0;
+    RGB_MATRIX_SPLIT_SET_CHANGE_MODE;
 }
 
 uint8_t rgb_matrix_is_enabled(void) { return rgb_matrix_config.enable; }
@@ -511,6 +549,7 @@ void rgb_matrix_mode_eeprom_helper(uint8_t mode, bool write_to_eeprom) {
         eeconfig_update_rgb_matrix();
     }
     dprintf("rgb matrix mode [%s]: %u\n", (write_to_eeprom) ? "EEPROM" : "NOEEPROM", rgb_matrix_config.mode);
+    RGB_MATRIX_SPLIT_SET_CHANGE_MODE;
 }
 void rgb_matrix_mode_noeeprom(uint8_t mode) { rgb_matrix_mode_eeprom_helper(mode, false); }
 void rgb_matrix_mode(uint8_t mode) { rgb_matrix_mode_eeprom_helper(mode, true); }
@@ -542,6 +581,7 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
         eeconfig_update_rgb_matrix();
     }
     dprintf("rgb matrix set hsv [%s]: %u,%u,%u\n", (write_to_eeprom) ? "EEPROM" : "NOEEPROM", rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v);
+    RGB_MATRIX_SPLIT_SET_CHANGE_HSVS;
 }
 void rgb_matrix_sethsv_noeeprom(uint16_t hue, uint8_t sat, uint8_t val) { rgb_matrix_sethsv_eeprom_helper(hue, sat, val, false); }
 void rgb_matrix_sethsv(uint16_t hue, uint8_t sat, uint8_t val) { rgb_matrix_sethsv_eeprom_helper(hue, sat, val, true); }
@@ -581,6 +621,7 @@ void rgb_matrix_set_speed_eeprom_helper(uint8_t speed, bool write_to_eeprom) {
         eeconfig_update_rgb_matrix();
     }
     dprintf("rgb matrix set speed [%s]: %u\n", (write_to_eeprom) ? "EEPROM" : "NOEEPROM", rgb_matrix_config.speed);
+    RGB_MATRIX_SPLIT_SET_CHANGE_HSVS;
 }
 void rgb_matrix_set_speed_noeeprom(uint8_t speed) { rgb_matrix_set_speed_eeprom_helper(speed, false); }
 void rgb_matrix_set_speed(uint8_t speed) { rgb_matrix_set_speed_eeprom_helper(speed, true); }
@@ -597,4 +638,44 @@ void rgb_matrix_decrease_speed(void) { rgb_matrix_decrease_speed_helper(true); }
 
 led_flags_t rgb_matrix_get_flags(void) { return rgb_effect_params.flags; }
 
-void rgb_matrix_set_flags(led_flags_t flags) { rgb_effect_params.flags = flags; }
+void rgb_matrix_set_flags(led_flags_t flags) {
+    rgb_effect_params.flags = flags;
+    RGB_MATRIX_SPLIT_SET_CHANGE_FLAG;
+}
+
+#ifdef RGB_MATRIX_SPLIT
+uint8_t rgb_matrix_get_change_flags(void) { return change_flags; }  // TODO
+void    rgb_matrix_clear_change_flags(void) { change_flags = 0; }
+
+void rgb_matrix_get_syncinfo(rgb_matrix_syncinfo_t *syncinfo) {
+    syncinfo->config       = rgb_matrix_config;
+    syncinfo->effect_flags = rgb_matrix_get_flags();
+    syncinfo->change_flags = change_flags;
+}
+
+void rgb_matrix_update_sync(rgb_matrix_syncinfo_t *syncinfo) {
+    if (syncinfo->change_flags & RGB_MATRIX_STATUS_CHANGE_MODE) {
+        if (syncinfo->config.enable) {  // CHANGE MODE or ENABLE
+            rgb_matrix_enable_noeeprom();
+            rgb_matrix_mode_noeeprom(syncinfo->config.mode);
+            rgb_task_state = STARTING;
+        } else
+            rgb_matrix_disable_noeeprom();
+    }
+
+    if (syncinfo->change_flags & RGB_MATRIX_STATUS_CHANGE_HSVS) {
+        // CHANGE HSV
+        rgb_matrix_sethsv_noeeprom(syncinfo->config.hsv.h, syncinfo->config.hsv.s, syncinfo->config.hsv.v);
+        // CHANGE SPEED
+        rgb_matrix_config.speed = syncinfo->config.speed;
+    }
+
+    if (syncinfo->change_flags & RGB_MATRIX_STATUS_CHANGE_FLAG) {
+        // CHANGE FLAGS
+        rgb_matrix_set_flags(syncinfo->effect_flags);
+    }
+
+    // SUSPEND
+    // rgb_matrix_set_suspend_state(false);
+}
+#endif
