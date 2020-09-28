@@ -145,6 +145,16 @@ else
         # This will effectively work the same as "transient" if not supported by the chip
         SRC += $(PLATFORM_COMMON_DIR)/eeprom_teensy.c
       endif
+	  else ifeq ($(PLATFORM),CHIBIOS_RV)
+      ifeq ($(MCU_SERIES), GD32VF103)
+        SRC += $(PLATFORM_COMMON_DIR)/eeprom_stm32.c
+        SRC += $(PLATFORM_COMMON_DIR)/flash_stm32.c
+        OPT_DEFS += -DEEPROM_EMU_STM32F103xB
+        OPT_DEFS += -DSTM32_EEPROM_ENABLE
+      else
+        # This will effectively work the same as "transient" if not supported by the chip
+        SRC += $(PLATFORM_COMMON_DIR)/eeprom_teensy.c
+      endif
     else ifeq ($(PLATFORM),ARM_ATSAM)
       SRC += $(PLATFORM_COMMON_DIR)/eeprom.c
     else ifeq ($(PLATFORM),TEST)

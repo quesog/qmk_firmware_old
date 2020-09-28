@@ -43,7 +43,7 @@ __attribute__((weak)) void enter_bootloader_mode_if_requested(void) {}
  * any other initialization.
  */
 void __early_init(void) {
-  enter_bootloader_mode_if_requested();
+ // enter_bootloader_mode_if_requested();
 
   stm32_clock_init();
 }
@@ -52,8 +52,8 @@ void __early_init(void) {
  * Board-specific initialization code.
  */
 void boardInit(void) {
-   //Set backup register DR10 to enter bootloader on reset
-   BKP->DR10 = RTC_BOOTLOADER_FLAG;
-   AFIO->MAPR |= AFIO_MAPR_USART1_REMAP;
-   AFIO->MAPR |= AFIO_MAPR_SWJ_CFG_NOJNTRST;
+    //Set backup register DR10 to enter bootloader on reset
+    //BKP->DR10 = RTC_BOOTLOADER_FLAG;
+    AFIO->MAPR |= AFIO_MAPR_USART1_REMAP;
+    AFIO->MAPR |= AFIO_MAPR_SWJ_CFG_NOJNTRST;
 }

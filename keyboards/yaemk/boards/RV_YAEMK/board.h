@@ -25,7 +25,7 @@
  * Board identifier.
  */
 #define BOARD_STM32_F103_STM32DUINO
-#define BOARD_NAME              "YAEMK BOARD WITH GD32F103CBT6 - stm32duino bootloader"
+#define BOARD_NAME              "YAEMK BOARD WITH GD32VF103CBT6"
 
 /*
  * Board frequencies.
@@ -36,7 +36,7 @@
 /*
  * MCU type, supported types are defined in ./os/hal/platforms/hal_lld.h.
  */
-#define STM32F103xB
+#define GD32VF103xB
 
 /*
  * IO pins assignments
@@ -47,15 +47,7 @@
 #define GPIOA_LED               8
 #define GPIOD_OSC_IN            0
 #define GPIOD_OSC_OUT           1
-
-/* In case your board has a "USB enable" hardware
-   controlled by a pin, define it here. (It could be just
-   a 1.5k resistor connected to D+ line.)
-*/
-/*
-#define GPIOB_USB_DISC          10
-*/
-
+#define BOARD_OTG_NOVBUSSENS
 /*
  * I/O ports initial setup, this configuration is established soon after reset
  * in the initialization code.
@@ -126,31 +118,6 @@
 #define VAL_GPIOECRL            0x88888888      /*  PE7...PE0 */
 #define VAL_GPIOECRH            0x88888888      /* PE15...PE8 */
 #define VAL_GPIOEODR            0xFFFFFFFF
-
-/*
- * USB bus activation macro, required by the USB driver.
- */
-/* The point is that most of the generic STM32F103* boards
-   have a 1.5k resistor connected on one end to the D+ line
-   and on the other end to some pin. Or even a slightly more
-   complicated "USB enable" circuit, controlled by a pin.
-   That should go here.
-
-   However on some boards (e.g. one that I have), there's no
-   such hardware. In which case it's better to not do anything.
-*/
-/*
-#define usb_lld_connect_bus(usbp) palClearPad(GPIOB, GPIOB_USB_DISC)
-*/
-//#define usb_lld_connect_bus(usbp) palSetPadMode(GPIOA, 12, PAL_MODE_INPUT);
-
-/*
- * USB bus de-activation macro, required by the USB driver.
- */
-/*
-#define usb_lld_disconnect_bus(usbp) palSetPad(GPIOB, GPIOB_USB_DISC)
-*/
-//#define usb_lld_disconnect_bus(usbp) palSetPadMode(GPIOA, 12, PAL_MODE_OUTPUT_PUSHPULL); palClearPad(GPIOA, 12);
 
 #if !defined(_FROM_ASM_)
 #ifdef __cplusplus

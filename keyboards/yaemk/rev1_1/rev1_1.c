@@ -1,5 +1,18 @@
 #include "rev1_1.h"
 
-void board_init(void) {
-    AFIO->MAPR |= AFIO_MAPR_USART1_REMAP;
+void matrix_io_delay(void) {
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
+    __asm__ volatile("nop");
 }

@@ -223,7 +223,11 @@ endif
 # Determine and set parameters based on the keyboard's processor family.
 # We can assume a ChibiOS target When MCU_FAMILY is defined since it's
 # not used for LUFA
-ifdef MCU_FAMILY
+ifeq ("$(MCU)","rv")
+    PLATFORM=CHIBIOS_RV
+    PLATFORM_KEY=chibios_rv
+    FIRMWARE_FORMAT?=bin
+else ifdef MCU_FAMILY
     PLATFORM=CHIBIOS
     PLATFORM_KEY=chibios
     FIRMWARE_FORMAT?=bin

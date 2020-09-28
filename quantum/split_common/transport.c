@@ -376,7 +376,7 @@ void transport_secondary(matrix_row_t matrix[]) {
 
 // React on the primary half to received transactions
 void react_received_primary(matrix_row_t matrix[]) {
-    uint8_t sstd_index;
+    int32_t sstd_index;
     chSysLock();
     msg_t msg = chMBFetchI(&transaction_received_mailbox, (msg_t *)(&sstd_index));
     chSysUnlock();
@@ -402,7 +402,7 @@ void react_received_primary(matrix_row_t matrix[]) {
 
 void react_received_secondary(matrix_row_t matrix[]) {
     static int32_t timer_diff = 0;
-    uint8_t        sstd_index;
+    int32_t        sstd_index;
     // todo timer sync task
     sync_timer_update(timer_read32() + timer_diff);
 

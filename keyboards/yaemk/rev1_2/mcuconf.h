@@ -17,7 +17,7 @@
 #ifndef MCUCONF_H
 #define MCUCONF_H
 
-#define STM32F103_MCUCONF
+#define GD32VF103_MCUCONF
 
 /*
  * STM32F103 drivers configuration.
@@ -193,18 +193,20 @@
 #define STM32_UART_USART1_IRQ_PRIORITY      5
 #define STM32_UART_USART2_IRQ_PRIORITY      5
 #define STM32_UART_USART3_IRQ_PRIORITY      5
-#define STM32_UART_USART1_DMA_PRIORITY      0
-#define STM32_UART_USART2_DMA_PRIORITY      0
-#define STM32_UART_USART3_DMA_PRIORITY      0
+#define STM32_UART_USART1_DMA_PRIORITY      1
+#define STM32_UART_USART2_DMA_PRIORITY      1
+#define STM32_UART_USART3_DMA_PRIORITY      1
 #define STM32_UART_DMA_ERROR_HOOK(uartp)    osalSysHalt("DMA failure")
 
 /*
  * USB driver system settings.
  */
-#define STM32_USB_USE_USB1                  TRUE
-#define STM32_USB_LOW_POWER_ON_SUSPEND      FALSE
-#define STM32_USB_USB1_HP_IRQ_PRIORITY      13
-#define STM32_USB_USB1_LP_IRQ_PRIORITY      14
+#define STM32_USB_USE_OTG1                  TRUE
+#define STM32_USB_OTG1_IRQ_PRIORITY         14
+#define STM32_USB_OTG1_RX_FIFO_SIZE         512
+#define STM32_USB_OTG_THREAD_PRIO           NORMALPRIO+3
+#define STM32_USB_OTG_THREAD_STACK_SIZE     128
+#define STM32_USB_OTGFIFO_FILL_BASEPRI      0
 
 /*
  * WDG driver system settings.

@@ -17,12 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-/* USB Device descriptor parameter */
-#define VENDOR_ID 0x4B4B   // KK
-#define PRODUCT_ID 0x5941  // YA
-#define DEVICE_VER 0x0001
-#define MANUFACTURER YAEMK
-
 /* key matrix size */
 #define MATRIX_ROWS 10
 #define MATRIX_COLS 8
@@ -40,12 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_ANIMATIONS
 #define RGBLED_SPLIT \
     { 33, 33 }
-#define RGBLIGHT_SPLIT
+#define ALLOW_WARNINGS
 #define RGBLIGHT_LIMIT_VAL 192
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS RGBLIGHT_LIMIT_VAL
-#define RGB_MATRIX_SPLIT RGBLED_SPLIT
-//#define SPLIT_TRANSPORT_MIRROR
-#define RGB_MATRIX_LED_PROCESS_LIMIT (DRIVER_LED_TOTAL + 4) / 5 // limits the number of LEDs to process in an animation per task run (increases keyboard responsiveness)
+#define SPLIT_TRANSPORT_MIRROR
+#define RGB_MATRIX_LED_PROCESS_LIMIT DRIVER_LED_TOTAL / 10 // limits the number of LEDs to process in an animation per task run (increases keyboard responsiveness)
 #define RGB_MATRIX_LED_FLUSH_LIMIT 16 // limits in milliseconds how frequently an animation will update the LEDs. 16 (16ms) is equivalent to limiting to 60fps (increases keyboard responsiveness)
 
 #ifdef RGBLIGHT_ENABLE
@@ -90,7 +83,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USB_POLLING_INTERVAL_MS 1
 
 #define SPLIT_USB_DETECT
-//#define SPLIT_USB_TIMEOUT 10000
 
 #define SERIAL_PIN_TX B6  // USART TX pin
 #define SERIAL_PIN_RX B7  // USART TX pin
@@ -103,9 +95,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define SERIAL_USART_SPEED 4500000
 //#define SERIAL_USART_SPEED 2250000
 //#define SERIAL_SPEED 0
-#define SERIAL_USART_DRIVER UARTD1  // USART driver of TX pin. default: SD1
+//#define SERIAL_USART_DRIVER UARTD1  // USART driver of TX pin. default: SD1
 #define SERIAL_USART_TX_PAL_MODE 7  // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 7
 
 /* Set 0 if debouncing isn't needed */
-#define DEBOUNCE 4
+#define DEBOUNCE 8
 #define TAPPING_TOGGLE 2

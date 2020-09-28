@@ -2,6 +2,11 @@
 
 #include "config_common.h"
 
+/* USB Device descriptor parameter */
+#define VENDOR_ID 0x4B4B   // KK
+#define PRODUCT_ID 0x5941  // YA
+#define DEVICE_VER 0x0002
+#define MANUFACTURER YAEMK
 #define PRODUCT YAEMK 1.1
 #define DESCRIPTION YAEMK 1.1
 
@@ -27,10 +32,10 @@
 #define RGB_MATRIX_SPLIT RGBLED_SPLIT
 #define SPLIT_TRANSPORT_MIRROR
 #define SPLIT_HAND_PIN B9
-//#define I2C_DRIVER I2CD2
-//#define I2C1_BANK GPIOB
-//#define I2C1_SCL 10  // pin 21
-//#define I2C1_SDA 11  // pin 22
+#define I2C_DRIVER I2CD2
+#define I2C1_BANK GPIOB
+#define I2C1_SCL 10  // pin 21
+#define I2C1_SDA 11  // pin 22
 //#define OLED_DISPLAY_ADDRESS 0x3C
 //#    define OLED_IC OLED_IC_SH1106
 #define OLED_DISPLAY_128X64
