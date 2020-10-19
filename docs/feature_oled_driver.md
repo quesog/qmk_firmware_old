@@ -306,12 +306,6 @@ bool oled_off(void);
 // not
 bool is_oled_on(void);
 
-// Sets the brightness level of the display
-uint8_t oled_set_brightness(uint8_t level);
-
-// Gets the current brightness level of the display
-uint8_t oled_get_brightness(void);
-
 // Basically it's oled_render, but with timeout management and oled_task_user calling!
 void oled_task(void);
 
