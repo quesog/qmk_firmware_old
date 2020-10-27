@@ -300,7 +300,6 @@ void transport_task(void) {
 bool transport_primary(matrix_row_t matrix[]) {
 #    ifdef SPLIT_TRANSPORT_MIRROR
     if (keyboard_state.matrix_changed || keyboard_state.encoder_changed) {
-        chMtxLock(&transactions_mutex);
         // TODO: if MATRIX_COLS > 8 change to pack()
         for (int i = 0; i < ROWS_PER_HAND; ++i) {
             serial_s2m_buffer.smatrix[i] = matrix[i];
@@ -310,14 +309,11 @@ bool transport_primary(matrix_row_t matrix[]) {
         encoder_state_raw((uint8_t *)serial_s2m_buffer.encoder_state);
         //   }
 #        endif
-        chMtxUnlock(&transactions_mutex);
         if (serial_transaction(SEND_MATRIX_TO_SECONDARY) != TRANSACTION_END) {
             // return;
         }
     }
 #    endif
-
-    chMtxLock(&transactions_mutex);
 
     bool           send_meta           = false;
 #    ifdef BACKLIGHT_ENABLE
@@ -345,7 +341,6 @@ bool transport_primary(matrix_row_t matrix[]) {
         serial_m2s_buffer.sync_timer = sync_timer_read32();
         send_meta                    = true;
     }
-    chMtxUnlock(&transactions_mutex);
 
     if (send_meta) {
         if (serial_transaction(SEND_METADATA_TO_SECONDARY) != TRANSACTION_END) {
@@ -357,7 +352,6 @@ bool transport_primary(matrix_row_t matrix[]) {
 
 void transport_secondary(matrix_row_t matrix[]) {
     if (keyboard_state.matrix_changed || keyboard_state.encoder_changed) {
-        chMtxLock(&transactions_mutex);
         // TODO: if MATRIX_COLS > 8 change to pack()
         for (int i = 0; i < ROWS_PER_HAND; ++i) {
             serial_s2m_buffer.smatrix[i] = matrix[i];
@@ -367,7 +361,6 @@ void transport_secondary(matrix_row_t matrix[]) {
         encoder_state_raw((uint8_t *)serial_s2m_buffer.encoder_state);
         //   }
 #    endif
-        chMtxUnlock(&transactions_mutex);
         if (serial_transaction(SEND_MATRIX_TO_PRIMARY) != TRANSACTION_END) {
             // return;
         }
@@ -385,10 +378,10 @@ void react_received_primary(matrix_row_t matrix[]) {
         return;
     }
 
+    chMtxLock(&transactions_mutex);
+
     // Primary Received Matrix Changes from the Secondary Half, so we have to update our Matrix with the changes
     if (sstd_index == SEND_MATRIX_TO_PRIMARY) {
-        chMtxLock(&transactions_mutex);
-
         // TODO:  if MATRIX_COLS > 8 change to unpack()
         for (int i = 0; i < ROWS_PER_HAND; ++i) {
             matrix[i] = serial_s2m_buffer.smatrix[i];
@@ -396,8 +389,9 @@ void react_received_primary(matrix_row_t matrix[]) {
 #    ifdef ENCODER_ENABLE
         encoder_update_raw((uint8_t *)serial_s2m_buffer.encoder_state);
 #    endif
-        chMtxUnlock(&transactions_mutex);
     }
+
+    chMtxUnlock(&transactions_mutex);
 }
 
 void react_received_secondary(matrix_row_t matrix[]) {
@@ -414,9 +408,9 @@ void react_received_secondary(matrix_row_t matrix[]) {
         return;
     }
 
-    if (sstd_index == SEND_METADATA_TO_SECONDARY) {
-        chMtxLock(&transactions_mutex);
+    chMtxLock(&transactions_mutex);
 
+    if (sstd_index == SEND_METADATA_TO_SECONDARY) {
         timer_diff = timer_read32() - serial_m2s_buffer.sync_timer;  // todo offset calculation
 
 #    ifdef WPM_ENABLE
@@ -426,12 +420,10 @@ void react_received_secondary(matrix_row_t matrix[]) {
 #    ifdef BACKLIGHT_ENABLE
         backlight_set(serial_m2s_buffer.backlight_level);
 #    endif
-        chMtxUnlock(&transactions_mutex);
     }
 
 #    ifdef SPLIT_TRANSPORT_MIRROR
-    if (sstd_index == SEND_MATRIX_TO_SECONDARY) {
-        chMtxLock(&transactions_mutex);
+    else if (sstd_index == SEND_MATRIX_TO_SECONDARY) {
 
         // TODO:  if MATRIX_COLS > 8 change to unpack()
         for (int i = 0; i < ROWS_PER_HAND; ++i) {
@@ -440,9 +432,10 @@ void react_received_secondary(matrix_row_t matrix[]) {
 #        ifdef ENCODER_ENABLE
         encoder_update_raw((uint8_t *)serial_s2m_buffer.encoder_state);
 #        endif
-        chMtxUnlock(&transactions_mutex);
     }
 #    endif
+
+    chMtxUnlock(&transactions_mutex);
 }
 
 #    undef RGB_SHOULD_SPLIT

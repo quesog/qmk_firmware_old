@@ -86,11 +86,8 @@ extern mutex_t transactions_mutex;
 
 static volatile uint8_t handshake = 0xFF;
 
-static thread_reference_t tp_initiator = NULL;
-static thread_reference_t tp_target    = NULL;
+static thread_reference_t tp_target = NULL;
 
-static msg_t mailbox_buffer[8];
-MAILBOX_DECL(transaction_mailbox, &mailbox_buffer, 8);
 static msg_t mailbox_receive_buffer[8];
 MAILBOX_DECL(transaction_received_mailbox, &mailbox_receive_buffer, 8);
 
@@ -113,10 +110,10 @@ static void rxchar(UARTDriver* uartp, uint16_t c) {
 __attribute__((weak)) void usart_init(void) {
 #if defined(USE_GPIOV1)
     palSetLineMode(SERIAL_USART_TX_PIN, PAL_MODE_STM32_ALTERNATE_PUSHPULL);
-    palSetLineMode(SERIAL_USART_RX_PIN, PAL_MODE_INPUT);
+    palSetLineMode(SERIAL_USART_RX_PIN, PAL_MODE_INPUT_PULLDOWN);
 #else
     palSetLineMode(SERIAL_USART_TX_PIN, PAL_MODE_ALTERNATE(SERIAL_USART_TX_PAL_MODE) | PAL_STM32_OTYPE_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
-    palSetLineMode(SERIAL_USART_RX_PIN, PAL_STM32_MODE_INPUT);
+    palSetLineMode(SERIAL_USART_RX_PIN, PAL_MODE_INPUT_PULLDOWN);
 #endif
 }
 
@@ -186,32 +183,6 @@ int receive_transaction(uint8_t sstd_index) {
 }
 
 /*
- * This thread i
- */
-static THD_WORKING_AREA(waInitiatorThread, 512);
-static THD_FUNCTION(InitiatorThread, arg) {
-    (void)arg;
-    chRegSetThreadName("initiator_usart_tx_rx");
-
-    tp_initiator = chThdGetSelfX();
-
-    uint8_t sstd_index = 0xFF;
-    while (true) {
-        msg_t msg = chMBFetchTimeout(&transaction_mailbox, (msg_t*)(&sstd_index), TIME_INFINITE);
-
-        if (msg == MSG_OK) {
-            chMtxLock(&transactions_mutex);
-            for (int8_t error_count = 0; error_count < 3; error_count++) {
-                if (start_transaction(sstd_index) == TRANSACTION_END) {
-                    break;
-                }
-            };
-            chMtxUnlockAll();
-        }
-    }
-}
-
-/*
  * This thread runs on the target half and reacts to transactions init from the initiator.
  */
 static THD_WORKING_AREA(waTargetThread, 512);
@@ -224,9 +195,9 @@ static THD_FUNCTION(TargetThread, arg) {
     while (true) {
         chEvtWaitAny((eventmask_t)1);
 
-        chMtxLock(&transactions_mutex);
+        // chMtxLock(&transactions_mutex);
         int msg = receive_transaction(handshake);
-        chMtxUnlockAll();
+        // chMtxUnlockAll();
         if (msg == TRANSACTION_ACCEPTED) {
             chSysLock();
             chMBPostI(&transaction_received_mailbox, (msg_t)handshake);
@@ -289,14 +260,16 @@ int start_transaction(uint8_t sstd_index) {
  *             TRANSACTION_END in case of success.
  */
 int serial_transaction(int sstd_index) {
-    chSysLock();
-    msg_t msg = chMBPostI(&transaction_mailbox, (msg_t)sstd_index);
-    chSysUnlock();
-    if (msg == MSG_OK) {
-        return TRANSACTION_END;
-    } else {
-        return TRANSACTION_NO_RESPONSE;
-    }
+    int status = TRANSACTION_END;
+
+    for (int8_t error_count = 0; error_count < 3; error_count++) {
+        int status = start_transaction(sstd_index);
+        if (status == TRANSACTION_END) {
+            break;
+        }
+    };
+
+    return status;
 }
 
 void serial_init(SSTD_t* const sstd_table, int sstd_table_size) {
@@ -304,6 +277,5 @@ void serial_init(SSTD_t* const sstd_table, int sstd_table_size) {
     Transaction_table_size = (uint8_t)sstd_table_size;
     usart_init();
     uartStart(&SERIAL_USART_DRIVER, &uart_config);
-    chThdCreateStatic(waInitiatorThread, sizeof(waInitiatorThread), NORMALPRIO + 1, InitiatorThread, NULL);
     chThdCreateStatic(waTargetThread, sizeof(waTargetThread), NORMALPRIO + 2, TargetThread, NULL);
 }
