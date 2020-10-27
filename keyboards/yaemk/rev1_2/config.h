@@ -28,19 +28,5 @@
 #define ENCODERS_PAD_B \
     { A7 }
 
-#if defined(RGB_MATRIX_ENABLE)
-#define RGBLIGHT_SPLIT
-#define RGB_MATRIX_SPLIT RGBLED_SPLIT
-#endif
-
 #define SPLIT_TRANSPORT_MIRROR
 #define SPLIT_HAND_PIN B9
-#define I2C_DRIVER I2CD2
-#define I2C1_BANK GPIOB
-#define I2C1_SCL 10  // pin 21
-#define I2C1_SDA 11  // pin 22
-//#define OLED_DISPLAY_ADDRESS 0x3C
-//#    define OLED_IC OLED_IC_SH1106
-#define OLED_DISPLAY_128X64
-#ifdef OLED_DRIVER_ENABLE
-#endif

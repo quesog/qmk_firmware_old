@@ -24,7 +24,6 @@
 /*
  * Board identifier.
  */
-#define BOARD_STM32_F103_STM32DUINO
 #define BOARD_NAME              "YAEMK BOARD WITH GD32F103CBT6 - stm32duino bootloader"
 
 /*
@@ -37,16 +36,6 @@
  * MCU type, supported types are defined in ./os/hal/platforms/hal_lld.h.
  */
 #define STM32F103xB
-
-/*
- * IO pins assignments
- */
-
-/* on-board */
-
-#define GPIOA_LED               8
-#define GPIOD_OSC_IN            0
-#define GPIOD_OSC_OUT           1
 
 /* In case your board has a "USB enable" hardware
    controlled by a pin, define it here. (It could be just
@@ -139,18 +128,12 @@
    However on some boards (e.g. one that I have), there's no
    such hardware. In which case it's better to not do anything.
 */
-/*
-#define usb_lld_connect_bus(usbp) palClearPad(GPIOB, GPIOB_USB_DISC)
-*/
-//#define usb_lld_connect_bus(usbp) palSetPadMode(GPIOA, 12, PAL_MODE_INPUT);
+#define usb_lld_connect_bus(usbp) palSetPadMode(GPIOA, 12, PAL_MODE_INPUT);
 
 /*
  * USB bus de-activation macro, required by the USB driver.
  */
-/*
-#define usb_lld_disconnect_bus(usbp) palSetPad(GPIOB, GPIOB_USB_DISC)
-*/
-//#define usb_lld_disconnect_bus(usbp) palSetPadMode(GPIOA, 12, PAL_MODE_OUTPUT_PUSHPULL); palClearPad(GPIOA, 12);
+#define usb_lld_disconnect_bus(usbp) palSetPadMode(GPIOA, 12, PAL_MODE_OUTPUT_PUSHPULL); palClearPad(GPIOA, 12);
 
 #if !defined(_FROM_ASM_)
 #ifdef __cplusplus

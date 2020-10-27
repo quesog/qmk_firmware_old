@@ -104,7 +104,7 @@
  * I2C driver system settings.
  */
 #define STM32_I2C_USE_I2C1                  FALSE
-#define STM32_I2C_USE_I2C2                  TRUE
+#define STM32_I2C_USE_I2C2                  FALSE
 #define STM32_I2C_BUSY_TIMEOUT              50
 #define STM32_I2C_I2C1_IRQ_PRIORITY         5
 #define STM32_I2C_I2C2_IRQ_PRIORITY         5
@@ -181,7 +181,7 @@
 /*
  * ST driver system settings.
  */
-#define STM32_ST_IRQ_PRIORITY               8
+#define STM32_ST_IRQ_PRIORITY               14
 #define STM32_ST_USE_TIMER                  2
 
 /*
@@ -190,19 +190,19 @@
 #define STM32_UART_USE_USART1               TRUE
 #define STM32_UART_USE_USART2               FALSE
 #define STM32_UART_USE_USART3               FALSE
-#define STM32_UART_USART1_IRQ_PRIORITY      5
+#define STM32_UART_USART1_IRQ_PRIORITY      10
 #define STM32_UART_USART2_IRQ_PRIORITY      5
 #define STM32_UART_USART3_IRQ_PRIORITY      5
-#define STM32_UART_USART1_DMA_PRIORITY      1
-#define STM32_UART_USART2_DMA_PRIORITY      1
-#define STM32_UART_USART3_DMA_PRIORITY      1
+#define STM32_UART_USART1_DMA_PRIORITY      0
+#define STM32_UART_USART2_DMA_PRIORITY      0
+#define STM32_UART_USART3_DMA_PRIORITY      0
 #define STM32_UART_DMA_ERROR_HOOK(uartp)    osalSysHalt("DMA failure")
 
 /*
  * USB driver system settings.
  */
 #define STM32_USB_USE_OTG1                  TRUE
-#define STM32_USB_OTG1_IRQ_PRIORITY         14
+#define STM32_USB_OTG1_IRQ_PRIORITY         2
 #define STM32_USB_OTG1_RX_FIFO_SIZE         512
 #define STM32_USB_OTG_THREAD_PRIO           NORMALPRIO+3
 #define STM32_USB_OTG_THREAD_STACK_SIZE     128

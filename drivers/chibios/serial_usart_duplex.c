@@ -259,7 +259,7 @@ int start_transaction(uint8_t sstd_index) {
  *             TRANSACTION_TYPE_ERROR in case of invalid transaction index.
  *             TRANSACTION_END in case of success.
  */
-int serial_transaction(int sstd_index) {
+int soft_serial_transaction(int sstd_index) {
     int status = TRANSACTION_END;
 
     for (int8_t error_count = 0; error_count < 3; error_count++) {

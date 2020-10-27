@@ -309,7 +309,7 @@ bool transport_primary(matrix_row_t matrix[]) {
         encoder_state_raw((uint8_t *)serial_s2m_buffer.encoder_state);
         //   }
 #        endif
-        if (serial_transaction(SEND_MATRIX_TO_SECONDARY) != TRANSACTION_END) {
+        if (soft_serial_transaction(SEND_MATRIX_TO_SECONDARY) != TRANSACTION_END) {
             // return;
         }
     }
@@ -343,7 +343,7 @@ bool transport_primary(matrix_row_t matrix[]) {
     }
 
     if (send_meta) {
-        if (serial_transaction(SEND_METADATA_TO_SECONDARY) != TRANSACTION_END) {
+        if (soft_serial_transaction(SEND_METADATA_TO_SECONDARY) != TRANSACTION_END) {
             // return;
         }
     }
@@ -361,7 +361,7 @@ void transport_secondary(matrix_row_t matrix[]) {
         encoder_state_raw((uint8_t *)serial_s2m_buffer.encoder_state);
         //   }
 #    endif
-        if (serial_transaction(SEND_MATRIX_TO_PRIMARY) != TRANSACTION_END) {
+        if (soft_serial_transaction(SEND_MATRIX_TO_PRIMARY) != TRANSACTION_END) {
             // return;
         }
     }
