@@ -19,7 +19,7 @@ void keyboard_post_init_user(void) {
 }
 
 void matrix_io_delay(void) {
-    for (int32_t i = 0; i <= 50; i++) {
+    for (int32_t i = 0; i <= BUSY_WAIT_INSTRUCTIONS; i++) {
         __asm__ volatile("nop");
     }
 }
