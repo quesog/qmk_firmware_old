@@ -93,6 +93,7 @@ MAILBOX_DECL(transaction_received_mailbox, &mailbox_receive_buffer, 8);
 
 int start_transaction(uint8_t sstd_index);
 int receive_transaction(uint8_t sstd_index);
+void serial_init(SSTD_t* const sstd_table, int sstd_table_size);
 
 /*
  * This callback is invoked when a character is received but the application
@@ -271,6 +272,12 @@ int soft_serial_transaction(int sstd_index) {
 
     return status;
 }
+
+// initiator is transaction start side
+void soft_serial_initiator_init(SSTD_t* sstd_table, int sstd_table_size) { serial_init(sstd_table, sstd_table_size); }
+
+// target is interrupt accept side
+void soft_serial_target_init(SSTD_t* sstd_table, int sstd_table_size) { serial_init(sstd_table, sstd_table_size); }
 
 void serial_init(SSTD_t* const sstd_table, int sstd_table_size) {
     Transaction_table      = sstd_table;
