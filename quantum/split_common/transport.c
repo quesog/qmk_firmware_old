@@ -305,12 +305,9 @@ bool transport_primary(matrix_row_t matrix[]) {
             serial_s2m_buffer.smatrix[i] = matrix[i];
         }
 #        ifdef ENCODER_ENABLE
-        //  if (keyboard_state.encoder_changed) {
         encoder_state_raw((uint8_t *)serial_s2m_buffer.encoder_state);
-        //   }
 #        endif
         if (soft_serial_transaction(SEND_MATRIX_TO_SECONDARY) != TRANSACTION_END) {
-            // return;
         }
     }
 #    endif
@@ -357,12 +354,9 @@ void transport_secondary(matrix_row_t matrix[]) {
             serial_s2m_buffer.smatrix[i] = matrix[i];
         }
 #    ifdef ENCODER_ENABLE
-        //  if (keyboard_state.encoder_changed) {
         encoder_state_raw((uint8_t *)serial_s2m_buffer.encoder_state);
-        //   }
 #    endif
         if (soft_serial_transaction(SEND_MATRIX_TO_PRIMARY) != TRANSACTION_END) {
-            // return;
         }
     }
 }

@@ -338,12 +338,6 @@ void keyboard_task(void) {
     uint8_t keys_processed = 0;
 #endif
 
-#ifdef OLED_DRIVER_ENABLE
-    uint8_t matrix_scan_res = matrix_scan();
-#else
-    matrix_scan();
-#endif
-
     housekeeping_task_kb();
     housekeeping_task_user();
 

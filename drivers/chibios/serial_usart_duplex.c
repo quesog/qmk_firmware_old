@@ -91,8 +91,8 @@ static thread_reference_t tp_target = NULL;
 static msg_t mailbox_receive_buffer[8];
 MAILBOX_DECL(transaction_received_mailbox, &mailbox_receive_buffer, 8);
 
-int start_transaction(uint8_t sstd_index);
-int receive_transaction(uint8_t sstd_index);
+int  start_transaction(uint8_t sstd_index);
+int  receive_transaction(uint8_t sstd_index);
 void serial_init(SSTD_t* const sstd_table, int sstd_table_size);
 
 /*
@@ -123,7 +123,6 @@ __attribute__((weak)) void usart_init(void) {
  * This version uses duplex send and receive usart pheriphals and DMA backed transfers.
  */
 int receive_transaction(uint8_t sstd_index) {
-    // println("Receiving!");
     size_t buffer_size = (size_t)sizeof(sstd_index);
     msg_t  msg         = 0;
 
