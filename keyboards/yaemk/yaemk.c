@@ -18,9 +18,10 @@ void keyboard_post_init_user(void) {
     // debug_mouse=true;
 }
 
+#if defined(BUSY_WAIT)
 void matrix_io_delay(void) {
     for (int32_t i = 0; i <= BUSY_WAIT_INSTRUCTIONS; i++) {
         __asm__ volatile("nop");
     }
 }
-
+#endif
