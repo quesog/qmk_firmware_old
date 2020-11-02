@@ -43,7 +43,7 @@
  * @note    Allowed values are 16 or 32 bits.
  */
 #if !defined(CH_CFG_ST_RESOLUTION)
-#define CH_CFG_ST_RESOLUTION                32
+#define CH_CFG_ST_RESOLUTION                16
 #endif
 
 /**
@@ -52,7 +52,7 @@
  *          setting also defines the system tick time unit.
  */
 #if !defined(CH_CFG_ST_FREQUENCY)
-#define CH_CFG_ST_FREQUENCY                 100000
+#define CH_CFG_ST_FREQUENCY                 10000
 #endif
 
 /**
@@ -80,7 +80,7 @@
  *          this value.
  */
 #if !defined(CH_CFG_ST_TIMEDELTA)
-#define CH_CFG_ST_TIMEDELTA                 0
+#define CH_CFG_ST_TIMEDELTA                 2
 #endif
 
 /** @} */
