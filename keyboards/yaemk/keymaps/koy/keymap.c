@@ -1,6 +1,4 @@
 /*
-Copyright 2012,2013 Jun Wako <wakojun@gmail.com>
-
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -15,27 +13,44 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include QMK_KEYBOARD_H
+#include "keymap_german.h"
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 enum Layers {
-    _BASE = 0,
-    _FN   = 1,
-    _RGB  = 2,
-    _GAME = 3,
+    _BASE    = 0,
+    _SYM = 1,
+    _NAV     = 2,
+    _FN      = 3,
+    _RGB     = 4,
+    _GAME    = 5,
 };
 
 // clang-format off
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT( \
-     KC_ESC         , KC_1          , KC_2          , KC_3          , KC_4          , KC_5          , LCTL(KC_GRV)  ,                                 KC_ESC        , KC_6          , KC_7          , KC_8          , KC_9          , KC_0          , KC_MINS       ,\
-     KC_TAB         , KC_Q          , KC_W          , KC_E          , KC_R          , KC_T          , MO(_RGB)      ,                                 MO(_RGB)      , KC_Y          , KC_U          , KC_I          , KC_O          , KC_P          , KC_LBRC       ,\
-     KC_CAPS        , LGUI_T(KC_A)  , LALT_T(KC_S)  , LCTL_T(KC_D)  , LSFT_T(KC_F)  , KC_G          , MO(_FN)       ,                                 MO(_FN)       , KC_H          , LSFT_T(KC_J)  , LCTL_T(KC_K)  , LALT_T(KC_L)  ,LGUI_T(KC_SCLN), KC_QUOT       ,\
-     KC_NUBS        , KC_Z          , KC_X          , KC_C          , KC_V          , KC_B          , KC_BSPC       , KC_BSPC       , KC_ENT        , KC_ENT        , KC_N          , KC_M          , KC_COMM       , KC_DOT        , KC_SLSH       , KC_NUBS       ,\
-                                                      DF(_GAME)     , KC_ESC        , KC_CAPS       , KC_BSPC       , KC_LGUI       , KC_CAPS       , KC_ENT        , MT(KC_CAPS,KC_SPC), KC_LALT   , DF(_GAME)\
+     KC_ESC         , KC_1          , KC_2          , KC_3          , KC_4          , KC_5          , LCTL(KC_GRV)  ,                                 KC_ESC        , KC_6          , KC_7          , KC_8          , KC_9          , KC_0          , DE_MINS       ,\
+     KC_TAB         , DE_K          , DE_DOT        , DE_O          , DE_COMM       , DE_Y          , MO(_RGB)      ,                                 MO(_RGB)      , DE_V          , DE_G          , DE_C          , DE_L          , DE_SS         , DE_Z          ,\
+     MO(_SYM)       , LGUI_T(DE_H)  , LALT_T(DE_A)  , LCTL_T(DE_E)  , LSFT_T(DE_I)  , DE_U          , MO(_FN)       ,                                 MO(_FN)       , DE_D          , LSFT_T(DE_T)  , LCTL_T(DE_R)  , LALT_T(DE_N)  , LGUI_T(DE_S)  , DE_F          ,\
+     MO(_NAV)       , DE_X          , DE_Q          , DE_ADIA       , DE_UDIA       , DE_ODIA       , KC_BSPC       , MO(_NAV)      , MO(_SYM)      , KC_ENT        , DE_B          , DE_P          , DE_W          , DE_M          , DE_J          , MO(_NAV)      ,\
+                                                      DF(_GAME)     , KC_ESC        , MO(_SYM)      , KC_BSPC       , MO(_NAV)      , MO(_SYM)      , KC_ENT        , LT(_SYM,KC_SPC), KC_LALT      , DF(_GAME)\
+  ),
+   [_SYM] = LAYOUT( \
+    _______         , _______       , _______       , _______       , _______       , _______       , _______       ,                                 _______       , _______       , _______       , _______       , _______       , _______       , _______       ,\
+    _______         , _______       , DE_UNDS       , DE_LBRC       , DE_RBRC       , DE_CIRC       , _______       ,                                 _______       , DE_EXLM       , DE_LABK       , DE_RABK       , DE_EQL        , DE_AMPR       , _______       ,\
+    _______         , DE_BSLS       , DE_SLSH       , DE_LCBR       , DE_RCBR       , DE_ASTR       , _______       ,                                 _______       , DE_QUES       , DE_LPRN       , DE_RPRN       , DE_MINS       , DE_COLN       , DE_AT         ,\
+    _______         , DE_HASH       , DE_DLR        , DE_PIPE       , DE_TILD       , DE_GRV        , _______       , _______       , _______       , _______       , DE_PLUS       , DE_PERC       , DE_DQOT       , DE_QUOT       , DE_SCLN       , _______       ,\
+                                                      _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______ \
+  ),
+   [_NAV] = LAYOUT( \
+    _______         , _______       , _______       , _______       , _______       , _______       , _______       ,                                 _______       , _______       , _______       , _______       , DE_SLSH       , DE_ASTR       , _______       ,\
+    _______         , KC_PGUP       , KC_BSPC       , KC_UP         , KC_DELETE     , KC_PGDN       , _______       ,                                 _______       , _______       , KC_7          , KC_8          , KC_9          , DE_PLUS       , DE_MINS       ,\
+    _______         , KC_HOME       , KC_LEFT       , KC_DOWN       , KC_RIGHT      , KC_END        , _______       ,                                 _______       , _______       , KC_4          , KC_5          , KC_6          , DE_COMM       , DE_DOT        ,\
+    _______         , KC_ESC        , KC_TAB        , _______       , KC_ENT        , _______       , _______       , _______       , _______       , _______       , _______       , KC_1          , KC_2          , KC_3          , DE_SCLN       , _______       ,\
+                                                      _______       , _______       , _______       , _______       , _______       , _______       , _______       , KC_0          , _______       , _______ \
   ),
    [_FN] = LAYOUT( \
     _______         , _______       , KC_ACL0       , KC_ACL1       , KC_ACL2       , RESET         , _______       ,                                 _______       , RESET         , KC_F10        , KC_F11        , KC_F12        , _______       , _______       ,\
