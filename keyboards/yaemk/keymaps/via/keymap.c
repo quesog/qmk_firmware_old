@@ -1,6 +1,4 @@
 /*
-Copyright 2012,2013 Jun Wako <wakojun@gmail.com>
-
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
@@ -15,16 +13,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include QMK_KEYBOARD_H
+#include "keymap_neo2.h"
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 enum Layers {
-    _BASE = 0,
-    _FN   = 1,
-    _RGB  = 2,
-    _GAME = 3,
+    _BASE    = 0,
+    _SYMBOLS = 1,
+    _NAV     = 2,
+    _FN      = 3,
+    _RGB     = 4,
+    _GAME    = 5,
 };
 
 // clang-format off
@@ -35,7 +36,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      KC_TAB         , KC_Q          , KC_W          , KC_E          , KC_R          , KC_T          , MO(_RGB)      ,                                 MO(_RGB)      , KC_Y          , KC_U          , KC_I          , KC_O          , KC_P          , KC_LBRC       ,\
      KC_CAPS        , LGUI_T(KC_A)  , LALT_T(KC_S)  , LCTL_T(KC_D)  , LSFT_T(KC_F)  , KC_G          , MO(_FN)       ,                                 MO(_FN)       , KC_H          , LSFT_T(KC_J)  , LCTL_T(KC_K)  , LALT_T(KC_L)  ,LGUI_T(KC_SCLN), KC_QUOT       ,\
      KC_NUBS        , KC_Z          , KC_X          , KC_C          , KC_V          , KC_B          , KC_BSPC       , KC_BSPC       , KC_ENT        , KC_ENT        , KC_N          , KC_M          , KC_COMM       , KC_DOT        , KC_SLSH       , KC_NUBS       ,\
-                                                      DF(_GAME)     , KC_ESC        , KC_CAPS       , KC_BSPC       , KC_LGUI       , KC_CAPS       , KC_ENT        , MT(KC_CAPS,KC_SPC), KC_LALT   , DF(_GAME)\
+                                                      DF(_GAME)     , KC_ESC        , KC_CAPS       , KC_BSPC       , KC_NUBS       , KC_CAPS       , KC_ENT        , MT(KC_CAPS,KC_SPC), KC_LALT   , DF(_GAME)\
+  ),
+   [_SYMBOLS] = LAYOUT( \
+    _______         , _______       , KC_ACL0       , KC_ACL1       , KC_ACL2       , RESET         , _______       ,                                 _______       , RESET         , KC_F10        , KC_F11        , KC_F12        , _______       , _______       ,\
+    _______         , _______       , KC_BTN1       , KC_MS_U       , KC_BTN2       , KC_PSCR       , _______       ,                                 _______       , _______       , KC_F7         , KC_F8         , KC_F9         , _______       , _______       ,\
+    _______         , _______       , KC_MS_L       , KC_MS_D       , KC_MS_R       , _______       , _______       ,                                 _______       , _______       , KC_F4         , KC_F5         , KC_F6         , _______       , _______       ,\
+    _______         , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , KC_F1         , KC_F2         , KC_F3         , _______       , _______       ,\
+                                                      _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______ \
+  ),
+   [_NAV] = LAYOUT( \
+    _______         , _______       , KC_ACL0       , KC_ACL1       , KC_ACL2       , RESET         , _______       ,                                 _______       , RESET         , KC_F10        , KC_F11        , KC_F12        , _______       , _______       ,\
+    _______         , _______       , KC_BTN1       , KC_MS_U       , KC_BTN2       , KC_PSCR       , _______       ,                                 _______       , _______       , KC_F7         , KC_F8         , KC_F9         , _______       , _______       ,\
+    _______         , _______       , KC_MS_L       , KC_MS_D       , KC_MS_R       , _______       , _______       ,                                 _______       , _______       , KC_F4         , KC_F5         , KC_F6         , _______       , _______       ,\
+    _______         , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , KC_F1         , KC_F2         , KC_F3         , _______       , _______       ,\
+                                                      _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______       , _______ \
   ),
    [_FN] = LAYOUT( \
     _______         , _______       , KC_ACL0       , KC_ACL1       , KC_ACL2       , RESET         , _______       ,                                 _______       , RESET         , KC_F10        , KC_F11        , KC_F12        , _______       , _______       ,\
