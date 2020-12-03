@@ -138,6 +138,7 @@ void mousekey_on(uint8_t code);
 void mousekey_off(uint8_t code);
 void mousekey_clear(void);
 void mousekey_send(void);
+int8_t times_inv_sqrt2(int8_t x);
 
 #ifdef __cplusplus
 }

@@ -5,10 +5,39 @@
 #define MATRIX_COLS 8
 #define DIODE_DIRECTION COL2ROW
 #define DEBUG_MATRIX_SCAN_RATE
-#define DEBOUNCE 5
+#define DEBOUNCE 8
 #define TAPPING_TOGGLE 2
 #define BUSY_WAIT
-#define BUSY_WAIT_INSTRUCTIONS 50
+#define BUSY_WAIT_INSTRUCTIONS 100
+
+// default but used in macros
+#define TAPPING_TERM 175
+
+// Prevent normal rollover on alphas from accidentally triggering mods.
+#define IGNORE_MOD_TAP_INTERRUPT
+
+// Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
+#define TAPPING_FORCE_HOLD
+
+// Auto Shift and Retro Shift (Auto Shift for Tap Hold).
+#define AUTO_SHIFT_TIMEOUT TAPPING_TERM
+#define AUTO_SHIFT_NO_SETUP
+#define RETRO_SHIFT 500
+
+// Recommended for heavy chording.
+#define QMK_KEYS_PER_SCAN 4
+
+// Mouse key speed and acceleration.
+#undef MOUSEKEY_DELAY
+#define MOUSEKEY_DELAY          0
+#undef MOUSEKEY_INTERVAL
+#define MOUSEKEY_INTERVAL       16
+#undef MOUSEKEY_WHEEL_DELAY
+#define MOUSEKEY_WHEEL_DELAY    0
+#undef MOUSEKEY_MAX_SPEED
+#define MOUSEKEY_MAX_SPEED      6
+#undef MOUSEKEY_TIME_TO_MAX
+#define MOUSEKEY_TIME_TO_MAX    64
 
 /* ENCODER CONFIG */
 #define ENCODER_RESOLUTION 2

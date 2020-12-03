@@ -27,7 +27,8 @@ OLED_DRIVER_ENABLE = no
 WPM_ENABLE = no
 SPLIT_KEYBOARD = yes
 SERIAL_DRIVER = usart_duplex
-VIA_ENABLE = yes
+VIA_ENABLE = no
+BOOTMAGIC_ENABLE = lite
 
 LAYOUTS = split_5x8
 
