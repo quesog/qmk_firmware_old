@@ -29,3 +29,27 @@
     { A7 }
 
 #define SPLIT_HAND_PIN C13
+
+/* WS2812 DRIVER */
+#define RGB_DI_PIN A2
+#    define RGBLIGHT_LIMIT_VAL 192
+#define WS2812_TRST_US 80
+#define WS2812_PWM_DRIVER PWMD2               // default: PWMD2
+#define WS2812_PWM_CHANNEL 3                  // default: 2
+#define WS2812_PWM_PAL_MODE 2                 // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 2
+#define WS2812_DMA_STREAM STM32_DMA1_STREAM2  // DMA Stream for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
+#define WS2812_DMA_CHANNEL 2                  // DMA Channel for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
+#    define RGBLED_NUM 66
+#    define DRIVER_LED_TOTAL RGBLED_NUM
+#    define RGBLED_SPLIT \
+        { 33, 33 }
+/* SERIAL SPLIT DRIVER */
+#define SPLIT_TRANSPORT_MIRROR
+#define SERIAL_PIN_TX B6  // USART TX pin
+#define SERIAL_PIN_RX B7  // USART TX pin
+#define SERIAL_USE_MULTI_TRANSACTION
+#define SERIAL_TIMEOUT_HANDSHAKE 1
+#define SERIAL_TIMEOUT_BUFFER 5
+#define SERIAL_USART_SPEED 921600
+
+#define SPLIT_USB_DETECT

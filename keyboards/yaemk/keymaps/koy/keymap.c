@@ -20,23 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 enum Layers {
-    _BASE    = 0,
-    _SYM = 1,
-    _NAV     = 2,
-    _FN      = 3,
-    _RGB     = 4,
-    _GAME    = 5,
+    _BASE = 0,
+    _SYM  = 1,
+    _NAV  = 2,
+    _FN   = 3,
+    _RGB  = 4,
+    _GAME = 5,
 };
 
 // clang-format off
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT( \
-     KC_ESC         , KC_1          , KC_2          , KC_3          , KC_4          , KC_5          , LCTL(KC_GRV)  ,                                 KC_ESC        , KC_6          , KC_7          , KC_8          , KC_9          , KC_0          , DE_MINS       ,\
+     KC_ESC         , KC_1          , KC_2          , KC_3          , KC_4          , KC_5          , LCTL(DE_CIRC)  ,                                 KC_ESC        , KC_6          , KC_7          , KC_8          , KC_9          , KC_0          , DE_MINS       ,\
      KC_TAB         , DE_K          , DE_DOT        , DE_O          , DE_COMM       , DE_Y          , MO(_RGB)      ,                                 MO(_RGB)      , DE_V          , DE_G          , DE_C          , DE_L          , DE_SS         , DE_Z          ,\
      MO(_SYM)       , LGUI_T(DE_H)  , LALT_T(DE_A)  , LCTL_T(DE_E)  , LSFT_T(DE_I)  , DE_U          , MO(_FN)       ,                                 MO(_FN)       , DE_D          , LSFT_T(DE_T)  , LCTL_T(DE_R)  , LALT_T(DE_N)  , LGUI_T(DE_S)  , DE_F          ,\
-     MO(_NAV)       , DE_X          , DE_Q          , DE_ADIA       , DE_UDIA       , DE_ODIA       , KC_BSPC       , MO(_NAV)      , MO(_SYM)      , KC_ENT        , DE_B          , DE_P          , DE_W          , DE_M          , DE_J          , MO(_NAV)      ,\
-                                                      DF(_GAME)     , KC_ESC        , MO(_SYM)      , KC_BSPC       , MO(_NAV)      , MO(_SYM)      , KC_ENT        , LT(_SYM,KC_SPC), KC_LALT      , DF(_GAME)\
+     MO(_NAV)       , DE_X          , DE_Q          , DE_ADIA       , DE_UDIA       , DE_ODIA       , KC_BSPC       , MO(_NAV)      , MO(_NAV)      , KC_ENT        , DE_B          , DE_P          , DE_W          , DE_M          , DE_J          , MO(_NAV)      ,\
+                                                      DF(_GAME)     , KC_ESC        , MO(_SYM)      , KC_BSPC       , MO(_NAV)      , MO(_NAV)      , KC_ENT        , LT(_SYM,KC_SPC), KC_LALT      , DF(_GAME)\
   ),
    [_SYM] = LAYOUT( \
     _______         , _______       , _______       , _______       , _______       , _______       , _______       ,                                 _______       , _______       , _______       , _______       , _______       , _______       , _______       ,\
@@ -145,29 +145,33 @@ void encoder_update_kb(uint8_t index, bool clockwise) {
 #ifdef OLED_DRIVER_ENABLE
 void oled_task_user(void) {
     // Host Keyboard Layer Status
-    oled_write_P(PSTR("Layer: "), false);
 
     switch (get_highest_layer(layer_state)) {
         case _BASE:
-            oled_write_P(PSTR("Default\n"), false);
+            oled_write_ln_P(PSTR("Base"), false);
+            break;
+        case _SYM:
+            oled_write_ln_P(PSTR("Sym."), false);
+            break;
+        case _NAV:
+            oled_write_ln_P(PSTR("Nav."), false);
             break;
         case _FN:
-            oled_write_P(PSTR("FN\n"), false);
+            oled_write_ln_P(PSTR("Func."), false);
             break;
         case _RGB:
-            oled_write_P(PSTR("ADJ\n"), false);
+            oled_write_ln_P(PSTR("RGB"), false);
             break;
         case _GAME:
-            oled_write_P(PSTR("GAME\n"), false);
+            oled_write_ln_P(PSTR("Game"), false);
+            break;
         default:
             // Or use the write_ln shortcut over adding '\n' to the end of your string
-            oled_write_ln_P(PSTR("Undefined"), false);
+            oled_write_ln_P(PSTR("???"), false);
     }
 
-    // Host Keyboard LED Status
-    led_t led_state = host_keyboard_led_state();
-    oled_write_P(led_state.num_lock ? PSTR("NUM ") : PSTR("    "), false);
-    oled_write_P(led_state.caps_lock ? PSTR("CAP ") : PSTR("    "), false);
-    oled_write_P(led_state.scroll_lock ? PSTR("SCR ") : PSTR("    "), false);
+    if (is_keyboard_master()) {
+        oled_write_ln_P(PSTR("\nPlug!"), false);
+    }
 }
 #endif
