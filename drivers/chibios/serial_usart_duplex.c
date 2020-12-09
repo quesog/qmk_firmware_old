@@ -9,10 +9,13 @@
 #    define USART_CR1_M0 USART_CR1_M  // some platforms (f1xx) dont have this so
 #endif
 
-#ifndef USE_GPIOV1
+#if !defined(USE_GPIOV1)
 // The default PAL alternate modes are used to signal that the pins are used for USART
-#    ifndef SERIAL_USART_TX_PAL_MODE
+#    if !defined(SERIAL_USART_TX_PAL_MODE)
 #        define SERIAL_USART_TX_PAL_MODE 7
+#    endif
+#    if !defined(SERIAL_USART_RX_PAL_MODE)
+#        define SERIAL_USART_RX_PAL_MODE 7
 #    endif
 #endif
 
@@ -78,7 +81,20 @@ static void rxchar(UARTDriver* uartp, uint16_t c);
  * UART driver configuration structure. Only the blocking DMA enabled API is used,
  * therefore all callback functions are set to NULL.
  */
-static UARTConfig uart_config = {.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = rxchar, .rxerr_cb = NULL, .speed = (SERIAL_USART_SPEED), .cr1 = (SERIAL_USART_CR1), .cr2 = (SERIAL_USART_CR2), .cr3 = (SERIAL_USART_CR3)};
+// clang-format off
+static UARTConfig uart_config = {
+    .txend1_cb = NULL,
+    .txend2_cb = NULL,
+    .rxend_cb = NULL,
+    .rxchar_cb = rxchar,
+    .rxerr_cb = NULL,
+    .timeout_cb = NULL,
+    .speed = (SERIAL_USART_SPEED),
+    .cr1 = (SERIAL_USART_CR1),
+    .cr2 = (SERIAL_USART_CR2),
+    .cr3 = (SERIAL_USART_CR3)
+};
+// clang-format on
 
 static SSTD_t* Transaction_table      = NULL;
 static uint8_t Transaction_table_size = 0;
@@ -114,7 +130,7 @@ __attribute__((weak)) void usart_init(void) {
     palSetLineMode(SERIAL_USART_RX_PIN, PAL_MODE_INPUT_PULLDOWN);
 #else
     palSetLineMode(SERIAL_USART_TX_PIN, PAL_MODE_ALTERNATE(SERIAL_USART_TX_PAL_MODE) | PAL_STM32_OTYPE_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
-    palSetLineMode(SERIAL_USART_RX_PIN, PAL_MODE_INPUT_PULLDOWN);
+    palSetLineMode(SERIAL_USART_RX_PIN, PAL_MODE_ALTERNATE(SERIAL_USART_RX_PAL_MODE) | PAL_STM32_OTYPE_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
 #endif
 }
 
@@ -273,7 +289,12 @@ int soft_serial_transaction(int sstd_index) {
 }
 
 // initiator is transaction start side
-void soft_serial_initiator_init(SSTD_t* sstd_table, int sstd_table_size) { serial_init(sstd_table, sstd_table_size); }
+void soft_serial_initiator_init(SSTD_t* sstd_table, int sstd_table_size) {
+    serial_init(sstd_table, sstd_table_size);
+#if defined(SERIAL_USART_PIN_SWAP)
+    uart_config.cr2 |= ~USART_CR2_SWAP;  // master has non-swapped TX/RX pins
+#endif
+}
 
 // target is interrupt accept side
 void soft_serial_target_init(SSTD_t* sstd_table, int sstd_table_size) { serial_init(sstd_table, sstd_table_size); }
