@@ -11,7 +11,7 @@
 #define BUSY_WAIT_INSTRUCTIONS 10
 
 // default but used in macros
-#define TAPPING_TERM 175
+#define TAPPING_TERM 150
 
 // Prevent normal rollover on alphas from accidentally triggering mods.
 #define IGNORE_MOD_TAP_INTERRUPT
