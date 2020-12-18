@@ -38,11 +38,11 @@ enum Layers {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT( \
-     KC_ESC         , KC_1          , KC_2          , KC_3          , KC_4          , KC_5          , LCTL(DE_CIRC)  ,                                 KC_ESC        , KC_6          , KC_7          , KC_8          , KC_9          , KC_0          , DE_MINS       ,\
+     KC_ESC         , KC_1          , KC_2          , KC_3          , KC_4          , KC_5          , LCTL(DE_CIRC) ,                                 KC_ESC        , KC_6          , KC_7          , KC_8          , KC_9          , KC_0          , DE_MINS       ,\
      KC_TAB         , DE_K          , DE_DOT        , DE_O          , DE_COMM       , DE_Y          , MO(_RGB)      ,                                 MO(_RGB)      , DE_V          , DE_G          , DE_C          , DE_L          , DE_SS         , DE_Z          ,\
-     MO(_SYM)       , LGUI_T(DE_H)  , LALT_T(DE_A)  , LCTL_T(DE_E)  , LSFT_T(DE_I)  , DE_U          , MO(_FN)       ,                                 MO(_FN)       , DE_D          , LSFT_T(DE_T)  , LCTL_T(DE_R)  , LALT_T(DE_N)  , LGUI_T(DE_S)  , DE_F          ,\
+     MO(_SYM)       , LGUI_T(DE_H)  , LALT_T(DE_A)  , LCTL_T(DE_E)  , LT(_SYM,DE_I) , DE_U          , MO(_FN)       ,                                 MO(_FN)       , DE_D          , LT(_SYM,DE_T) , LCTL_T(DE_R)  , LALT_T(DE_N)  , LGUI_T(DE_S)  , DE_F          ,\
      MO(_NAV)       , DE_X          , DE_Q          , DE_ADIA       , DE_UDIA       , DE_ODIA       , KC_BSPC       , MO(_NAV)      , MO(_NAV)      , KC_ENT        , DE_B          , DE_P          , DE_W          , DE_M          , DE_J          , MO(_NAV)      ,\
-                                                      TG(_GAME)     , KC_ESC        , MO(_SYM)      , KC_BSPC       , MO(_NAV)      , MO(_NAV)      , KC_ENT        , LT(_SYM,KC_SPC), KC_LALT      , TG(_GAME)\
+                                                      TG(_GAME)     , KC_ESC        , LSFT_T(KC_SPC), KC_BSPC       , MO(_NAV)      , MO(_NAV)      , KC_ENT        , LSFT_T(KC_SPC), KC_LALT       , TG(_GAME)\
   ),
    [_SYM] = LAYOUT( \
     _______         , _______       , _______       , _______       , _______       , _______       , _______       ,                                 _______       , _______       , _______       , _______       , _______       , _______       , _______       ,\
@@ -208,12 +208,13 @@ void oled_task_user(void) {
                 break;
             case _RGB:
                 oled_write_ln("RGB", false);
-                w_val("En:   %03d", rgb_matrix_config.enable);
-                w_val("Mode: %03d", rgb_matrix_config.mode);
-                w_val("Hue:  %03d", rgb_matrix_config.hsv.h);
-                w_val("Sat:  %03d", rgb_matrix_config.hsv.s);
-                w_val("Bri:  %03d", rgb_matrix_config.hsv.v);
-                w_val("Spd:  %03d", rgb_matrix_config.speed);
+                oled_write_ln("",false);
+                w_val("En:   %03d\n", rgb_matrix_config.enable);
+                w_val("Mode: %03d\n", rgb_matrix_config.mode);
+                w_val("Hue:  %03d\n", rgb_matrix_config.hsv.h);
+                w_val("Sat:  %03d\n", rgb_matrix_config.hsv.s);
+                w_val("Bri:  %03d\n", rgb_matrix_config.hsv.v);
+                w_val("Spd:  %03d\n", rgb_matrix_config.speed);
                 break;
             case _GAME:
                 oled_write_ln("Game", false);

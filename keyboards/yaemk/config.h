@@ -53,6 +53,7 @@
 #    define RGB_MATRIX_HUE_STEP 3  // number of steps to cycle through the hue by
 #    define RGB_MATRIX_SAT_STEP 6  // number of steps to increment the saturation by
 #    define RGB_MATRIX_VAL_STEP 6  // number of steps to increment the brightness by
+#    define RGB_MATRIX_SPD_STEP 6
 /* HARDWARE CONFIG */
 
 #    define RGB_MATRIX_MAXIMUM_BRIGHTNESS RGBLIGHT_LIMIT_VAL
