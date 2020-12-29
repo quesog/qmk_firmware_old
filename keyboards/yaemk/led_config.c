@@ -46,8 +46,6 @@ led_config_t g_led_config = { {
 	LED_FLAG, LED_FLAG
 }};
 
-#define RGB_MATRIX_CENTER L(7.5, 2)
-
 #endif
 
 // clang-format on
