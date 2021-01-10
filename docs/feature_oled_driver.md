@@ -2,7 +2,7 @@
 
 ## Supported Hardware
 
-OLED modules using SSD1306 or SH1106 driver ICs, communicating over I2C.
+OLED modules using SSD1306, SH1106 or SH1107 driver ICs, communicating over I2C.
 Tested combinations:
 
 |IC       |Size  |Platform|Notes                   |
@@ -11,6 +11,8 @@ Tested combinations:
 |SSD1306  |128x64|AVR     |Verified working        |
 |SSD1306  |128x32|Arm     |                        |
 |SH1106   |128x64|AVR     |No rotation or scrolling|
+|SH1107   |64x128|AVR     |No rotation or scrolling|
+|SH1107   |64x128|Arm     |No rotation or scrolling|
 
 Hardware configurations using Arm-based microcontrollers or different sizes of OLED modules may be compatible, but are untested.
 
@@ -169,7 +171,7 @@ These configuration options should be placed in `config.h`. Example:
 |`OLED_FADE_OUT_INTERVAL`   |`0`              |The speed of fade out animation, from 0 to 15. Larger values are slower.                                                  |
 |`OLED_SCROLL_TIMEOUT`      |`0`              |Scrolls the OLED screen after 0ms of OLED inactivity. Helps reduce OLED Burn-in. Set to 0 to disable.                     |
 |`OLED_SCROLL_TIMEOUT_RIGHT`|*Not defined*    |Scroll timeout direction is right when defined, left when undefined.                                                      |
-|`OLED_IC`                  |`OLED_IC_SSD1306`|Set to `OLED_IC_SH1106` if you're using the SH1106 OLED controller.                                                       |
+|`OLED_IC`                  |`OLED_IC_SSD1306`|Set to `OLED_IC_SH1106` or `OLED_IC_SH1107` if the corresponding controller chip is used.                                 |
 |`OLED_COLUMN_OFFSET`       |`0`              |Shift output to the right this many pixels.<br />Useful for 128x64 displays centered on a 132x64 SH1106 IC.               |
 |`OLED_BRIGHTNESS`          |`255`            |The default brightness level of the OLED, from 0 to 255.                                                                  |
 |`OLED_UPDATE_INTERVAL`     |`0`              |Set the time interval for updating the OLED display in ms. This will improve the matrix scan rate.                        |
@@ -197,7 +199,7 @@ These configuration options should be placed in `config.h`. Example:
 
 ### 90 Degree Rotation - Technical Mumbo Jumbo
 
-!> Rotation is unsupported on the SH1106.
+!> Rotation is unsupported on the SH1106 and SH1107.
 
 ```c
 // OLED Rotation enum values are flags
@@ -385,7 +387,7 @@ uint8_t oled_max_chars(void);
 uint8_t oled_max_lines(void);
 ```
 
-!> Scrolling and rotation are unsupported on the SH1106.
+!> Scrolling and rotation are unsupported on the SH1106 and SH1107.
 
 !> Scrolling does not work properly on the SSD1306 if the display width is smaller than 128.
 
