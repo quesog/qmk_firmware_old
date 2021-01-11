@@ -11,18 +11,16 @@
 #define BUSY_WAIT_INSTRUCTIONS 10
 
 // default but used in macros
-#define TAPPING_TERM 150
-
-#define RETRO_TAPPING
+#define TAPPING_TERM 160
 
 // Prevent normal rollover on alphas from accidentally triggering mods.
 #define IGNORE_MOD_TAP_INTERRUPT
 
 // Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
-//#define TAPPING_FORCE_HOLD
+#define TAPPING_FORCE_HOLD
 
 // Recommended for heavy chording.
-#define QMK_KEYS_PER_SCAN 4
+#define QMK_KEYS_PER_SCAN 8
 
 // Mouse key speed and acceleration.
 #undef MOUSEKEY_DELAY
