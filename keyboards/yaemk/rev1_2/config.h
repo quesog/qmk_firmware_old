@@ -43,11 +43,12 @@
 #define WS2812_PWM_PAL_MODE 6                 // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 2
 #define WS2812_DMA_STREAM STM32_DMA1_STREAM5  // DMA Stream for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
 #define WS2812_DMA_CHANNEL 5                  // DMA Channel for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
+#define WS2812_EXTERNAL_PULLUP
 
-#define RGBLED_NUM 78
+#define RGBLED_NUM 80
 #define DRIVER_LED_TOTAL RGBLED_NUM
 #define RGBLED_SPLIT \
-    { 39, 39 }
+    { 40, 40 }
 
 /* SERIAL SPLIT DRIVER */
 #define SPLIT_TRANSPORT_MIRROR
