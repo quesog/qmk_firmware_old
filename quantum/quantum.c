@@ -15,6 +15,7 @@
  */
 
 #include "quantum.h"
+#include "magic.h"
 
 #ifdef BLUETOOTH_ENABLE
 #    include "outputselect.h"
@@ -369,12 +370,7 @@ void tap_random_base64(void) {
 }
 
 void matrix_init_quantum() {
-#ifdef BOOTMAGIC_LITE
-    bootmagic_lite();
-#endif
-    if (!eeconfig_is_enabled()) {
-        eeconfig_init();
-    }
+    magic();
 #if defined(LED_NUM_LOCK_PIN) || defined(LED_CAPS_LOCK_PIN) || defined(LED_SCROLL_LOCK_PIN) || defined(LED_COMPOSE_PIN) || defined(LED_KANA_PIN)
     // TODO: remove calls to led_init_ports from keyboards and remove ifdef
     led_init_ports();
