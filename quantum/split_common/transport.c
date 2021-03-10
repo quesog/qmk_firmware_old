@@ -19,7 +19,14 @@
 #ifdef ENCODER_ENABLE
 #    include "encoder.h"
 static pin_t encoders_pad[] = ENCODERS_PAD_A;
+#ifdef ENCODERS_PAD_C
+static pin_t encoders_pad_c[] = ENCODERS_PAD_C;
+#    define NUMBER_OF_ENCODERS_AB (sizeof(encoders_pad) / sizeof(pin_t))
+#    define NUMBER_OF_ENCODERS_C (sizeof(encoders_pad_c) / sizeof(pin_t))
+#    define NUMBER_OF_ENCODERS (NUMBER_OF_ENCODERS_C * NUMBER_OF_ENCODERS_AB)
+#else
 #    define NUMBER_OF_ENCODERS (sizeof(encoders_pad) / sizeof(pin_t))
+#endif
 #endif
 
 #if defined(RGB_MATRIX_ENABLE) && defined(RGB_MATRIX_SPLIT)

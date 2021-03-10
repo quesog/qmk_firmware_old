@@ -40,9 +40,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_HAND_PIN C13
 
 /* Encoder Configuration */
-//#define ENCODERS_PAD_A { A1 }
-//#define ENCODERS_PAD_B { A2 }
-//#define ENCODERS_PAD_C { B12 }
+#define ENCODERS_PAD_A { A1 }
+#define ENCODERS_PAD_B { A2 }
+#define ENCODERS_PAD_C { A15, B12, A8, B15, A13, A0 }
+
+#define ENCODERS_PAD_A_RIGHT { A1 }
+#define ENCODERS_PAD_B_RIGHT { A2 }
+#define ENCODERS_PAD_C_RIGHT { A8, A13, B14, B15, B13, C14 }
 
 #define TOUCH_SEGMENTS 3
 
@@ -84,6 +88,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TOUCH_UPDATE_INTERVAL 33
 #define OLED_UPDATE_INTERVAL 33
+#define TAP_CODE_DELAY 1
 
 #ifdef AUDIO_ENABLE
 #undef AUDIO_PIN

@@ -78,3 +78,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TOUCH_UPDATE_INTERVAL 33
 #define OLED_UPDATE_INTERVAL 33
+#define TAP_CODE_DELAY 1

@@ -34,7 +34,7 @@ ENCODER_ENABLE = yes
 SPLIT_KEYBOARD = yes
 SERIAL_DRIVER = usart
 DEBOUNCE_TYPE = sym_eager_pk
-LTO_ENABLE = yes
+LTO_ENABLE = no
 OPT = 3
 
 DEFAULT_FOLDER = rgbkb/mun/rev1
