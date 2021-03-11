@@ -21,6 +21,7 @@ MIDI_ENABLE = no            # MIDI controls
 AUDIO_ENABLE = yes           # Audio output
 UNICODE_ENABLE = no         # Unicode
 BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
+DYNAMIC_MACRO_ENABLE = yes
 
 WS2812_DRIVER = pwm
 RGBLIGHT_ENABLE = no        # Enable WS2812 RGB underlight.
