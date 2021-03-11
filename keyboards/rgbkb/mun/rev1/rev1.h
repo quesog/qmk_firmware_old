@@ -26,15 +26,19 @@
 }
 
 #ifdef ENCODER_ENABLE
-#define NUMBER_OF_ENCODERS 2
+#define NUMBER_OF_ENCODERS 4
 
 #define ENCODER_LAYOUT( \
     E10, E11, \
-    E20, E21 \
+    E20, E21, \
+    E30, E31, \
+    E40, E41 \
 ) \
 { \
     { E10, E11 }, \
-    { E20, E21 } \
+    { E20, E21 }, \
+    { E30, E31 }, \
+    { E40, E41 } \
 }
 #endif //ENCODER_ENABLE
 // clang-format on

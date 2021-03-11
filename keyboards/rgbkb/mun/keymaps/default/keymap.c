@@ -80,21 +80,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][2]  = {
     [_QWERTY] = ENCODER_LAYOUT( \
         KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
         KC_VOLU, KC_VOLD
     ),
     [_COLEMAK] = ENCODER_LAYOUT( \
+        _______, _______,
+        _______, _______,
         _______, _______,
         _______, _______
     ),
     [_DVORAK] = ENCODER_LAYOUT( \
         _______, _______,
+        _______, _______,
+        _______, _______,
         _______, _______
     ),
     [_FN] = ENCODER_LAYOUT( \
         _______, _______,
+        _______, _______,
+        _______, _______,
         _______, _______
     ),
     [_ADJUST] = ENCODER_LAYOUT( \
+        _______, _______,
+        _______, _______,
         _______, _______,
         _______, _______
     )
