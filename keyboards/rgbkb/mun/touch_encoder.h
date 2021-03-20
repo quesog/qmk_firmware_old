@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef TOUCH_SEGMENTS
 #    define TOUCH_SEGMENTS 3
+#elif TOUCH_SEGMENTS > 8
+#    error Max supported TOUCH_SEGMENTS is 8.
 #endif
 
 #ifndef TOUCH_DEADZONE
@@ -50,3 +52,11 @@ void touch_encoder_update_user(uint8_t index, bool clockwise);
 
 // Called when touch encoder is slid, weak function overridable by the user
 void touch_encoder_update_user_raw(uint8_t index);
+
+typedef struct {
+    uint8_t  position;
+    uint8_t  taps;
+} slave_touch_status_t;
+
+void touch_encoder_get_raw(slave_touch_status_t* slave_state);
+void touch_encoder_set_raw(slave_touch_status_t slave_state);

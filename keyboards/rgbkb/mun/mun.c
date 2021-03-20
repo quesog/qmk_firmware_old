@@ -12,3 +12,9 @@ void matrix_scan_kb(void)
     touch_encoder_update();
     matrix_scan_user();
 }
+
+void matrix_slave_scan_kb(void)
+{
+    touch_encoder_update();
+    matrix_slave_scan_user();
+}

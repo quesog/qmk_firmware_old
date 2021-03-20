@@ -26,6 +26,9 @@ static pin_t encoders_pad[] = ENCODERS_PAD_A;
 #    include "rgb_matrix.h"
 #endif
 
+// TODO: Dirty Hacks!
+#include "touch_encoder.h"
+
 #if defined(USE_I2C)
 
 #    include "i2c_master.h"
@@ -224,6 +227,8 @@ typedef struct _Serial_s2m_buffer_t {
     uint8_t      encoder_state[NUMBER_OF_ENCODERS];
 #    endif
 
+// TODO: Dirty Hacks!
+    slave_touch_status_t touch_state;
 } Serial_s2m_buffer_t;
 
 typedef struct _Serial_m2s_buffer_t {
@@ -373,6 +378,9 @@ bool transport_master(matrix_row_t master_matrix[], matrix_row_t slave_matrix[])
     serial_m2s_buffer.rgb_suspend_state = g_suspend_state;
 #    endif
 
+// TODO: Dirty Hacks!
+    touch_encoder_set_raw(serial_s2m_buffer.touch_state);
+
 #    ifndef DISABLE_SYNC_TIMER
     serial_m2s_buffer.sync_timer        = sync_timer_read32() + SYNC_TIMER_OFFSET;
 #    endif
@@ -416,6 +424,9 @@ void transport_slave(matrix_row_t master_matrix[], matrix_row_t slave_matrix[]) 
     rgb_matrix_config = serial_m2s_buffer.rgb_matrix;
     g_suspend_state   = serial_m2s_buffer.rgb_suspend_state;
 #    endif
+
+// TODO: Dirty Hacks!
+    touch_encoder_get_raw((slave_touch_status_t *)&serial_s2m_buffer.touch_state);
 }
 
 #endif
