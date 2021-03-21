@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef TOUCH_SEGMENTS
 #    define TOUCH_SEGMENTS 3
+#elif TOUCH_SEGMENTS < 1 || TOUCH_SEGMENTS > 8
+#    error TOUCH_SEGMENTS must be between 1 and 8.
 #endif
 
 #ifndef TOUCH_DEADZONE
@@ -42,6 +44,15 @@ uint8_t touch_encoder_position(void);
 uint16_t touch_encoder_keys(void);
 void touch_encoder_calibrate(void);
 
+// Called when touch encoder is tapped, weak function overridable by the kb
+void touch_encoder_tapped_kb(uint8_t index, uint8_t section);
+
+// Called when touch encoder is slid, weak function overridable by the kb
+void touch_encoder_update_kb(uint8_t index, bool clockwise);
+
+// Called when touch encoder is slid, weak function overridable by the kb
+void touch_encoder_update_kb_raw(uint8_t index);
+
 // Called when touch encoder is tapped, weak function overridable by the user
 void touch_encoder_tapped_user(uint8_t index, uint8_t section);
 
@@ -50,3 +61,11 @@ void touch_encoder_update_user(uint8_t index, bool clockwise);
 
 // Called when touch encoder is slid, weak function overridable by the user
 void touch_encoder_update_user_raw(uint8_t index);
+
+typedef struct {
+    uint8_t  position;
+    uint8_t  taps;
+} slave_touch_status_t;
+
+void touch_encoder_get_raw(slave_touch_status_t* slave_state);
+void touch_encoder_set_raw(slave_touch_status_t slave_state);

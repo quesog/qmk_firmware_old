@@ -36,7 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * '--------+--------+--------+--------+--------+--------+--------'  '--------+--------+--------+--------+--------+--------+--------'
      */
     [_QWERTY] = LAYOUT(
-        KC_GESC, KC_1,    KC_2,    KC_3,    KC_VOLD,    KC_VOLU,    _______,   KC_EQL,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+        KC_GESC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_MINS,   KC_EQL,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LBRC,   KC_RBRC,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_PIPE,
         FN_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_LPRN,   KC_RPRN,   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LCBR,   KC_RCBR,   KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
@@ -76,8 +76,58 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
+#if defined(RGB_MATRIX_ENABLE)
+// Default configuration: 3 tap zones, slide up, slide down
+const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS]  = {
+    [_QWERTY] = TOUCH_ENCODER_LAYOUT( \
+        KC_MPRV, KC_MPLY, KC_MNXT, KC_VOLU, KC_VOLD,
+        KC_MPRV, KC_MPLY, KC_MNXT, KC_VOLU, KC_VOLD
+    ),
+    [_COLEMAK] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    ),
+    [_DVORAK] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    ),
+    [_FN] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    ),
+    [_ADJUST] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    )
+};
+#else
+// Default configuration: 3 tap zones, slide up, slide down
+const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS]  = {
+    [_QWERTY] = TOUCH_ENCODER_LAYOUT( \
+        RGB_RMOD, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD,
+        RGB_SAD, RGB_TOG, RGB_SAI, RGB_VAI, RGB_VAD
+    ),
+    [_COLEMAK] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    ),
+    [_DVORAK] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    ),
+    [_FN] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    ),
+    [_ADJUST] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    )
+};
+#endif
+
 #ifdef ENCODER_ENABLE
-const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][2]  = {
+const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][ENCODER_OPTIONS]  = {
     [_QWERTY] = ENCODER_LAYOUT( \
         KC_VOLU, KC_VOLD,
         KC_VOLU, KC_VOLD,
@@ -109,42 +159,7 @@ const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][2]  = {
         _______, _______
     )
 };
-
-void encoder_update_user(uint8_t index, bool clockwise) {
-    if (!is_keyboard_master()) return;
-    uint8_t layer = biton32(layer_state);
-    uint16_t keycode = pgm_read_word(&encoders[layer][index][clockwise]);
-    while (keycode == KC_TRANSPARENT && layer > 0)
-    {
-        layer--;
-        if ((layer_state & (1 << layer)) != 0)
-            keycode = pgm_read_word(&encoders[layer][index][clockwise]);
-    }
-    if (keycode != KC_TRANSPARENT)
-        tap_code16(keycode);
-}
 #endif // ENCODER_ENABLE
-
-#if defined(RGB_MATRIX_ENABLE) || defined(RGBLIGHT_ENABLE)
-typedef void (*rgb_f)(void);
-const rgb_f rgb_functions[TOUCH_SEGMENTS] = { rgblight_step, rgblight_toggle, rgblight_step_reverse };
-
-void touch_encoder_tapped_user(uint8_t index, uint8_t section)
-{
-    xprintf("tap %d, %d\n", index, section);
-    (*rgb_functions[section])();
-}
-
-void touch_encoder_update_user(uint8_t index, bool clockwise)
-{
-    xprintf("slide %d, %d\n", index, clockwise);
-    // The rgb functions write to eeprom, which takes 3-4ms on avr.
-    if (clockwise)
-        rgblight_increase_hue();
-    else
-        rgblight_decrease_hue();
-}
-#endif
 
 #if defined(OLED_DRIVER_ENABLE)
 uint16_t ovalue = 0;

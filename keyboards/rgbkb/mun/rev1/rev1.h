@@ -1,6 +1,7 @@
 #pragma once
 
 #include "mun.h"
+#include "touch_encoder.h"
 
 // clang-format off
 #define LAYOUT( \
@@ -25,8 +26,21 @@
     { R46, R45, R44, R43, R42, R41, R40 }  \
 }
 
+#define NUMBER_OF_TOUCH_ENCODERS 2
+#define TOUCH_ENCODER_OPTIONS TOUCH_SEGMENTS + 2
+
+#define TOUCH_ENCODER_LAYOUT( \
+    E10, E11, E12, E13, E14, \
+    E20, E21, E22, E23, E24 \
+) \
+{ \
+    { E10, E11, E12, E13, E14 }, \
+    { E20, E21, E22, E23, E24 } \
+}
+
 #ifdef ENCODER_ENABLE
 #define NUMBER_OF_ENCODERS 4
+#define ENCODER_OPTIONS 2
 
 #define ENCODER_LAYOUT( \
     E10, E11, \
