@@ -24,29 +24,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VENDOR_ID       0x3535
 #define PRODUCT_ID      0x3505
 #define MANUFACTURER    RGBKB
-#define PRODUCT         Sol 3
+#define PRODUCT         Zygomorph 2
 
 #define USB_POLLING_INTERVAL_MS 1
 
 /* Matrix Configuration - Rows are doubled up */
 #define MATRIX_ROWS 10
-#define MATRIX_COLS 8
-#define MATRIX_ROW_PINS  { B15, A8, A15, B12, A3 }
-#define MATRIX_COL_PINS  { A6, A7, B0, B2, B1, B9, B3, B4}
-#define MATRIX_ROW_PINS_RIGHT { B15, B14, A8, A13, A7 }
-#define MATRIX_COL_PINS_RIGHT { B9, B8, B4, A6, A3, B10, B12, B11}
+#define MATRIX_COLS 6
+#define MATRIX_ROW_PINS  { A13, B10, A2, C14, A6 }
+#define MATRIX_COL_PINS  { B13, B2, B1, A3, A14, A15}
 #define MATRIX_IO_DELAY 5
 
-#define SPLIT_HAND_PIN C13
+#define SPLIT_HAND_PIN B12
 
 /* Encoder Configuration */
-#define ENCODERS_PAD_A { A1 }
-#define ENCODERS_PAD_B { A2 }
-#define ENCODERS_PAD_C { A15, B12, A8, B15, A13, A0 }
-
-#define ENCODERS_PAD_A_RIGHT { A1 }
-#define ENCODERS_PAD_B_RIGHT { A2 }
-#define ENCODERS_PAD_C_RIGHT { A8, A13, B14, B15, B13, C14 }
+#define ENCODERS_PAD_A { B8 }
+#define ENCODERS_PAD_B { B9 }
+#define ENCODERS_PAD_C { A13, B10}
 
 #define TOUCH_SEGMENTS 3
 
@@ -64,27 +58,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SERIAL_USART_TIMEOUT 5
 
 /* RGB LED Configuration */
-#define RGB_DI_PIN          B5
+#define RGB_DI_PIN B11
 
-#define RGBLED_NUM 156
-#define RGBLED_SPLIT { 78, 78 }
+#define RGBLED_NUM 84
+#define RGBLED_SPLIT { 42, 42 }
 #define RGBLIGHT_LIMIT_VAL 255
 #define RGBLIGHT_ANIMATIONS
 
 #define DRIVER_LED_TOTAL RGBLED_NUM
 #define RGB_MATRIX_SPLIT RGBLED_SPLIT
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS RGBLIGHT_LIMIT_VAL
-#define RGB_MATRIX_CENTER { 81, 28 }
+#define RGB_MATRIX_CENTER { 104, 38 }
 #define RGB_MATRIX_LED_FLUSH_LIMIT 16
 #define RGB_MATRIX_LED_PROCESS_LIMIT 10
 #define RGB_MATRIX_KEYPRESSES
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 
-#define WS2812_PWM_DRIVER PWMD3
-#define WS2812_PWM_CHANNEL 2
-#define WS2812_PWM_PAL_MODE 2
-#define WS2812_DMA_STREAM STM32_DMA1_STREAM3
-#define WS2812_DMA_CHANNEL 3
+#define WS2812_PWM_DRIVER PWMD2
+#define WS2812_PWM_CHANNEL 4
+#define WS2812_PWM_PAL_MODE 1
+#define WS2812_DMA_STREAM STM32_DMA1_STREAM2
+#define WS2812_DMA_CHANNEL 2
 
 #define TOUCH_UPDATE_INTERVAL 33
 #define OLED_UPDATE_INTERVAL 33
