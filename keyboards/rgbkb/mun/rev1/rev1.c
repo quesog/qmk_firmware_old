@@ -1,5 +1,47 @@
 #include "rev1.h"
 
+#if defined(ENCODER_ENABLE) && !defined(MUN_CUSTOM_ENCODERS)
+extern const uint16_t encoders[][NUMBER_OF_ENCODERS][2];
+
+void encoder_update_kb(uint8_t index, bool clockwise) {
+    if (!is_keyboard_master()) return;
+    uint8_t layer = biton32(layer_state);
+    uint16_t keycode = pgm_read_word(&encoders[layer][index][clockwise]);
+    while (keycode == KC_TRANSPARENT && layer > 0)
+    {
+        layer--;
+        if ((layer_state & (1 << layer)) != 0)
+            keycode = pgm_read_word(&encoders[layer][index][clockwise]);
+    }
+    if (keycode != KC_TRANSPARENT)
+        tap_code16(keycode);
+}
+#endif
+
+extern const uint16_t touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS];
+
+static void process_touch_encoder(uint8_t index, uint8_t option) {
+    if (!is_keyboard_master()) return;
+    uint8_t layer = biton32(layer_state);
+    uint16_t keycode = pgm_read_word(&touch_encoders[layer][index][option]);
+    while (keycode == KC_TRANSPARENT && layer > 0)
+    {
+        layer--;
+        if ((layer_state & (1 << layer)) != 0)
+            keycode = pgm_read_word(&touch_encoders[layer][index][option]);
+    }
+    if (keycode != KC_TRANSPARENT)
+        tap_code16(keycode);
+}
+
+void touch_encoder_update_kb(uint8_t index, bool clockwise) {
+    process_touch_encoder(index, TOUCH_SEGMENTS + clockwise);
+}
+
+void touch_encoder_tapped_kb(uint8_t index, uint8_t section) {
+    process_touch_encoder(index, section);
+}
+
 #ifdef RGB_MATRIX_ENABLE
 // clang-format off
 led_config_t g_led_config = { {
