@@ -41,4 +41,4 @@ DEBOUNCE_TYPE = sym_eager_pk
 LTO_ENABLE = yes
 OPT = 3
 
-DEFAULT_FOLDER = rgbkb/zygomorp2/rev1
+DEFAULT_FOLDER = rgbkb/zygomorph2/rev1
