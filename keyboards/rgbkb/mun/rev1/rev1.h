@@ -38,7 +38,6 @@
     { E20, E21, E22, E23, E24 } \
 }
 
-#ifdef ENCODER_ENABLE
 #define NUMBER_OF_ENCODERS 4
 #define ENCODER_OPTIONS 2
 
@@ -54,5 +53,4 @@
     { E30, E31 }, \
     { E40, E41 } \
 }
-#endif //ENCODER_ENABLE
 // clang-format on

@@ -25,4 +25,48 @@
     { R36, R35, R34, R33, R32, R31, R30, KC_NO }, \
     { R47, R46, R45, R44, R43, R42, R41, R40 }  \
 }
+
+#define NUMBER_OF_TOUCH_ENCODERS 2
+#define TOUCH_ENCODER_OPTIONS TOUCH_SEGMENTS + 2
+
+#define TOUCH_ENCODER_LAYOUT( \
+    E10, E11, E12, E13, E14, \
+    E20, E21, E22, E23, E24 \
+) \
+{ \
+    { E10, E11, E12, E13, E14 }, \
+    { E20, E21, E22, E23, E24 } \
+}
+
+#define NUMBER_OF_ENCODERS 12
+#define ENCODER_OPTIONS 2
+
+#define ENCODER_LAYOUT( \
+    E010, E011, \
+    E020, E021, \
+    E030, E031, \
+    E040, E041, \
+    E050, E051, \
+    E060, E061, \
+    E070, E071, \
+    E080, E081, \
+    E090, E091, \
+    E100, E101, \
+    E110, E111, \
+    E120, E121 \
+) \
+{ \
+    { E010, E011 }, \
+    { E020, E021 }, \
+    { E030, E031 }, \
+    { E040, E041 }, \
+    { E050, E051 }, \
+    { E060, E061 }, \
+    { E070, E071 }, \
+    { E080, E081 }, \
+    { E090, E091 }, \
+    { E100, E101 }, \
+    { E110, E111 }, \
+    { E120, E121 } \
+}
 // clang-format on

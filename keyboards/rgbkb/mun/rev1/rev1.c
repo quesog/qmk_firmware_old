@@ -18,6 +18,7 @@ void encoder_update_kb(uint8_t index, bool clockwise) {
 }
 #endif
 
+#if !defined(MUN_CUSTOM_TOUCH_ENCODERS)
 extern const uint16_t touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS];
 
 static void process_touch_encoder(uint8_t index, uint8_t option) {
@@ -41,6 +42,7 @@ void touch_encoder_update_kb(uint8_t index, bool clockwise) {
 void touch_encoder_tapped_kb(uint8_t index, uint8_t section) {
     process_touch_encoder(index, section);
 }
+#endif
 
 #ifdef RGB_MATRIX_ENABLE
 // clang-format off

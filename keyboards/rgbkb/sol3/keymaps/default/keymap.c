@@ -82,26 +82,102 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-#if defined(RGB_MATRIX_ENABLE) || defined(RGBLIGHT_ENABLE)
-typedef void (*rgb_f)(void);
-const rgb_f rgb_functions[TOUCH_SEGMENTS] = { rgblight_step, rgblight_toggle, rgblight_step_reverse };
+// Default configuration: 3 tap zones, slide up, slide down
+const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS]  = {
+    [_QWERTY] = TOUCH_ENCODER_LAYOUT( \
+        RGB_RMOD, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD,
+        RGB_SAD, RGB_TOG, RGB_SAI, RGB_VAI, RGB_VAD
+    ),
+    [_COLEMAK] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    ),
+    [_GAME] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    ),
+    [_FN] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    ),
+    [_ADJUST] = TOUCH_ENCODER_LAYOUT( \
+        _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______
+    )
+};
 
-void touch_encoder_tapped_user(uint8_t index, uint8_t section)
-{
-    xprintf("tap %d, %d\n", index, section);
-    (*rgb_functions[section])();
-}
-
-void touch_encoder_update_user(uint8_t index, bool clockwise)
-{
-    xprintf("slide %d, %d\n", index, clockwise);
-    // The rgb functions write to eeprom, which takes 3-4ms on avr.
-    if (clockwise)
-        rgblight_increase_hue();
-    else
-        rgblight_decrease_hue();
-}
-#endif
+const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][ENCODER_OPTIONS]  = {
+    [_QWERTY] = ENCODER_LAYOUT( \
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD,
+        KC_VOLU, KC_VOLD
+    ),
+    [_COLEMAK] = ENCODER_LAYOUT( \
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______
+    ),
+    [_GAME] = ENCODER_LAYOUT( \
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______
+    ),
+    [_FN] = ENCODER_LAYOUT( \
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______
+    ),
+    [_ADJUST] = ENCODER_LAYOUT( \
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______,
+        _______, _______
+    )
+};
 
 #if defined(OLED_DRIVER_ENABLE)
 uint16_t ovalue = 0;
@@ -268,83 +344,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
-
-#ifdef ENCODER_ENABLE
-
-void encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) {        /* Encoder 1 PGDOWN */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 1) { /* Encoder 2 DELETE */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 2) { /* Encoder 3 RGB_TOG */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 3) { /* Encoder 4 MINUS */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 4) { /* Encoder 5, PGUP */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 5) { /* Encoder 6, ENTER */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 6) { /* Encoder 7, LEFT */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 7) { /* Encoder 8, EQUAL */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 8) { /* Encoder 9, LCBR */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 9) { /* Encoder 10 RCBR */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 10) { /* Encoder 11 RGB_ADJ */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    } else if (index == 11) { /* Encoder 12 DOWN */
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    }
-}
-
-#endif

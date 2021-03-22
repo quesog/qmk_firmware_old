@@ -16,10 +16,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "i2c_master.h"
+#include "keyboard.h"
 #include "touch_encoder.h"
 #include "print.h"
 #include "wait.h"
 #include "timer.h"
+
+// for memcpy
+#include <string.h>
 
 #define I2C_ADDRESS 0x1C
 #define CALIBRATION_BIT 0x80
@@ -109,11 +113,15 @@ enum {  // QT2120 registers
 };
 
 bool     touch_initialized  = false;
+uint8_t  touch_handness = 0;
+// touch_raw & touch_processed store the Detection Status, Key Status (x2), and Slider Position values
 uint8_t  touch_raw[4]       = { 0 };
 uint8_t  touch_processed[4] = { 0 };
-uint8_t  touch_lastPosition = 0;
+
 uint16_t touch_timer        = 0;
 uint16_t touch_update_timer = 0;
+
+slave_touch_status_t touch_slave_state = { 0, 0 };
 
 static bool write_register8(uint8_t address, uint8_t data) {
     i2c_status_t status = i2c_writeReg((I2C_ADDRESS << 1), address, &data, sizeof(data), I2C_TIMEOUT);
@@ -135,6 +143,8 @@ static bool read_register(uint8_t address, uint8_t* data, uint16_t length) {
 void touch_encoder_init(void) {
     i2c_init();
 
+    touch_handness = is_keyboard_left() ? 0 : 1;
+
     // Set QT to slider mode
     touch_initialized = write_register8(QT_SLIDER_OPTION, 0x80);
     touch_initialized &= write_register8(QT_TTD, 4);  // Toward Drift - 20 @ 3.2s
@@ -143,6 +153,10 @@ void touch_encoder_init(void) {
     touch_initialized &= write_register8(QT_TRD, 0);  // Touch Recall - 48
     touch_encoder_calibrate();
 }
+
+__attribute__((weak)) void touch_encoder_tapped_kb(uint8_t index, uint8_t section) { touch_encoder_tapped_user(index, section); }
+__attribute__((weak)) void touch_encoder_update_kb(uint8_t index, bool clockwise) { touch_encoder_update_user(index, clockwise); }
+__attribute__((weak)) void touch_encoder_update_kb_raw(uint8_t index) { touch_encoder_update_user_raw(index); }
 
 __attribute__((weak)) void touch_encoder_tapped_user(uint8_t index, uint8_t section) {}
 __attribute__((weak)) void touch_encoder_update_user(uint8_t index, bool clockwise) {}
@@ -159,7 +173,12 @@ void touch_encoder_update_tapped(void) {
     if (timer_expired(timer_read(), touch_timer)) return;
 
     uint8_t section = touch_processed[3] / (UINT8_MAX / TOUCH_SEGMENTS + 1);
-    touch_encoder_tapped_user(0, section);
+    if (is_keyboard_master()) {
+        touch_encoder_tapped_kb(touch_handness, section);
+    }
+    else {
+        touch_slave_state.taps ^= (1 << section);
+    }
 }
 
 void touch_encoder_update_position(void) {
@@ -169,18 +188,23 @@ void touch_encoder_update_position(void) {
         touch_timer = timer_read();
     }
 
-    int8_t delta = (touch_processed[3] - touch_raw[3]) / ENCODER_RESOLUTION;
-    bool clockwise = touch_raw[3] > touch_processed[3];
-    if (delta == 0) return;
+    if (is_keyboard_master()) {
+        int8_t delta = (touch_processed[3] - touch_raw[3]) / ENCODER_RESOLUTION;
+        bool clockwise = touch_raw[3] > touch_processed[3];
+        if (delta == 0) return;
 
-    // track direction, update cached position, then call user function to ensure api return values are current for the user
-    // Don't use touch_raw[3] directly, as we want to ensure any remainder is kept and used next time this is called
-    touch_processed[3] -= delta * ENCODER_RESOLUTION;
-    touch_encoder_update_user_raw(0);
+        // track direction, update cached position, then call user function to ensure api return values are current for the user
+        // Don't use touch_raw[3] directly, as we want to ensure any remainder is kept and used next time this is called
+        touch_processed[3] -= delta * ENCODER_RESOLUTION;
+        touch_encoder_update_kb_raw(touch_handness);
 
-    uint8_t u_delta   = delta < 0 ? -delta : delta;
-    for (uint8_t i = 0; i < u_delta; i++) {
-        touch_encoder_update_user(0, clockwise);
+        uint8_t u_delta   = delta < 0 ? -delta : delta;
+        for (uint8_t i = 0; i < u_delta; i++) {
+            touch_encoder_update_kb(touch_handness, clockwise);
+        }
+    }
+    else {
+        touch_slave_state.position = touch_raw[3];
     }
 }
 
@@ -228,4 +252,31 @@ uint16_t touch_encoder_keys(void) {
 void touch_encoder_calibrate(void) {
     if (!touch_initialized) return;
     write_register8(QT_CALIBRATE, 0x01);
+}
+
+void touch_encoder_get_raw(slave_touch_status_t* slave_state) {
+    memcpy(slave_state, &touch_slave_state, sizeof(slave_touch_status_t));
+}
+
+void touch_encoder_set_raw(slave_touch_status_t slave_state) {
+    int8_t delta = (touch_slave_state.position - slave_state.position) / ENCODER_RESOLUTION;
+    bool clockwise = slave_state.position > touch_slave_state.position;
+    if (delta != 0) {
+        touch_slave_state.position -= delta * ENCODER_RESOLUTION;
+        touch_encoder_update_kb_raw(!touch_handness);
+
+        uint8_t u_delta   = delta < 0 ? -delta : delta;
+        for (uint8_t i = 0; i < u_delta; i++) {
+            touch_encoder_update_kb(!touch_handness, clockwise);
+        }
+    }
+
+    if (touch_slave_state.taps != slave_state.taps) {
+        for (uint8_t section = 0; section < TOUCH_SEGMENTS; section++) {
+            uint8_t mask = (1 << section);
+            if ((touch_slave_state.taps & mask) != (slave_state.taps & mask))
+                touch_encoder_tapped_kb(!touch_handness, section);
+        }
+        touch_slave_state.taps = slave_state.taps;
+    }
 }

@@ -76,31 +76,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-#if defined(RGB_MATRIX_ENABLE)
-// Default configuration: 3 tap zones, slide up, slide down
-const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS]  = {
-    [_QWERTY] = TOUCH_ENCODER_LAYOUT( \
-        KC_MPRV, KC_MPLY, KC_MNXT, KC_VOLU, KC_VOLD,
-        KC_MPRV, KC_MPLY, KC_MNXT, KC_VOLU, KC_VOLD
-    ),
-    [_COLEMAK] = TOUCH_ENCODER_LAYOUT( \
-        _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______
-    ),
-    [_DVORAK] = TOUCH_ENCODER_LAYOUT( \
-        _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______
-    ),
-    [_FN] = TOUCH_ENCODER_LAYOUT( \
-        _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______
-    ),
-    [_ADJUST] = TOUCH_ENCODER_LAYOUT( \
-        _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______
-    )
-};
-#else
 // Default configuration: 3 tap zones, slide up, slide down
 const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS]  = {
     [_QWERTY] = TOUCH_ENCODER_LAYOUT( \
@@ -124,9 +99,7 @@ const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_
         _______, _______, _______, _______, _______
     )
 };
-#endif
 
-#ifdef ENCODER_ENABLE
 const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][ENCODER_OPTIONS]  = {
     [_QWERTY] = ENCODER_LAYOUT( \
         KC_VOLU, KC_VOLD,
@@ -159,7 +132,6 @@ const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][ENCODER_OPTIONS]  = {
         _______, _______
     )
 };
-#endif // ENCODER_ENABLE
 
 #if defined(OLED_DRIVER_ENABLE)
 uint16_t ovalue = 0;
