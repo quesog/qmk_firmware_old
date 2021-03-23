@@ -3,7 +3,7 @@
 enum keymap_layers {
     _QWERTY,
     _COLEMAK,
-    _DVORAK,
+    _GAME,
     _FN,
     _ADJUST
 };
@@ -16,7 +16,7 @@ enum keymap_keycodes {
 // Default Layers
 #define QWERTY   DF(_QWERTY)
 #define COLEMAK  DF(_COLEMAK)
-#define DVORAK   DF(_DVORAK)
+#define GAME     DF(_GAME)
 
 // Momentary Layers
 #define FN       MO(_FN)
@@ -55,12 +55,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
-    [_DVORAK] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    _______, _______, KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    _______,
-        _______, KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    _______, _______, KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    _______,
-        _______, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    _______, _______, KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    [_GAME] = LAYOUT(
+        _______, _______, _______, _______, _______, _______, KC_F1,   KC_F5,   _______, _______, _______, _______, _______, _______,
+        _______, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_F2,   KC_F6,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    _______,
+        _______, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_F3,   KC_F7,   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, _______,
+        _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_F4,   KC_F8,   KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______,
+        _______, KC_NO,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
     [_FN] = LAYOUT(
@@ -75,7 +75,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F11,  KC_F12,  KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,
         _______, RGB_SAD, RGB_VAI, RGB_SAI, RESET,   _______, _______, _______, _______, KC_P7,   KC_P8,   KC_P9,   _______, _______,
         _______, RGB_HUD, RGB_VAD, RGB_HUI, _______, _______, _______, _______, _______, KC_P4,   KC_P5,   KC_P6,   _______, _______,
-        _______, RGB_SPD, _______, RGB_SPI, _______, _______, _______, _______, _______, KC_P1,   KC_P2,   KC_P3,   _______, DVORAK,
+        _______, RGB_SPD, _______, RGB_SPI, _______, _______, _______, _______, _______, KC_P1,   KC_P2,   KC_P3,   _______, GAME,
         _______, RGB_RMOD,_______, RGB_MOD, _______, _______, _______, _______, _______, KC_P0,   KC_PDOT, KC_NLCK, QWERTY, COLEMAK
     ),
 };
@@ -90,7 +90,7 @@ const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_
         _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______
     ),
-    [_DVORAK] = TOUCH_ENCODER_LAYOUT( \
+    [_GAME] = TOUCH_ENCODER_LAYOUT( \
         _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______
     ),
@@ -117,7 +117,7 @@ const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][ENCODER_OPTIONS]  = {
         _______, _______,
         _______, _______
     ),
-    [_DVORAK] = ENCODER_LAYOUT( \
+    [_GAME] = ENCODER_LAYOUT( \
         _______, _______,
         _______, _______,
         _______, _______,
@@ -156,10 +156,10 @@ void oled_task_user(void) {
             oled_write_ln_P(PSTR("Default"), false);
             break;
         case _COLEMAK:
-            oled_write_ln_P(PSTR("ColemakK"), false);
+            oled_write_ln_P(PSTR("Colemak"), false);
             break;
-        case _DVORAK:
-            oled_write_ln_P(PSTR("Dvorak"), false);
+        case _GAME:
+            oled_write_ln_P(PSTR("GAME"), false);
             break;
         case _FN:
             oled_write_ln_P(PSTR("FN"), false);
