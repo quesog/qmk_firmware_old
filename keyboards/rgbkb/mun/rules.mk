@@ -2,7 +2,7 @@
 MCU = STM32F303
 
 # Touch encoder needs
-SRC += touch_encoder.c
+SRC += ../common/touch_encoder.c
 QUANTUM_LIB_SRC += i2c_master.c
 
 # Build Options
@@ -36,5 +36,7 @@ SERIAL_DRIVER = usart
 DEBOUNCE_TYPE = sym_eager_pk
 LTO_ENABLE = yes
 OPT = 3
+
+OPT_DEFS += -Ikeyboards/rgbkb/common
 
 DEFAULT_FOLDER = rgbkb/mun/rev1

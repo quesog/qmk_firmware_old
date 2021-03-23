@@ -1,8 +1,10 @@
 # MCU name
 MCU = STM32F303
 
+OPT_DEFS += -Ikeyboards/rgbkb/common
 # Touch encoder needs
-SRC += touch_encoder.c
+SRC += ../common/touch_encoder.c
+
 QUANTUM_LIB_SRC += i2c_master.c
 
 # Build Options
@@ -32,7 +34,7 @@ SLEEP_LED_ENABLE = no       # Breathing sleep LED during USB suspend
 OLED_DRIVER_ENABLE = yes     # Enable the OLED Driver
 
 # ENCODER_ENABLE = no 	# We're not using the normal QMK encoder support
-SRC += encoder.c
+SRC += ../common/encoder.c
 OPT_DEFS += -DENCODER_ENABLE
 
 SPLIT_KEYBOARD = yes
