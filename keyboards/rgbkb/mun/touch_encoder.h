@@ -43,6 +43,7 @@ uint8_t touch_encoder_status(void);
 uint8_t touch_encoder_position(void);
 uint16_t touch_encoder_keys(void);
 void touch_encoder_calibrate(void);
+void touch_encoder_toggle(void);
 
 // Called when touch encoder is tapped, weak function overridable by the kb
 void touch_encoder_tapped_kb(uint8_t index, uint8_t section);

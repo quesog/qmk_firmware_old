@@ -113,6 +113,7 @@ enum {  // QT2120 registers
 };
 
 bool     touch_initialized  = false;
+bool     touch_disabled = false;
 uint8_t  touch_handness = 0;
 // touch_raw & touch_processed store the Detection Status, Key Status (x2), and Slider Position values
 uint8_t  touch_raw[4]       = { 0 };
@@ -252,6 +253,10 @@ uint16_t touch_encoder_keys(void) {
 void touch_encoder_calibrate(void) {
     if (!touch_initialized) return;
     write_register8(QT_CALIBRATE, 0x01);
+}
+
+void touch_encoder_toggle(void) {
+    touch_disabled = !touch_disabled;
 }
 
 void touch_encoder_get_raw(slave_touch_status_t* slave_state) {

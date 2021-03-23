@@ -1,22 +1,26 @@
 #include QMK_KEYBOARD_H
 
-enum mun_layers {
+enum keymap_layers {
     _QWERTY,
     _COLEMAK,
     _DVORAK,
-
     _FN,
     _ADJUST
 };
 
-enum mun_keycodes {
-    QWERTY = SAFE_RANGE,
-    COLEMAK,
-    DVORAK
+enum keymap_keycodes {
+    // Disables touch processing
+    TCH_TOG = SAFE_RANGE
 };
 
-#define FN      MO(_FN)
-#define ADJUST  MO(_ADJUST)
+// Default Layers
+#define QWERTY   DF(_QWERTY)
+#define COLEMAK  DF(_COLEMAK)
+#define DVORAK   DF(_DVORAK)
+
+// Momentary Layers
+#define FN       MO(_FN)
+#define ADJUST   MO(_ADJUST)
 
 #define FN_CAPS  LT(_FN, KC_CAPS)
 #define FN_ESC   LT(_FN, KC_ESC)
@@ -64,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_HOME, KC_UP,   KC_END,  _______, _______, _______, _______, _______, KC_HOME, KC_UP,   KC_END,  KC_PSCR, KC_PGUP,
         _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_INS,  KC_PGDN,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, RGB_MOD, _______, _______, _______, _______, _______, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU
+        _______, _______, _______, TCH_TOG, _______, _______, _______, _______, _______, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU
     ),
 
     [_ADJUST] = LAYOUT(
@@ -133,48 +137,37 @@ const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][ENCODER_OPTIONS]  = {
     )
 };
 
-#if defined(OLED_DRIVER_ENABLE)
-uint16_t ovalue = 0;
-uint32_t mcounter = 0;
-uint32_t mvalue = 0;
-uint16_t sec_timer = 1000;
-
-void do_counters(void) {
-    mcounter++;
-    uint16_t now = sync_timer_read();
-    if (timer_expired(now, sec_timer))
-    {
-        sec_timer += 1000;
-        ovalue++;
-        mvalue = (mvalue + mcounter) / 2;
-        mcounter = 0;
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case TCH_TOG:
+            touch_encoder_toggle();
+            return false;  // Skip all further processing of this key
+        default:
+            return true;  // Process all other keycodes normally
     }
 }
 
-void matrix_scan_user(void) {
-    do_counters();
-}
-
-void matrix_slave_scan_user(void) {
-    do_counters();
-}
-
+#if defined(OLED_DRIVER_ENABLE)
 void oled_task_user(void) {
     // Host Keyboard Layer Status
     oled_write_P(PSTR("Layer: "), false);
-
     switch (get_highest_layer(layer_state)) {
         case _QWERTY:
-            oled_write_P(PSTR("Default\n"), false);
+            oled_write_ln_P(PSTR("Default"), false);
+            break;
+        case _COLEMAK:
+            oled_write_ln_P(PSTR("ColemakK"), false);
+            break;
+        case _DVORAK:
+            oled_write_ln_P(PSTR("Dvorak"), false);
             break;
         case _FN:
-            oled_write_P(PSTR("FN\n"), false);
+            oled_write_ln_P(PSTR("FN"), false);
             break;
         case _ADJUST:
-            oled_write_P(PSTR("ADJ\n"), false);
+            oled_write_ln_P(PSTR("ADJ"), false);
             break;
         default:
-            // Or use the write_ln shortcut over adding '\n' to the end of your string
             oled_write_ln_P(PSTR("Undefined"), false);
     }
 
@@ -183,14 +176,5 @@ void oled_task_user(void) {
     oled_write_P(led_state.num_lock ? PSTR("NUM ") : PSTR("    "), false);
     oled_write_P(led_state.caps_lock ? PSTR("CAP ") : PSTR("    "), false);
     oled_write_ln_P(led_state.scroll_lock ? PSTR("SCR ") : PSTR("    "), false);
-
-    static char buffer[6] = {0};
-    snprintf(buffer, sizeof(buffer), "%5d", ovalue);
-    oled_write_P(PSTR("\nTimer: "), false);
-    oled_write_ln_P(buffer, false);
-
-    snprintf(buffer, sizeof(buffer), "%5d", mvalue);
-    oled_write_P(PSTR("\nScans: "), false);
-    oled_write_ln_P(buffer, false);
 }
 #endif
