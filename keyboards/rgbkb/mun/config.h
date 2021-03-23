@@ -35,6 +35,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_COL_PINS { A0, B11, B0, B10, B12, B2, A8 }
 #define MATRIX_IO_DELAY 5
 
+/* Touchbar adjustments */
+#define TOUCH_DEADZONE 25 // width of a "button", wider inputs will be interpreted as a swipe
+#define TOUCH_TERM 250 // time of a "button" touch, longer inputs will be a swipe
+#define TOUCH_RESOLUTION 10 // sensitivity of swipes, lower=faster
+
 /* Encoder Configuration */
 #define ENCODERS_PAD_A { B8, B9 }
 #define ENCODERS_PAD_B { A14, A15 }
@@ -55,7 +60,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* RGB LED Configuration */
 #define RGB_DI_PIN          B5
-
 #define RGBLED_NUM 98
 #define RGBLED_SPLIT { 49, 49 }
 #define RGBLIGHT_LIMIT_VAL 255

@@ -33,8 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define TOUCH_DEADZONE 25
 #endif
 
-#ifndef ENCODER_RESOLUTION
-#    define ENCODER_RESOLUTION 10
+#ifndef TOUCH_RESOLUTION
+#    define TOUCH_RESOLUTION 10
 #endif
 
 void touch_encoder_init(void);

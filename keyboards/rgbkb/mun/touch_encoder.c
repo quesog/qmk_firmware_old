@@ -190,13 +190,13 @@ void touch_encoder_update_position(void) {
     }
 
     if (is_keyboard_master()) {
-        int8_t delta = (touch_processed[3] - touch_raw[3]) / ENCODER_RESOLUTION;
+        int8_t delta = (touch_processed[3] - touch_raw[3]) / TOUCH_RESOLUTION;
         bool clockwise = touch_raw[3] > touch_processed[3];
         if (delta == 0) return;
 
         // track direction, update cached position, then call user function to ensure api return values are current for the user
         // Don't use touch_raw[3] directly, as we want to ensure any remainder is kept and used next time this is called
-        touch_processed[3] -= delta * ENCODER_RESOLUTION;
+        touch_processed[3] -= delta * TOUCH_RESOLUTION;
         touch_encoder_update_kb_raw(touch_handness);
 
         uint8_t u_delta   = delta < 0 ? -delta : delta;
@@ -264,10 +264,10 @@ void touch_encoder_get_raw(slave_touch_status_t* slave_state) {
 }
 
 void touch_encoder_set_raw(slave_touch_status_t slave_state) {
-    int8_t delta = (touch_slave_state.position - slave_state.position) / ENCODER_RESOLUTION;
+    int8_t delta = (touch_slave_state.position - slave_state.position) / TOUCH_RESOLUTION;
     bool clockwise = slave_state.position > touch_slave_state.position;
     if (delta != 0) {
-        touch_slave_state.position -= delta * ENCODER_RESOLUTION;
+        touch_slave_state.position -= delta * TOUCH_RESOLUTION;
         touch_encoder_update_kb_raw(!touch_handness);
 
         uint8_t u_delta   = delta < 0 ? -delta : delta;
