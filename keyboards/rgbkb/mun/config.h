@@ -58,7 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define RGBLED_NUM 98
 #define RGBLED_SPLIT { 49, 49 }
-#define RGBLIGHT_LIMIT_VAL 120
+#define RGBLIGHT_LIMIT_VAL 255
 #define RGBLIGHT_ANIMATIONS
 
 #define DRIVER_LED_TOTAL RGBLED_NUM
