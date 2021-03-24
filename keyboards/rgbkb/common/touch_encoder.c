@@ -157,13 +157,11 @@ void touch_encoder_init(void) {
 
 __attribute__((weak)) void touch_encoder_tapped_kb(uint8_t index, uint8_t section) { touch_encoder_tapped_user(index, section); }
 __attribute__((weak)) void touch_encoder_update_kb(uint8_t index, bool clockwise) { touch_encoder_update_user(index, clockwise); }
-__attribute__((weak)) void touch_encoder_update_kb_raw(uint8_t index) { touch_encoder_update_user_raw(index); }
 
 __attribute__((weak)) void touch_encoder_tapped_user(uint8_t index, uint8_t section) {}
 __attribute__((weak)) void touch_encoder_update_user(uint8_t index, bool clockwise) {}
-__attribute__((weak)) void touch_encoder_update_user_raw(uint8_t index) {}
 
-void touch_encoder_update_tapped(void) {
+static void touch_encoder_update_tapped(void) {
     // Started touching, being counter for TOUCH_TERM
     if (touch_processed[0] & SLIDER_BIT) {
         touch_timer = timer_read() + TOUCH_TERM;
@@ -175,14 +173,31 @@ void touch_encoder_update_tapped(void) {
 
     uint8_t section = touch_processed[3] / (UINT8_MAX / TOUCH_SEGMENTS + 1);
     if (is_keyboard_master()) {
-        touch_encoder_tapped_kb(touch_handness, section);
+        if (!touch_disabled) {
+            touch_encoder_tapped_kb(touch_handness, section);
+        }
     }
     else {
         touch_slave_state.taps ^= (1 << section);
     }
 }
 
-void touch_encoder_update_position(void) {
+static void touch_encoder_update_position_common(uint8_t* position, uint8_t raw, uint8_t index) {
+    int8_t delta = (*position - raw) / TOUCH_RESOLUTION;
+    bool clockwise = raw > *position;
+    if (delta == 0) return;
+
+    // Don't store raw directly, as we want to ensure any remainder is kept and used next time this is called
+    *position -= delta * TOUCH_RESOLUTION;
+    uint8_t u_delta   = delta < 0 ? -delta : delta;
+    if (!touch_disabled) {
+        for (uint8_t i = 0; i < u_delta; i++) {
+            touch_encoder_update_kb(index, clockwise);
+        }
+    }
+}
+
+static void touch_encoder_update_position(void) {
     // If the user touchs and moves enough, expire touch_timer faster and do encoder position logic instead
     if (!timer_expired(timer_read(), touch_timer)) {
         if ((uint8_t)(touch_raw[3] - touch_processed[3]) <= TOUCH_DEADZONE) return;
@@ -190,19 +205,7 @@ void touch_encoder_update_position(void) {
     }
 
     if (is_keyboard_master()) {
-        int8_t delta = (touch_processed[3] - touch_raw[3]) / TOUCH_RESOLUTION;
-        bool clockwise = touch_raw[3] > touch_processed[3];
-        if (delta == 0) return;
-
-        // track direction, update cached position, then call user function to ensure api return values are current for the user
-        // Don't use touch_raw[3] directly, as we want to ensure any remainder is kept and used next time this is called
-        touch_processed[3] -= delta * TOUCH_RESOLUTION;
-        touch_encoder_update_kb_raw(touch_handness);
-
-        uint8_t u_delta   = delta < 0 ? -delta : delta;
-        for (uint8_t i = 0; i < u_delta; i++) {
-            touch_encoder_update_kb(touch_handness, clockwise);
-        }
+        touch_encoder_update_position_common(&touch_processed[3], touch_raw[3], touch_handness);
     }
     else {
         touch_slave_state.position = touch_raw[3];
@@ -232,6 +235,10 @@ void touch_encoder_update(void) {
         }
         if (delta & SLIDER_BIT) {
             touch_processed[3] = touch_raw[3];
+            if (!is_keyboard_master()) {
+                touch_slave_state.position = touch_raw[3];
+                touch_slave_state.taps ^= (1 << 7);
+            }
             touch_encoder_update_tapped();
         }
     }
@@ -239,15 +246,6 @@ void touch_encoder_update(void) {
     if ((touch_raw[0] & SLIDER_BIT) && touch_processed[3] != touch_raw[3]) {
         touch_encoder_update_position();
     }
-}
-
-uint8_t touch_encoder_status(void) { return touch_processed[0]; }
-
-uint8_t touch_encoder_position(void) { return touch_processed[3]; }
-
-uint16_t touch_encoder_keys(void) {
-    uint16_t data = touch_processed[1];
-    return (data << 8) | touch_processed[2];
 }
 
 void touch_encoder_calibrate(void) {
@@ -264,23 +262,23 @@ void touch_encoder_get_raw(slave_touch_status_t* slave_state) {
 }
 
 void touch_encoder_set_raw(slave_touch_status_t slave_state) {
-    int8_t delta = (touch_slave_state.position - slave_state.position) / TOUCH_RESOLUTION;
-    bool clockwise = slave_state.position > touch_slave_state.position;
-    if (delta != 0) {
-        touch_slave_state.position -= delta * TOUCH_RESOLUTION;
-        touch_encoder_update_kb_raw(!touch_handness);
-
-        uint8_t u_delta   = delta < 0 ? -delta : delta;
-        for (uint8_t i = 0; i < u_delta; i++) {
-            touch_encoder_update_kb(!touch_handness, clockwise);
+    if (touch_slave_state.position != slave_state.position) {
+        // Did a new slide event start?
+        uint8_t mask = (1 << 7);
+        if ((touch_slave_state.taps & mask) != (slave_state.taps & mask)) {
+            touch_slave_state.position = slave_state.position;
         }
+        touch_encoder_update_position_common(&touch_slave_state.position, slave_state.position, !touch_handness);
     }
 
     if (touch_slave_state.taps != slave_state.taps) {
-        for (uint8_t section = 0; section < TOUCH_SEGMENTS; section++) {
-            uint8_t mask = (1 << section);
-            if ((touch_slave_state.taps & mask) != (slave_state.taps & mask))
-                touch_encoder_tapped_kb(!touch_handness, section);
+        if (!touch_disabled) {
+            for (uint8_t section = 0; section < TOUCH_SEGMENTS; section++) {
+                uint8_t mask = (1 << section);
+                if ((touch_slave_state.taps & mask) != (slave_state.taps & mask)) {
+                    touch_encoder_tapped_kb(touch_handness, section);
+                }
+            }
         }
         touch_slave_state.taps = slave_state.taps;
     }
