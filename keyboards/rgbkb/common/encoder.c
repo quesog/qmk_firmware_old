@@ -122,7 +122,7 @@ void encoder_init(void) {
     }
     // And reset all the row pins
     for (int i = 0; i < NUMBER_OF_ENCODERS_C; i++) {
-        setPinInputLow(encoders_pad_c[i]);
+        setPinInputHigh(encoders_pad_c[i]);
     }
 
 #else
@@ -200,7 +200,7 @@ bool encoder_read(void) {
     }
     // revert row pins back to input
     for (int i = 0; i < NUMBER_OF_ENCODERS_C; i++) {
-        setPinInputLow(encoders_pad_c[i]);
+        setPinInputHigh(encoders_pad_c[i]);
     }
 #else
     for (uint8_t i = 0; i < NUMBER_OF_ENCODERS_AB; i++) {

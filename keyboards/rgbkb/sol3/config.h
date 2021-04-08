@@ -42,7 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Encoder Configuration */
 #define ENCODERS_PAD_A { A1 }
 #define ENCODERS_PAD_B { A2 }
-#define ENCODERS_PAD_C { C14, C15, B8, B10, B11, B14 } // { A15, B12, A8, B15, A13, A0 }
+#define ENCODERS_PAD_C { A15, B12, A8, B15, A13, A0 }
 
 #define ENCODERS_PAD_A_RIGHT { A1 }
 #define ENCODERS_PAD_B_RIGHT { A2 }
