@@ -25,7 +25,9 @@
 
 #define HAL_USE_PWM TRUE
 
+#if defined(__arm__)
 #define HAL_USE_I2C TRUE
+#endif
 
 #define HAL_USE_GPT FALSE
 
