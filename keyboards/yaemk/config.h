@@ -1,6 +1,8 @@
 #pragma once
 
 #include "config_common.h"
+#define SEGGER_RTT
+#define SEGGER_IRQ_MAPPING "I#58=USART2,I#47=TIM1,I#48=TIM2,I#86=USBFS"
 
 /* USB CONFIG */
 #define USB_POLLING_INTERVAL_MS 1

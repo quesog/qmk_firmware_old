@@ -271,6 +271,10 @@ endif
 
 ifeq ($(strip $(USE_CHIBIOS_CONTRIB)),yes)
     include $(CHIBIOS_CONTRIB)/os/hal/hal.mk
+    ifeq ($(strip $(USE_SEGGER_RTT)),yes)
+        include $(CHIBIOS_CONTRIB)/os/various/segger_bindings/segger_rtt.mk
+        include $(CHIBIOS_CONTRIB)/os/various/segger_bindings/segger_systemview.mk
+    endif
     CHIBISRC += $(PLATFORMSRC_CONTRIB) $(HALSRC_CONTRIB)
     EXTRAINCDIRS += $(PLATFORMINC_CONTRIB) $(HALINC_CONTRIB) $(CHIBIOS_CONTRIB)/os/various
 endif

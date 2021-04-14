@@ -1,5 +1,5 @@
 # Choose to use RISC-V or ARM MCU
-RISC-V = no
+RISC-V = yes
 
 ifeq ($(strip $(RISC-V)), yes)
     MCU                =   GD32VF103
@@ -17,11 +17,13 @@ endif
 
 # YAEMK source files
 LAYOUTS = split_5x8
-SRC     = led_config.c
+SRC     = led_config.c segger.c
 
 # Debugging
 EXTRAFLAGS     += -g2
 ALLOW_WARNINGS =   yes
+USE_CHIBIOS_CONTRIB = yes
+USE_SEGGER_RTT =   yes
 
 # QMK features 
 CONSOLE_ENABLE     = no

@@ -33,6 +33,11 @@
 #include "debug.h"
 #include "print.h"
 
+#if defined(SEGGER_RTT)
+#    include "SEGGER_SYSVIEW_ChibiOS.h"
+#    include "SEGGER_RTT_streams.h"
+#endif
+
 #ifndef EARLY_INIT_PERFORM_BOOTLOADER_JUMP
 // Change this to be TRUE once we've migrated keyboards to the new init system
 // Remember to change docs/platformdev_chibios_earlyinit.md as well.
@@ -149,6 +154,23 @@ int main(void) {
     /* ChibiOS/RT init */
     halInit();
     chSysInit();
+
+#if defined(SEGGER_RTT)
+    /*
+     * This is optional. You need to initialize this if you will be using the
+     * RTT sequential streams (RTTD0). You *don't* need to use them; you can
+     * use RTT directly (call SEGGER_RTT_xxxx) without any initialization.
+     *
+     *
+     * Initialize RTT (channel 0). The output can be seen on Telnet por 19201.
+     */
+    rttInit();
+    rttSetUpFlags(&RTTD0, RTT_MODE_FLAGS_BLOCK_IF_FIFO_FULL);
+    /*
+     * Start SystemView
+     */
+    SYSVIEW_ChibiOS_Start(GD32_SYSCLK, GD32_SYSCLK, SEGGER_IRQ_MAPPING);
+#endif
 
 #ifdef STM32_EEPROM_ENABLE
     EEPROM_Init();

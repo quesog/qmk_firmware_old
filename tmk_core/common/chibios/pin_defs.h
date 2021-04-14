@@ -275,7 +275,7 @@
 #    define I5 PAL_LINE(GPIOI, 5)
 #    define I6 PAL_LINE(GPIOI, 6)
 #    define I7 PAL_LINE(GPIOI, 7)
-#    define I8 PAL_LINE(GPIOI, 8)
+//#    define I8 PAL_LINE(GPIOI, 8)
 #    define I9 PAL_LINE(GPIOI, 9)
 #    define I10 PAL_LINE(GPIOI, 10)
 #    define I11 PAL_LINE(GPIOI, 11)
