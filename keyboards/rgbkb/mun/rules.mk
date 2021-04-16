@@ -37,6 +37,7 @@ DEBOUNCE_TYPE = sym_eager_pk
 LTO_ENABLE = no
 OPT = 3
 
+OPT_DEFS += -DOLED_FONT_H=\"../common/glcdfont.c\"
 OPT_DEFS += -Ikeyboards/rgbkb/common
 
 DEFAULT_FOLDER = rgbkb/mun/rev1

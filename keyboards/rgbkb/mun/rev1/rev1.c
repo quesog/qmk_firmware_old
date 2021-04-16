@@ -13,8 +13,15 @@ void encoder_update_kb(uint8_t index, bool clockwise) {
         if ((layer_state & (1 << layer)) != 0)
             keycode = pgm_read_word(&encoders[layer][index][clockwise]);
     }
-    if (keycode != KC_TRANSPARENT)
-        tap_code16(keycode);
+    if (keycode != KC_TRANSPARENT) {
+        if (keycode >= SAFE_RANGE) {
+            xprintf("kc\n");
+            keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
+            process_record_user(keycode, &pressed);
+        }
+        else
+            tap_code16(keycode);
+    }
 }
 #endif
 
@@ -31,8 +38,14 @@ static void process_touch_encoder(uint8_t index, uint8_t option) {
         if ((layer_state & (1 << layer)) != 0)
             keycode = pgm_read_word(&touch_encoders[layer][index][option]);
     }
-    if (keycode != KC_TRANSPARENT)
-        tap_code16(keycode);
+    if (keycode != KC_TRANSPARENT) {
+        if (keycode >= SAFE_RANGE) {
+            keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
+            process_record_user(keycode, &pressed);
+        }
+        else
+            tap_code16(keycode);
+    }
 }
 
 void touch_encoder_update_kb(uint8_t index, bool clockwise) {

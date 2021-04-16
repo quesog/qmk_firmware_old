@@ -83,8 +83,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Default configuration: 3 tap zones, slide up, slide down
 const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS]  = {
     [_QWERTY] = TOUCH_ENCODER_LAYOUT( \
-        _______, _______, _______, KC_VOLU, KC_VOLD,
-        _______, _______, _______, KC_UP, KC_DOWN
+        KC_NO, KC_NO, KC_NO, KC_VOLU, KC_VOLD,
+        KC_NO, KC_NO, KC_NO, KC_UP, KC_DOWN
         //RGB_RMOD, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD,
         //RGB_RMOD, RGB_TOG, RGB_MOD, RGB_VAI, RGB_VAD
     ),
