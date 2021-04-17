@@ -33,7 +33,7 @@ OLED_DRIVER_ENABLE = yes     # Enable the OLED Driver
 
 # ENCODER_ENABLE = no 	# We're not using the normal QMK encoder support
 SRC += ../common/encoder.c
-OPT_DEFS += -DENCODER_ENABLE
+# OPT_DEFS += -DENCODER_ENABLE
 OPT_DEFS += -Ikeyboards/rgbkb/common
 
 SPLIT_KEYBOARD = yes
