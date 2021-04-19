@@ -23,6 +23,7 @@
 #include "transactions.h"
 #include "transport.h"
 #include "transaction_id_define.h"
+#include "crc.h"
 
 #define SYNC_TIMER_OFFSET 2
 
@@ -39,22 +40,6 @@
 #define trans_target2initiator_initializer_cb(member, cb) \
     { &dummy, 0, 0, sizeof_member(split_shared_memory_t, member), offsetof(split_shared_memory_t, member), cb }
 #define trans_target2initiator_initializer(member) trans_target2initiator_initializer_cb(member, NULL)
-
-static uint8_t crc8(const void *data, size_t len) {
-    const uint8_t *p   = (const uint8_t *)data;
-    uint8_t        crc = 0xff;
-    size_t         i, j;
-    for (i = 0; i < len; i++) {
-        crc ^= p[i];
-        for (j = 0; j < 8; j++) {
-            if ((crc & 0x80) != 0)
-                crc = (uint8_t)((crc << 1) ^ 0x31);
-            else
-                crc <<= 1;
-        }
-    }
-    return crc;
-}
 
 #if defined(SPLIT_TRANSACTION_IDS_KB) || defined(SPLIT_TRANSACTION_IDS_USER)
 void slave_rpc_info_callback(uint8_t initiator2target_buffer_size, const void *initiator2target_buffer, uint8_t target2initiator_buffer_size, void *target2initiator_buffer) {
