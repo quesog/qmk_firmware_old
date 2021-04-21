@@ -13,7 +13,7 @@ QUANTUM_LIB_SRC += i2c_master.c
 #
 BOOTMAGIC_ENABLE = no       # Virtual DIP switch configuration
 ## (Note that for BOOTMAGIC on Teensy LC you have to use a custom .ld script.)
-DIP_SWITCH_ENABLE = no
+DIP_SWITCH_ENABLE = yes
 MOUSEKEY_ENABLE = no        # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
 CONSOLE_ENABLE = yes        # Console for debug

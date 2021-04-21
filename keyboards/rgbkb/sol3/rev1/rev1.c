@@ -1,5 +1,21 @@
 #include "rev1.h"
 
+void dip_switch_update_kb(uint8_t index, bool active) {
+    if (index == 0) {
+#ifdef RGB_MATRIX_ENABLE
+    if (active) {
+        rgb_matrix_set_flag( LED_FLAG_LIMIT_BRIGHTNESS );
+    } else {
+        rgb_matrix_unset_flag( LED_FLAG_LIMIT_BRIGHTNESS );
+    }
+
+    rgb_matrix_sethsv(rgb_matrix_get_hue(), rgb_matrix_get_sat(), rgb_matrix_get_val());
+#endif
+    }
+
+    dip_switch_update_user(index, active);
+}
+
 #if defined(ENCODER_ENABLE) && !defined(SOL_CUSTOM_ENCODERS)
 extern const uint16_t encoders[][NUMBER_OF_ENCODERS][2];
 

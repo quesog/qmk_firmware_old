@@ -76,6 +76,15 @@ __attribute__((weak)) RGB rgb_matrix_hsv_to_rgb(HSV hsv) { return hsv_to_rgb(hsv
 #    define RGB_MATRIX_MAXIMUM_BRIGHTNESS UINT8_MAX
 #endif
 
+#if !defined(RGB_MATRIX_LIMIT_BRIGHTNESS) || RGB_MATRIX_LIMIT_BRIGHTNESS > UINT8_MAX
+#    undef RGB_MATRIX_LIMIT_BRIGHTNESS
+#    if RGB_MATRIX_LIMIT_BRIGHTNESS > UINT8_MAX
+#        define RGB_MATRIX_LIMIT_BRIGHTNESS UINT8_MAX
+#    else
+#        define RGB_MATRIX_LIMIT_BRRIGHTNESS 128
+#    endif
+#endif
+
 #if !defined(RGB_MATRIX_HUE_STEP)
 #    define RGB_MATRIX_HUE_STEP 8
 #endif
@@ -582,9 +591,14 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
     if (!rgb_matrix_config.enable) {
         return;
     }
+
+    uint8_t maximum_brightness = rgb_matrix_config.flags & LED_FLAG_LIMIT_BRIGHTNESS
+        ? RGB_MATRIX_LIMIT_BRIGHTNESS
+        : RGB_MATRIX_MAXIMUM_BRIGHTNESS;
+
     rgb_matrix_config.hsv.h = hue;
     rgb_matrix_config.hsv.s = sat;
-    rgb_matrix_config.hsv.v = (val > RGB_MATRIX_MAXIMUM_BRIGHTNESS) ? RGB_MATRIX_MAXIMUM_BRIGHTNESS : val;
+    rgb_matrix_config.hsv.v = (val > maximum_brightness) ? maximum_brightness : val;
     if (write_to_eeprom) {
         eeconfig_update_rgb_matrix();
     }
@@ -645,3 +659,5 @@ void rgb_matrix_decrease_speed(void) { rgb_matrix_decrease_speed_helper(true); }
 led_flags_t rgb_matrix_get_flags(void) { return rgb_matrix_config.flags; }
 
 void rgb_matrix_set_flags(led_flags_t flags) { rgb_matrix_config.flags = flags; }
+void rgb_matrix_set_flag(led_flags_t flag) { rgb_matrix_config.flags |= flag; }
+void rgb_matrix_unset_flag(led_flags_t flag) { rgb_matrix_config.flags &= ~flag; }

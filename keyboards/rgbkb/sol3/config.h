@@ -39,6 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SPLIT_HAND_PIN C13
 
+/* LED Turbo DIP Switch */
+#define DIP_SWITCH_PINS { A14 }
+
 /* Encoder Configuration */
 #define ENCODERS_PAD_A { A1 }
 #define ENCODERS_PAD_B { A2 }
@@ -74,6 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DRIVER_LED_TOTAL RGBLED_NUM
 #define RGB_MATRIX_SPLIT RGBLED_SPLIT
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS RGBLIGHT_LIMIT_VAL
+#define RGB_MATRIX_LIMIT_BRIGHTNESS 128
 #define RGB_MATRIX_CENTER { 81, 28 }
 #define RGB_MATRIX_LED_FLUSH_LIMIT 16
 #define RGB_MATRIX_LED_PROCESS_LIMIT 10
@@ -97,5 +101,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AUDIO_PIN_ALT_AS_NEGATIVE
 #endif
 
-
-// #define DIP_SWITCH_PIN A14
