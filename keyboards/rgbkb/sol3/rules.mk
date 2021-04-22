@@ -39,7 +39,7 @@ OPT_DEFS += -DENCODER_ENABLE
 
 SPLIT_KEYBOARD = yes
 SERIAL_DRIVER = usart
-DEBOUNCE_TYPE = sym_eager_pk
+DEBOUNCE_TYPE = sym_defer_pk
 LTO_ENABLE = no
 OPT = 3
 
