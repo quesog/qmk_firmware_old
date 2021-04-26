@@ -172,6 +172,7 @@ static void touch_encoder_update_tapped(void) {
     if (timer_expired(timer_read(), touch_timer)) return;
 
     uint8_t section = touch_processed[3] / (UINT8_MAX / TOUCH_SEGMENTS + 1);
+    xprintf("tap %d\n", section);
     if (is_keyboard_master()) {
         if (!touch_disabled) {
             touch_encoder_tapped_kb(touch_handness, section);
@@ -189,11 +190,11 @@ static void touch_encoder_update_position_common(uint8_t* position, uint8_t raw,
 
     // Don't store raw directly, as we want to ensure any remainder is kept and used next time this is called
     *position -= delta * TOUCH_RESOLUTION;
-    uint8_t u_delta   = delta < 0 ? -delta : delta;
+    xprintf("pos %d\n", raw);
+    //uint8_t u_delta   = delta < 0 ? -delta : delta;
     if (!touch_disabled) {
-        for (uint8_t i = 0; i < u_delta; i++) {
+        //for (uint8_t i = 0; i < u_delta; i++)
             touch_encoder_update_kb(index, clockwise);
-        }
     }
 }
 

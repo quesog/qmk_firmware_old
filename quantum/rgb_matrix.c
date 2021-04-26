@@ -81,7 +81,7 @@ __attribute__((weak)) RGB rgb_matrix_hsv_to_rgb(HSV hsv) { return hsv_to_rgb(hsv
 #    if RGB_MATRIX_LIMIT_BRIGHTNESS > UINT8_MAX
 #        define RGB_MATRIX_LIMIT_BRIGHTNESS UINT8_MAX
 #    else
-#        define RGB_MATRIX_LIMIT_BRRIGHTNESS 128
+#        define RGB_MATRIX_LIMIT_BRIGHTNESS 128
 #    endif
 #endif
 

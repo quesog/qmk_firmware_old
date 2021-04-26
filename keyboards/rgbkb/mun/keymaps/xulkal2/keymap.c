@@ -19,8 +19,8 @@ enum keymap_keycodes {
 #define QWERTY   DF(_QWERTY)
 
 // Momentary Layers
-#define FN       MO(_FUNCTION)
-#define ADJ      MO(_ADJUST)
+#define FN       OSL(_FUNCTION)
+#define ADJ      OSL(_ADJUST)
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -40,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(
         KC_GESC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_NO,      KC_NO,   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_NO,      KC_NO,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_MPLY,    MENU_BTN,KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_MPLY,    KC_MPLY, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, //MENU_BTN
         KC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LCBR,    KC_RCBR, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC,
         KC_LCPO, KC_LGUI, KC_LALT, KC_DEL,  KC_SPC,  KC_NO,   ADJ,        FN,      KC_NO,   KC_SPC,  KC_QUOTE,KC_RALT, KC_APP,  KC_RCPC
     ),
@@ -68,11 +68,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     /* Adjust
      * .--------------------------------------------------------------.  .--------------------------------------------------------------.
-     * |        |        |        |        |        |        |        |  |        |        | NumLck | /      | *      | -      |        |
+     * |        |        |        |        |        |        |        |  |        |        | NumLck | /      | *      | -      | Del    |
      * |--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-     * |        |        |        |        | Reset  |        |        |  |        |        | 7      | 8      | 9      | +      |        |
+     * |        |        | Up     |        | Reset  | T_TOG  |        |  |        |        | 7      | 8      | 9      | +      |        |
      * |--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-     * |        |        |        |        | T_TOG  |        |        |  |        |        | 4      | 5      | 6      | +      |        |
+     * |        | Left   | Down   | Right  |        |        |        |  |        |        | 4      | 5      | 6      | +      |        |
      * |--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
      * |        |        |        |        |        | EepRst |        |  |        |        | 1      | 2      | 3      | Enter  |        |
      * |--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -80,9 +80,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * '--------+--------+--------+--------+--------+--------+--------'  '--------+--------+--------+--------+--------+--------+--------'
      */
     [_ADJUST] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______,    _______, _______, KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS, _______,
-        _______, _______, _______, _______, RESET,   _______, _______,    _______, _______, KC_KP_7, KC_KP_8, KC_KP_9, KC_PPLS, _______,
-        _______, _______, _______, _______, TCH_TOG, _______, _______,    _______, _______, KC_KP_4, KC_KP_5, KC_KP_6, KC_PPLS, _______,
+        _______, _______, _______, _______, _______, _______, _______,    _______, _______, KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS, KC_DEL,
+        _______, _______, KC_UP,   _______, RESET,   TCH_TOG, _______,    _______, _______, KC_KP_7, KC_KP_8, KC_KP_9, KC_PPLS, _______,
+        _______, KC_LEFT, KC_DOWN, KC_RIGHT,_______, _______, _______,    _______, _______, KC_KP_4, KC_KP_5, KC_KP_6, KC_PPLS, _______,
         _______, _______, _______, _______, _______, EEP_RST, _______,    _______, _______, KC_KP_1, KC_KP_2, KC_KP_3, KC_PENT, _______,
         _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, KC_KP_0, KC_PDOT, KC_PENT, _______
     )
@@ -91,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Default configuration: 3 tap zones, slide up, slide down
 const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS]  = {
     [_QWERTY] = TOUCH_ENCODER_LAYOUT( \
-        KC_MPRV, KC_MPLY, KC_MNXT, KC_VOLU, KC_VOLD,
+        KC_MNXT, KC_MPLY, KC_MPRV, KC_VOLU, KC_VOLD,
         KC_MNXT, KC_MPLY, KC_MPRV, KC_VOLD, KC_VOLU
         // RGB_RMOD, RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI
     ),
@@ -109,8 +109,10 @@ const uint16_t PROGMEM encoders[][NUMBER_OF_ENCODERS][ENCODER_OPTIONS]  = {
     [_QWERTY] = ENCODER_LAYOUT( \
         KC_VOLD, KC_VOLU,
         KC_VOLD, KC_VOLU,
-        MENU_DN, MENU_UP,
-        MENU_DN, MENU_UP
+        KC_PGDN, KC_PGUP,
+        KC_PGDN, KC_PGUP
+        //MENU_DN, MENU_UP,
+        //MENU_DN, MENU_UP
     ),
     [_FUNCTION] = ENCODER_LAYOUT( \
         _______, _______,
@@ -137,22 +139,26 @@ const rgb_matrix_f rgb_matrix_functions[RGB_FUNCTION_COUNT][2] = {
 };
 // clang-format on
 
-static bool rgb_menu_selecting = false;
-static uint8_t rgb_menu_selection = 4;
+typedef struct {
+    bool selecting;
+    uint8_t selection;
+} kb_menu_status_t;
+
+static kb_menu_status_t rgb_menu = { false, 4 };
 
 static void rgb_menu_action(bool clockwise) {
-    if (rgb_menu_selecting)  {
+    if (rgb_menu.selecting)  {
         if (clockwise) {
-            rgb_menu_selection = (rgb_menu_selection - 1);
-            if (rgb_menu_selection >= RGB_FUNCTION_COUNT)
-                rgb_menu_selection = RGB_FUNCTION_COUNT - 1;
+            rgb_menu.selection = (rgb_menu.selection - 1);
+            if (rgb_menu.selection >= RGB_FUNCTION_COUNT)
+                rgb_menu.selection = RGB_FUNCTION_COUNT - 1;
         }
         else {
-            rgb_menu_selection = (rgb_menu_selection + 1) % RGB_FUNCTION_COUNT;
+            rgb_menu.selection = (rgb_menu.selection + 1) % RGB_FUNCTION_COUNT;
         }
     }
     else {
-        (*rgb_matrix_functions[rgb_menu_selection][clockwise])();
+        (*rgb_matrix_functions[rgb_menu.selection][clockwise])();
     }
 }
 
@@ -161,19 +167,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     {
         case MENU_BTN:
             if (record->event.pressed) {
-                rgb_menu_selecting = !rgb_menu_selecting;
-                xprintf("s %d\n", rgb_menu_selecting);
+                rgb_menu.selecting = !rgb_menu.selecting;
             }
             return false;
         case MENU_UP:
             if (record->event.pressed) {
-                xprintf("p %d\n",1);
                 rgb_menu_action(true);
             }
             return false;
         case MENU_DN:
             if (record->event.pressed) {
-                xprintf("p %d\n",0);
                 rgb_menu_action(false);
             }
             return false;
@@ -215,54 +218,60 @@ static void render_rgb_menu(void) {
     snprintf(buffer, sizeof(buffer), " Hue  %3d  Sat  %3d  Val  %3d  Spd  %3d  Mod  %3d ", 
     rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v, rgb_matrix_config.speed, rgb_matrix_config.mode);
 
-    if (rgb_menu_selecting) {
-        buffer[rgb_menu_selection * 10] = '*';
-        buffer[4 + rgb_menu_selection * 10] = '*';
+    if (rgb_menu.selecting) {
+        buffer[rgb_menu.selection * 10] = '*';
+        buffer[4 + rgb_menu.selection * 10] = '*';
     }
     else {
-        buffer[rgb_menu_selection * 10] = '>';
-        buffer[4 + rgb_menu_selection * 10] = '<';
+        buffer[rgb_menu.selection * 10] = '>';
+        buffer[4 + rgb_menu.selection * 10] = '<';
     }
     oled_write(buffer, false);
 }
 
-// static void render_layer(void) {
-//     // Host Keyboard Layer Status
-//     oled_write_P(PSTR("     "), false);
-//     oled_write_P(PSTR("Layer"), false);
-//     switch (get_highest_layer(layer_state)) {
-//         case _QWERTY:
-//             oled_write_ln_P(PSTR("BASE "), false);
-//             break;
-//         case _FUNCTION:
-//             oled_write_ln_P(PSTR("FUNC "), false);
-//             break;
-//         case _ADJUST:
-//             oled_write_ln_P(PSTR("ADJS "), false);
-//             break;
-//     }
-// }
+static void render_layer(void) {
+    // Host Keyboard Layer Status
+    oled_write_P(PSTR("     "), false);
+    oled_write_P(PSTR("Layer"), false);
+    switch (get_highest_layer(layer_state)) {
+        case _QWERTY:
+            oled_write_ln_P(PSTR("BASE "), false);
+            break;
+        case _FUNCTION:
+            oled_write_ln_P(PSTR("FUNC "), false);
+            break;
+        case _ADJUST:
+            oled_write_ln_P(PSTR("ADJS "), false);
+            break;
+    }
+}
 
-// static void render_leds(void)
-// {
-//     // Host Keyboard LED Status
-//     oled_write_P(PSTR("     "), false);
-//     led_t led_state = host_keyboard_led_state();
-//     oled_write_P(led_state.num_lock ? PSTR("NUMLK")     : PSTR("     "), false);
-//     oled_write_P(led_state.caps_lock ? PSTR("CAPLK")    : PSTR("     "), false);
-//     oled_write_P(led_state.scroll_lock ? PSTR("SCRLK")  : PSTR("     "), false);
-// }
+static void render_leds(void)
+{
+    // Host Keyboard LED Status
+    oled_write_P(PSTR("     "), false);
+    led_t led_state = host_keyboard_led_state();
+    oled_write_P(led_state.num_lock ? PSTR("NUMLK")     : PSTR("     "), false);
+    oled_write_P(led_state.caps_lock ? PSTR("CAPLK")    : PSTR("     "), false);
+    oled_write_P(led_state.scroll_lock ? PSTR("SCRLK")  : PSTR("     "), false);
+}
 
 void oled_task_user(void) {
     if (is_keyboard_master()) {
         render_icon();
-        //render_layer();
-        //render_leds();
-        render_rgb_menu();
+        render_layer();
+        render_leds();
     }
-    else {
+    else if (!is_keyboard_master()) {
+        render_icon();
         render_logo();
         oled_scroll_left();
+        // TOOD: enable rgb menu after kb transport code lands
+        //render_rgb_menu();
+    }
+    else {
+        // TODO: compile hack for now
+        render_rgb_menu();
     }
 }
 

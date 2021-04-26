@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 
 #ifndef TOUCH_TERM
-#    define TOUCH_TERM 250
+#    define TOUCH_TERM 500
 #endif
 
 #ifndef TOUCH_SEGMENTS
@@ -30,11 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifndef TOUCH_DEADZONE
-#    define TOUCH_DEADZONE 25
+#    define TOUCH_DEADZONE 50
 #endif
 
 #ifndef TOUCH_RESOLUTION
-#    define TOUCH_RESOLUTION 10
+#    define TOUCH_RESOLUTION 25
 #endif
 
 void touch_encoder_init(void);

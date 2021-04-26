@@ -17,7 +17,7 @@ void encoder_update_kb(uint8_t index, bool clockwise) {
         if (keycode >= SAFE_RANGE) {
             xprintf("kc\n");
             keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
-            process_record_user(keycode, &pressed);
+            process_record_kb(keycode, &pressed);
         }
         else
             tap_code16(keycode);
@@ -41,7 +41,7 @@ static void process_touch_encoder(uint8_t index, uint8_t option) {
     if (keycode != KC_TRANSPARENT) {
         if (keycode >= SAFE_RANGE) {
             keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
-            process_record_user(keycode, &pressed);
+            process_record_kb(keycode, &pressed);
         }
         else
             tap_code16(keycode);
