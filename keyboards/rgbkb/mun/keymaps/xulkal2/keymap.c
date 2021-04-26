@@ -263,14 +263,13 @@ void oled_task_user(void) {
         render_leds();
     }
     else if (!is_keyboard_master()) {
-        render_icon();
         render_logo();
         oled_scroll_left();
-        // TOOD: enable rgb menu after kb transport code lands
-        //render_rgb_menu();
     }
     else {
+        // TOOD: enable rgb menu after kb transport code lands
         // TODO: compile hack for now
+        render_icon();
         render_rgb_menu();
     }
 }
