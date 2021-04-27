@@ -213,7 +213,6 @@ static void render_icon(void) {
 }
 
 static void render_rgb_menu(void) {
-    oled_write_P(PSTR("     "), false);
     static char buffer[53] = {0};
     snprintf(buffer, sizeof(buffer), " Hue  %3d  Sat  %3d  Val  %3d  Spd  %3d  Mod  %3d ", 
     rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v, rgb_matrix_config.speed, rgb_matrix_config.mode);
@@ -231,7 +230,6 @@ static void render_rgb_menu(void) {
 
 static void render_layer(void) {
     // Host Keyboard Layer Status
-    oled_write_P(PSTR("     "), false);
     oled_write_P(PSTR("Layer"), false);
     switch (get_highest_layer(layer_state)) {
         case _QWERTY:
@@ -249,18 +247,28 @@ static void render_layer(void) {
 static void render_leds(void)
 {
     // Host Keyboard LED Status
-    oled_write_P(PSTR("     "), false);
     led_t led_state = host_keyboard_led_state();
     oled_write_P(led_state.num_lock ? PSTR("NUMLK")     : PSTR("     "), false);
     oled_write_P(led_state.caps_lock ? PSTR("CAPLK")    : PSTR("     "), false);
     oled_write_P(led_state.scroll_lock ? PSTR("SCRLK")  : PSTR("     "), false);
 }
 
+static void render_touch(void)
+{
+    // Host Touch LED Status
+    oled_write_P(!touch_encoder_toggled() ? PSTR("TOUCH")  : PSTR("     "), false);
+    oled_write_P(touch_encoder_calibrating() ? PSTR("CLBRT")  : PSTR("     "), false);
+}
+
 void oled_task_user(void) {
     if (is_keyboard_master()) {
-        render_icon();
         render_layer();
+        oled_write_P(PSTR("     "), false);
         render_leds();
+        oled_write_P(PSTR("     "), false);
+        render_touch();
+        oled_write_P(PSTR("     "), false);
+        render_icon();
     }
     else if (!is_keyboard_master()) {
         render_logo();

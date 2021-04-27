@@ -18,7 +18,8 @@
         "type_traits": "c",
         "utility": "c",
         "ranges": "c",
-        "variant": "c"
+        "variant": "c",
+        "regex": "c"
     },
     "[markdown]": {
         "editor.trimAutoWhitespace": false,

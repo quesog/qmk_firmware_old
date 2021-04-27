@@ -254,8 +254,16 @@ void touch_encoder_calibrate(void) {
     write_register8(QT_CALIBRATE, 0x01);
 }
 
+bool touch_encoder_calibrating(void) {
+    return touch_raw[0] & CALIBRATION_BIT;
+}
+
 void touch_encoder_toggle(void) {
     touch_disabled = !touch_disabled;
+}
+
+bool touch_encoder_toggled(void) {
+    return touch_disabled;
 }
 
 void touch_encoder_get_raw(slave_touch_status_t* slave_state) {

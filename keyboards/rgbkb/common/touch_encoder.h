@@ -39,8 +39,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void touch_encoder_init(void);
 void touch_encoder_update(void);
+
 void touch_encoder_calibrate(void);
+bool touch_encoder_calibrating(void);
+
 void touch_encoder_toggle(void);
+bool touch_encoder_toggled(void);
 
 // Called when touch encoder is tapped, weak function overridable by the kb
 void touch_encoder_tapped_kb(uint8_t index, uint8_t section);
