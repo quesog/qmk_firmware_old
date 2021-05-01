@@ -80,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * '--------+--------+--------+--------+--------+--------+--------'  '--------+--------+--------+--------+--------+--------+--------'
      */
     [_ADJUST] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______,    _______, _______, KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS, KC_DEL,
+        KC_GRAVE, _______, _______, _______, _______, _______, _______,    _______, _______, KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS, KC_DEL,
         _______, _______, KC_UP,   _______, RESET,   TCH_TOG, _______,    _______, _______, KC_KP_7, KC_KP_8, KC_KP_9, KC_PPLS, _______,
         _______, KC_LEFT, KC_DOWN, KC_RIGHT,_______, _______, _______,    _______, _______, KC_KP_4, KC_KP_5, KC_KP_6, KC_PPLS, _______,
         _______, _______, _______, _______, _______, EEP_RST, _______,    _______, _______, KC_KP_1, KC_KP_2, KC_KP_3, KC_PENT, _______,
@@ -266,12 +266,12 @@ void oled_task_user(void) {
         render_leds();
         oled_write_P(PSTR("     "), false);
         render_touch();
-        oled_write_P(PSTR("     "), false);
+        oled_set_cursor(0, 12);
         render_icon();
     }
     else {
         render_rgb_menu();
-        oled_write_P(PSTR("     "), false);
+        oled_set_cursor(0, 12);
         render_icon();
     }
 }

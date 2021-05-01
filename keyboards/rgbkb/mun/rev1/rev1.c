@@ -1,5 +1,23 @@
 #include "rev1.h"
 
+static void tap_keycode(uint16_t keycode) {
+    keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
+    process_record_quantum_keycode(keycode, &pressed);
+#if TAP_CODE_DELAY > 0
+    wait_ms(TAP_CODE_DELAY);
+#endif
+    pressed.event.pressed = false;
+    process_record_quantum_keycode(keycode, &pressed);
+
+    // if (keycode >= SAFE_RANGE) {
+    //     xprintf("kc\n");
+    //     keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
+    //     process_record_kb(keycode, &pressed);
+    // }
+    // else
+    //     tap_code16(keycode);
+}
+
 #if defined(ENCODER_ENABLE) && !defined(MUN_CUSTOM_ENCODERS)
 extern const uint16_t encoders[][NUMBER_OF_ENCODERS][2];
 
@@ -14,13 +32,7 @@ void encoder_update_kb(uint8_t index, bool clockwise) {
             keycode = pgm_read_word(&encoders[layer][index][clockwise]);
     }
     if (keycode != KC_TRANSPARENT) {
-        if (keycode >= SAFE_RANGE) {
-            xprintf("kc\n");
-            keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
-            process_record_kb(keycode, &pressed);
-        }
-        else
-            tap_code16(keycode);
+        tap_keycode(keycode);
     }
 }
 #endif
@@ -39,12 +51,7 @@ static void process_touch_encoder(uint8_t index, uint8_t option) {
             keycode = pgm_read_word(&touch_encoders[layer][index][option]);
     }
     if (keycode != KC_TRANSPARENT) {
-        if (keycode >= SAFE_RANGE) {
-            keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
-            process_record_kb(keycode, &pressed);
-        }
-        else
-            tap_code16(keycode);
+        tap_keycode(keycode);
     }
 }
 
