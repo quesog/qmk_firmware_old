@@ -1,13 +1,18 @@
 #include "rev1.h"
 
 static void tap_keycode(uint16_t keycode) {
-    keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
-    process_record_quantum_keycode(keycode, &pressed);
-#if TAP_CODE_DELAY > 0
-    wait_ms(TAP_CODE_DELAY);
-#endif
-    pressed.event.pressed = false;
-    process_record_quantum_keycode(keycode, &pressed);
+    if (keycode < QK_MODS_MAX) {
+        tap_code16(keycode);
+    }
+    else {
+        keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
+        process_record_quantum_keycode(keycode, &pressed);
+    #if TAP_CODE_DELAY > 0
+        wait_ms(TAP_CODE_DELAY);
+    #endif
+        pressed.event.pressed = false;
+        process_record_quantum_keycode(keycode, &pressed);
+    }
 
     // if (keycode >= SAFE_RANGE) {
     //     xprintf("kc\n");

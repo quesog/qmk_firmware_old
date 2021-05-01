@@ -92,7 +92,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 const uint16_t PROGMEM touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS]  = {
     [_QWERTY] = TOUCH_ENCODER_LAYOUT( \
         KC_MNXT, KC_MPLY, KC_MPRV, KC_VOLU, KC_VOLD,
-        RGB_MOD, RGB_TOG, RGB_RMOD, RGB_HUD, RGB_HUI
+        RGB_RMOD, RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI
     ),
     [_FUNCTION] = TOUCH_ENCODER_LAYOUT( \
         _______, _______, _______, _______, _______,

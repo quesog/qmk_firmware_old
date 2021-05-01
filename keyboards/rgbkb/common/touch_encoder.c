@@ -122,6 +122,7 @@ uint8_t  touch_processed[4] = { 0 };
 uint16_t touch_timer        = 0;
 uint16_t touch_update_timer = 0;
 
+bool touch_slave_init = false;
 slave_touch_status_t touch_slave_state = { 0, 0 };
 
 static bool write_register8(uint8_t address, uint8_t data) {
@@ -271,6 +272,12 @@ void touch_encoder_get_raw(slave_touch_status_t* slave_state) {
 }
 
 void touch_encoder_set_raw(slave_touch_status_t slave_state) {
+    if (!touch_slave_init) {
+        touch_slave_state = slave_state;
+        touch_slave_init = true;
+        return;
+    }
+
     if (touch_slave_state.position != slave_state.position) {
         // Did a new slide event start?
         uint8_t mask = (1 << 7);
