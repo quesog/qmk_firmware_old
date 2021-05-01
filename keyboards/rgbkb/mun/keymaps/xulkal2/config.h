@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define RGB_DISABLE_TIMEOUT 1200000
 #define RGB_DISABLE_WHEN_USB_SUSPENDED true
 #define OLED_SCROLL_TIMEOUT 20000
+#define ONESHOT_TAP_TOGGLE 2
 
 #define RGB_MATRIX_HUE_STEP 8
 #define RGB_MATRIX_SAT_STEP 8
