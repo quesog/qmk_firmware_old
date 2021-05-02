@@ -1,64 +1,64 @@
 #include "rev1.h"
+#include "split_util.h"
+
+const encodermap_t encoder_map[NUMBER_OF_ENCODERS][ENCODER_OPTIONS] = ENCODER_MATRIX_MAP;
+const encodermap_t touch_encoder_map[NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS] = TOUCH_ENCODER_MATRIX_MAP;
 
 void dip_switch_update_kb(uint8_t index, bool active) {
-    if (index == 0) {
+    switch(index) {
+        case 0: {
 #ifdef RGB_MATRIX_ENABLE
-    if (active) {
-        rgb_matrix_set_flag( LED_FLAG_LIMIT_BRIGHTNESS );
-    } else {
-        rgb_matrix_unset_flag( LED_FLAG_LIMIT_BRIGHTNESS );
-    }
+            if (active) {
+                rgb_matrix_set_flag( LED_FLAG_LIMIT_BRIGHTNESS );
+            } else {
+                rgb_matrix_unset_flag( LED_FLAG_LIMIT_BRIGHTNESS );
+            }
 
-    rgb_matrix_sethsv(rgb_matrix_get_hue(), rgb_matrix_get_sat(), rgb_matrix_get_val());
+            rgb_matrix_sethsv(rgb_matrix_get_hue(), rgb_matrix_get_sat(), rgb_matrix_get_val());
 #endif
+            break;
+        }
+        case 1: {
+            action_exec((keyevent_t){
+                .key = (keypos_t){.row = isLeftHand ? 4 : 11, .col = 6},
+                .pressed = active,
+                .time = (timer_read() | 1)
+            });
+            break;
+        }
     }
 
     dip_switch_update_user(index, active);
 }
 
-#if defined(ENCODER_ENABLE) && !defined(SOL_CUSTOM_ENCODERS)
-extern const uint16_t encoders[][NUMBER_OF_ENCODERS][2];
-
-void encoder_update_kb(uint8_t index, bool clockwise) {
-    if (!is_keyboard_master()) return;
-    uint8_t layer = biton32(layer_state);
-    uint16_t keycode = pgm_read_word(&encoders[layer][index][clockwise]);
-    while (keycode == KC_TRANSPARENT && layer > 0)
-    {
-        layer--;
-        if ((layer_state & (1 << layer)) != 0)
-            keycode = pgm_read_word(&encoders[layer][index][clockwise]);
-    }
-    if (keycode != KC_TRANSPARENT)
-        tap_code16(keycode);
-}
+inline void process_encoder_update(encodermap_t pos) {
+    action_exec((keyevent_t){
+        .key = (keypos_t){ .row = pos.row, .col = pos.col }, .pressed = true, .time = (timer_read() | 1) /* time should not be 0 */
+    });
+#if TAP_CODE_DELAY > 0
+    wait_ms(TAP_CODE_DELAY);
 #endif
-
-#if !defined(SOL_CUSTOM_TOUCH_ENCODERS)
-extern const uint16_t touch_encoders[][NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS];
-
-static void process_touch_encoder(uint8_t index, uint8_t option) {
-    if (!is_keyboard_master()) return;
-    uint8_t layer = biton32(layer_state);
-    uint16_t keycode = pgm_read_word(&touch_encoders[layer][index][option]);
-    while (keycode == KC_TRANSPARENT && layer > 0)
-    {
-        layer--;
-        if ((layer_state & (1 << layer)) != 0)
-            keycode = pgm_read_word(&touch_encoders[layer][index][option]);
-    }
-    if (keycode != KC_TRANSPARENT)
-        tap_code16(keycode);
-}
-
-void touch_encoder_update_kb(uint8_t index, bool clockwise) {
-    process_touch_encoder(index, TOUCH_SEGMENTS + clockwise);
+    action_exec((keyevent_t){
+        .key = (keypos_t){ .row = pos.row, .col = pos.col }, .pressed = false, .time = (timer_read() | 1) /* time should not be 0 */
+    });
 }
 
 void touch_encoder_tapped_kb(uint8_t index, uint8_t section) {
-    process_touch_encoder(index, section);
+    process_encoder_update(touch_encoder_map[index][section + 2]); // Offset 2 for taps
 }
-#endif
+
+void touch_encoder_update_kb(uint8_t index, bool clockwise) {
+    process_encoder_update(touch_encoder_map[index][clockwise ? 0 : 1]);
+}
+
+void encoder_update_kb(uint8_t index, bool clockwise) {
+    process_encoder_update(encoder_map[index][clockwise]);
+}
+
+void matrix_slave_scan_kb() {
+    dip_switch_read(false);
+    matrix_slave_scan_user();
+}
 
 #ifdef RGB_MATRIX_ENABLE
 // clang-format off

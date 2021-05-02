@@ -14,13 +14,14 @@ QUANTUM_LIB_SRC += i2c_master.c
 BOOTMAGIC_ENABLE = no       # Virtual DIP switch configuration
 ## (Note that for BOOTMAGIC on Teensy LC you have to use a custom .ld script.)
 DIP_SWITCH_ENABLE = yes
-MOUSEKEY_ENABLE = no        # Mouse keys
+MOUSEKEY_ENABLE = yes       # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
 CONSOLE_ENABLE = yes        # Console for debug
 COMMAND_ENABLE = no         # Commands for debug and configuration
 NKRO_ENABLE = yes           # Nkey Rollover - if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
 MIDI_ENABLE = no            # MIDI controls
 AUDIO_ENABLE = yes           # Audio output
+AUDIO_DRIVER = dac_basic
 UNICODE_ENABLE = no         # Unicode
 BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
 DYNAMIC_MACRO_ENABLE = yes

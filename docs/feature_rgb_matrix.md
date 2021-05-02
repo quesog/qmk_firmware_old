@@ -194,6 +194,7 @@ As mentioned earlier, the center of the keyboard by default is expected to be `{
 |`LED_FLAG_UNDERGLOW`        |`0x02`|If the LED is for underglow                      |
 |`LED_FLAG_KEYLIGHT`         |`0x04`|If the LED is for key backlight                  |
 |`LED_FLAG_INDICATOR`        |`0x08`|If the LED is for keyboard state indication      |
+|`LED_FLAG_LIMITED`          |`0x10`|Limit the brightness to a lower value            |
 
 ## Keycodes :id=keycodes
 
@@ -441,6 +442,7 @@ These are defined in [`rgblight_list.h`](https://github.com/qmk/qmk_firmware/blo
 #define RGB_MATRIX_LED_PROCESS_LIMIT (DRIVER_LED_TOTAL + 4) / 5 // limits the number of LEDs to process in an animation per task run (increases keyboard responsiveness)
 #define RGB_MATRIX_LED_FLUSH_LIMIT 16 // limits in milliseconds how frequently an animation will update the LEDs. 16 (16ms) is equivalent to limiting to 60fps (increases keyboard responsiveness)
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200 // limits maximum brightness of LEDs to 200 out of 255. If not defined maximum brightness is set to 255
+#define RGB_MATRIX_LIMIT_BRIGHTNESS   100 // a lower limited maximum brightness
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_CYCLE_LEFT_RIGHT // Sets the default mode, if none has been set
 #define RGB_MATRIX_STARTUP_HUE 0 // Sets the default hue value, if none has been set
 #define RGB_MATRIX_STARTUP_SAT 255 // Sets the default saturation value, if none has been set
@@ -524,6 +526,37 @@ Where `28` is an unused index from `eeconfig.h`.
 |`rgb_matrix_get_hsv()`           |Gets hue, sat, and val and returns a [`HSV` structure](https://github.com/qmk/qmk_firmware/blob/7ba6456c0b2e041bb9f97dbed265c5b8b4b12192/quantum/color.h#L56-L61)|
 |`rgb_matrix_get_speed()`         |Gets current speed         |
 |`rgb_matrix_get_suspend_state()` |Gets current suspend state |
+
+### Update flags :id=update-flags
+
+Global flags are used to affect the complete RGB Matrix state, only lighting LEDs matching a certain flag, or with `LED_FLAG_LIMIT_BRIGHTNESS` lowering the maximum brightness for the keyboard.
+
+|Function                           |Description                |
+|rgb_matrix_set_flags(flags)        |Set the global flags       |
+|rgb_matrix_set_flag(flag)          |Enable a single flag       |
+|rgb_matrix_unset_flag(flag)        |Disable a single flag      |
+
+For example, you could put a DIP switch on your keyboard to toggle between the limited or full brightness.
+
+```c
+// config.h
+#define RGB_MATRIX_LIMIT_BRIGHTNESS   128
+#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 255
+
+// keyboard.c
+void dip_switch_update_kb(uint8_t index, bool active) {
+#ifdef RGB_MATRIX_ENABLE
+    if (active)
+        rgb_matrix_set_flag( LED_FLAG_LIMIT_BRIGHTNESS );
+    else
+        rgb_matrix_unset_flag( LED_FLAG_LIMIT_BRIGHTNESS );
+    
+    rgb_matrix_sethsv(rgb_matrix_get_hue(), rgb_matrix_get_sat(), rgb_matrix_get_val());
+#endif
+
+    dip_switch_update_user(index, active);
+}
+```
 
 ## Callbacks :id=callbacks
 

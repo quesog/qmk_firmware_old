@@ -29,18 +29,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USB_POLLING_INTERVAL_MS 1
 
 /* Matrix Configuration - Rows are doubled up */
-#define MATRIX_ROWS 10
+#define MATRIX_ROWS 14
 #define MATRIX_COLS 8
-#define MATRIX_ROW_PINS  { B15, A8, A15, B12, A3 }
+#define MATRIX_ROW_PINS  { B15, A8, A15, B12, A3, C15, C15 } // TODO: s/C15/PIN_NO/
 #define MATRIX_COL_PINS  { A6, A7, B0, B2, B1, B9, B3, B4}
-#define MATRIX_ROW_PINS_RIGHT { B15, B14, A8, A13, A7 }
+#define MATRIX_ROW_PINS_RIGHT { B15, B14, A8, A13, A7, C15, C15 } // TODO: s/C15/PIN_NO/
 #define MATRIX_COL_PINS_RIGHT { B9, B8, B4, A6, A3, B10, B12, B11}
 #define MATRIX_IO_DELAY 5
 
 #define SPLIT_HAND_PIN C13
 
 /* LED Turbo DIP Switch */
-#define DIP_SWITCH_PINS { A14 }
+#define DIP_SWITCH_PINS { A14, B13 }
+#define DIP_SWITCH_PINS_RIGHT { A14, B0 }
 
 /* Encoder Configuration */
 #define ENCODERS_PAD_A { A1 }
@@ -96,8 +97,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef AUDIO_ENABLE
 #undef AUDIO_PIN
-#define AUDIO_PIN A5
-#define AUDIO_PIN_ALT A4
+#define AUDIO_PIN A4
+#define AUDIO_PIN_ALT A5
 #define AUDIO_PIN_ALT_AS_NEGATIVE
 #endif
 
