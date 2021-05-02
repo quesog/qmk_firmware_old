@@ -27,18 +27,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT         Mün
 
 #define USB_POLLING_INTERVAL_MS 1
+// Note, we are using sym_eager_pk debounce, so 10ms has identical key up response time to the default debounce algorithm at 5ms, 
+//    key down response time with sym_eager_pk is faster as it is equivelent to the default debounce algorithm at 0ms.
+#define DEBOUNCE 10
 
 /* Matrix Configuration - Rows are doubled up */
-#define MATRIX_ROWS 10
-#define MATRIX_ROW_PINS { A1, A3, B3, A13, B15 }
+#define MATRIX_ROWS 14
+// B1, A2 reserved for encoder / touch encoder support
+#define MATRIX_ROW_PINS { A1, A3, B3, A13, B15, B1, A2 }
 #define MATRIX_COLS 7
 #define MATRIX_COL_PINS { A0, B11, B0, B10, B12, B2, A8 }
 #define MATRIX_IO_DELAY 5
 
 /* Touchbar adjustments */
-#define TOUCH_DEADZONE 25 // width of a "button", wider inputs will be interpreted as a swipe
-#define TOUCH_TERM 250 // time of a "button" touch, longer inputs will be a swipe
-#define TOUCH_RESOLUTION 10 // sensitivity of swipes, lower=faster
+#define TOUCH_DEADZONE 50 // width of a "button", wider inputs will be interpreted as a swipe
+#define TOUCH_TERM 350 // time of a "button" touch, longer inputs will be a swipe
+#define TOUCH_RESOLUTION 25 // sensitivity of swipes, lower=faster
 
 /* Encoder Configuration */
 #define ENCODERS_PAD_A { B8, B9 }

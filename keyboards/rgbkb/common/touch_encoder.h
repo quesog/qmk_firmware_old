@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 
 #ifndef TOUCH_TERM
-#    define TOUCH_TERM 500
+#    define TOUCH_TERM 350
 #endif
 
 #ifndef TOUCH_SEGMENTS
