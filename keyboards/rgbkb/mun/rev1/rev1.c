@@ -15,7 +15,7 @@ const encodermap_t encoder_map[NUMBER_OF_ENCODERS][ENCODER_OPTIONS] =
     { { 12, 2 }, { 12, 3 } }, // Encoder 4 matrix entries
 }; 
 
-const encodermap_t touch_encoder_map[NUMBER_OF_ENCODERS + NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS] = 
+const encodermap_t touch_encoder_map[NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS] = 
 {
     { {  6, 0 }, {  6, 1 }, {  6, 2 }, {  6, 3 }, {  6, 4 } }, // Touch Encoder 1 matrix entries
     { { 13, 0 }, { 13, 1 }, { 13, 2 }, { 13, 3 }, { 13, 4 } }  // Touch Encoder 2 matrix entries

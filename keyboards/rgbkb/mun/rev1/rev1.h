@@ -35,28 +35,6 @@
 #define NUMBER_OF_TOUCH_ENCODERS 2
 #define TOUCH_ENCODER_OPTIONS TOUCH_SEGMENTS + 2
 
-#define TOUCH_ENCODER_LAYOUT( \
-    E10, E11, E12, E13, E14, \
-    E20, E21, E22, E23, E24 \
-) \
-{ \
-    { E10, E11, E12, E13, E14 }, \
-    { E20, E21, E22, E23, E24 } \
-}
-
 #define NUMBER_OF_ENCODERS 4
 #define ENCODER_OPTIONS 2
-
-#define ENCODER_LAYOUT( \
-    E10, E11, \
-    E20, E21, \
-    E30, E31, \
-    E40, E41 \
-) \
-{ \
-    { E10, E11 }, \
-    { E20, E21 }, \
-    { E30, E31 }, \
-    { E40, E41 } \
-}
 // clang-format on
