@@ -10,8 +10,8 @@
     L20, L21, L22, L23, L24, L25, L26, R20, R21, R22, R23, R24, R25, R26, \
     L30, L31, L32, L33, L34, L35, L36, R30, R31, R32, R33, R34, R35, R36, \
     L40, L41, L42, L43, L44, L45, L46, R40, R41, R42, R43, R44, R45, R46, \
-    E01, E02, E11, E12,                               E31, E32, E41, E42, \
-    T01, T02, T03, T04, T05,                     T11, T12, T13, T14, T15 \
+    E00, E01, E10, E11,                               E20, E21, E30, E31, \
+    T00, T01, T02, T03, T04,                     T10, T11, T12, T13, T14 \
 ) \
 { \
     /* Left Half */ \
@@ -20,16 +20,16 @@
     { L20, L21, L22, L23, L24, L25, L26 }, \
     { L30, L31, L32, L33, L34, L35, L36 }, \
     { L40, L41, L42, L43, L44, L45, L46 }, \
-    { E01, E02, E11, E12, KC_NO, KC_NO, KC_NO }, \
-    { T01, T02, T03, T04, T05,   KC_NO, KC_NO }, \
+    { E00, E01, E10, E11, KC_NO, KC_NO, KC_NO }, \
+    { T00, T01, T02, T03, T04,   KC_NO, KC_NO }, \
     /* Right Half */ \
     { R06, R05, R04, R03, R02, R01, R00 }, \
     { R16, R15, R14, R13, R12, R11, R10 }, \
     { R26, R25, R24, R23, R22, R21, R20 }, \
     { R36, R35, R34, R33, R32, R31, R30 }, \
     { R46, R45, R44, R43, R42, R41, R40 },  \
-    { E31, E32, E41, E42, KC_NO, KC_NO, KC_NO }, \
-    { T11, T12, T13, T14, T15,   KC_NO, KC_NO } \
+    { E20, E21, E30, E31, KC_NO, KC_NO, KC_NO }, \
+    { T10, T11, T12, T13, T14,   KC_NO, KC_NO } \
 }
 
 #define NUMBER_OF_TOUCH_ENCODERS 2
