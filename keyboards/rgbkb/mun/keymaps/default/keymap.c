@@ -101,10 +101,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
+void keyboard_post_init_user() {
+    if (!touch_encoder_toggled())
+        touch_encoder_toggle();
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case TCH_TOG:
-            touch_encoder_toggle();
+            if (record->event.pressed) {
+                touch_encoder_toggle();
+            }
             return false;  // Skip all further processing of this key
         default:
             return true;  // Process all other keycodes normally
