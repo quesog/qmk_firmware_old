@@ -27,9 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT         Mün
 
 #define USB_POLLING_INTERVAL_MS 1
-// Note, we are using sym_eager_pk debounce, so 10ms has identical key up response time to the default debounce algorithm at 5ms, 
-//    key down response time with sym_eager_pk is faster as it is equivelent to the default debounce algorithm at 0ms.
-#define DEBOUNCE 10
+#define DEBOUNCE 5
 
 /* Matrix Configuration - Rows are doubled up */
 #define MATRIX_ROWS 14
@@ -56,10 +54,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EE_HANDS
 #define SPLIT_USB_DETECT
 #define SPLIT_TRANSPORT_MIRROR
-#define SOFT_SERIAL_PIN A9
+//#define SOFT_SERIAL_PIN A9
+//#define SERIAL_USART_SPEED (1 * 1024 * 1024)
+//#define SERIAL_USART_DRIVER SD1
+#define SERIAL_USART_TX_PIN A9
+#define SERIAL_USART_RX_PIN A10
+#define SERIAL_USART_PIN_SWAP
 #define SERIAL_USART_SPEED (1 * 1024 * 1024)
-#define SERIAL_USART_DRIVER SD1
+#define SERIAL_USART_DRIVER UARTD1
 #define SERIAL_USART_TX_PAL_MODE 7
+#define SERIAL_USART_RX_PAL_MODE 7
 #define SERIAL_USART_TIMEOUT 5
 
 /* RGB LED Configuration */

@@ -8,12 +8,12 @@
 
 #define HAL_USE_PWM TRUE
 
-#define HAL_USE_SERIAL TRUE
+//#define HAL_USE_SERIAL TRUE
 
 #define HAL_USE_SERIAL_USB TRUE
 
-//#define PAL_USE_CALLBACKS TRUE
+#define HAL_USE_UART TRUE
 
-//#define PAL_USE_WAIT TRUE
+#define UART_USE_WAIT TRUE
 
 #include_next <halconf.h>

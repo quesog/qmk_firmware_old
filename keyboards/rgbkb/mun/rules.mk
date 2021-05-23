@@ -32,7 +32,7 @@ OLED_DRIVER_ENABLE = yes    # Enable the OLED Driver
 ENCODER_ENABLE = yes
 
 SPLIT_KEYBOARD = yes
-SERIAL_DRIVER = usart
+SERIAL_DRIVER = usart_duplex
 DEBOUNCE_TYPE = sym_eager_pk
 LTO_ENABLE = no
 OPT = 3
