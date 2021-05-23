@@ -75,6 +75,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGB_MATRIX_LED_PROCESS_LIMIT 10
 #define RGB_MATRIX_KEYPRESSES
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+#define RGB_DISABLE_WHEN_USB_SUSPENDED true
 
 #if RGB_UNLIMITED_POWER
   #define RGBLIGHT_LIMIT_VAL 255
