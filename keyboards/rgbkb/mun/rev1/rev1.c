@@ -33,9 +33,13 @@ static void process_encoder_matrix(encodermap_t pos) {
     });
 }
 
-void encoder_update_kb(uint8_t index, bool clockwise) {
+bool encoder_update_kb(uint8_t index, bool clockwise) {
+    if (!encoder_update_user(index, clockwise))
+        return false;
+
     // Mapping clockwise (typically increase) to zero, and counter clockwise (decrease) to 1
     process_encoder_matrix(encoder_map[index][clockwise ? 0 : 1]);
+    return false;
 }
 
 void touch_encoder_update_kb(uint8_t index, bool clockwise) {

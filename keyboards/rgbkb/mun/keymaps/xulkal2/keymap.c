@@ -195,14 +195,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     oled_write_P(font_logo, false);
 }*/
 
-static void render_icon(void) {
+/*static void render_icon(void) {
     static const char PROGMEM font_icon[] = {
         0x9b,0x9c,0x9d,0x9e,0x9f,
         0xbb,0xbc,0xbd,0xbe,0xbf,
         0xdb,0xdc,0xdd,0xde,0xdf,0
     };
     oled_write_P(font_icon, false);
-}
+}*/
 
 static void render_rgb_menu(void) {
     static char buffer[53] = {0};
@@ -252,6 +252,35 @@ static void render_touch(void)
     oled_write_P(touch_encoder_calibrating() ? PSTR("CLBRT")  : PSTR("     "), false);
 }
 
+static uint32_t scan_counter = 0;
+static uint32_t scan_value = 0;
+static uint16_t scan_timer = 1000;
+
+void do_counters(void) {
+    scan_counter++;
+    uint16_t now = sync_timer_read();
+    if (timer_expired(now, scan_timer))
+    {
+        scan_timer += 1000;
+        scan_value = (scan_value + scan_counter) / 2;
+        scan_counter = 0;
+    }
+}
+
+void matrix_scan_user(void) {
+    do_counters();
+}
+
+void matrix_slave_scan_user(void) {
+    do_counters();
+}
+
+void render_debug_scan(void) {
+    static char buffer[6] = {0};
+    snprintf(buffer, sizeof(buffer), "%5d", scan_value);
+    oled_write_ln_P(buffer, false);
+}
+
 void oled_task_user(void) {
     if (is_keyboard_master()) {
         render_layer();
@@ -259,13 +288,17 @@ void oled_task_user(void) {
         render_leds();
         oled_write_P(PSTR("     "), false);
         render_touch();
-        oled_set_cursor(0, 12);
-        render_icon();
+        oled_write_P(PSTR("     "), false);
+        render_debug_scan();
+        //oled_set_cursor(0, 12);
+        //render_icon();
     }
     else {
         render_rgb_menu();
-        oled_set_cursor(0, 12);
-        render_icon();
+        oled_write_P(PSTR("     "), false);
+        render_debug_scan();
+        //oled_set_cursor(0, 12);
+        //render_icon();
     }
 }
 
