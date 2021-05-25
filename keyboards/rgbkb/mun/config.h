@@ -64,7 +64,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SERIAL_USART_TX_PIN A9
 #define SERIAL_USART_RX_PIN A10
 #define SERIAL_USART_PIN_SWAP
-#define SERIAL_USART_SPEED (1 * 1024 * 1024)
+//#define SERIAL_USART_SPEED (1 * 1024 * 1024)
+#define SERIAL_USART_SPEED (STM32_PCLK2 >> 4)  // Use highest possible baudrate (4.5Mbit) without oversampling by 8. Lower if timeouts occur.
 #define SERIAL_USART_DRIVER UARTD1
 #define SERIAL_USART_TX_PAL_MODE 7
 #define SERIAL_USART_RX_PAL_MODE 7
