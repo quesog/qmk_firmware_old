@@ -50,6 +50,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
+/* CRC Configuration */
+#define CRC8_OPTIMIZE_SPEED
+#define CRC8_USE_TABLE
+
 /* Split Keyboard Configuration */
 #define EE_HANDS
 #define SPLIT_USB_DETECT
