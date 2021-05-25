@@ -37,6 +37,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_COL_PINS { A0, B11, B0, B10, B12, B2, A8 }
 #define MATRIX_IO_DELAY 5
 
+#define BUSY_WAIT
+#define BUSY_WAIT_INSTRUCTIONS 35 // Increase if two rows are pressed at the same time.
+#define GPIO_INPUT_PIN_DELAY 10
+
 /* Touchbar adjustments */
 #define TOUCH_DEADZONE 50 // width of a "button", wider inputs will be interpreted as a swipe
 #define TOUCH_TERM 350 // time of a "button" touch, longer inputs will be a swipe
