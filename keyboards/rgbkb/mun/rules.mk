@@ -40,4 +40,7 @@ OPT = 3
 OPT_DEFS += -DOLED_FONT_H=\"../common/glcdfont.c\"
 OPT_DEFS += -Ikeyboards/rgbkb/common
 
+CUSTOM_MATRIX = yes
+SRC += matrix.c matrix_common.c
+
 DEFAULT_FOLDER = rgbkb/mun/rev1
