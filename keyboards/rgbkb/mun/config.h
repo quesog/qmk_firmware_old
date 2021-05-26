@@ -66,6 +66,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SERIAL_USART_RX_PAL_MODE 7
 #define SERIAL_USART_TIMEOUT 5
 
+#define SPLIT_TRANSACTION_IDS_KB TOUCH_ENCODER_SYNC, RGB_MENU_SYNC
+
 /* RGB LED Configuration */
 #define RGB_DI_PIN          B5
 #define RGBLED_NUM 98

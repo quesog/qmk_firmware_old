@@ -31,10 +31,4 @@
     { E20, E21, E30, E31, KC_NO, KC_NO, KC_NO }, \
     { T10, T11, T12, T13, T14,   KC_NO, KC_NO } \
 }
-
-#define NUMBER_OF_TOUCH_ENCODERS 2
-#define TOUCH_ENCODER_OPTIONS TOUCH_SEGMENTS + 2
-
-#define NUMBER_OF_ENCODERS 4
-#define ENCODER_OPTIONS 2
 // clang-format on

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // for memcpy
 #include <string.h>
+#include <transactions.h>
 
 #define I2C_ADDRESS 0x1C
 #define CALIBRATION_BIT 0x80
@@ -122,6 +123,12 @@ uint8_t  touch_processed[4] = { 0 };
 uint16_t touch_timer        = 0;
 uint16_t touch_update_timer = 0;
 
+// For split transport only
+typedef struct {
+    uint8_t position;
+    uint8_t taps;
+} slave_touch_status_t;
+
 bool touch_slave_init = false;
 slave_touch_status_t touch_slave_state = { 0, 0 };
 
@@ -156,11 +163,11 @@ void touch_encoder_init(void) {
     touch_encoder_calibrate();
 }
 
-__attribute__((weak)) void touch_encoder_tapped_kb(uint8_t index, uint8_t section) { touch_encoder_tapped_user(index, section); }
-__attribute__((weak)) void touch_encoder_update_kb(uint8_t index, bool clockwise) { touch_encoder_update_user(index, clockwise); }
+__attribute__((weak)) bool touch_encoder_tapped_kb(uint8_t index, uint8_t section) { return touch_encoder_tapped_user(index, section); }
+__attribute__((weak)) bool touch_encoder_update_kb(uint8_t index, bool clockwise) { return touch_encoder_update_user(index, clockwise); }
 
-__attribute__((weak)) void touch_encoder_tapped_user(uint8_t index, uint8_t section) {}
-__attribute__((weak)) void touch_encoder_update_user(uint8_t index, bool clockwise) {}
+__attribute__((weak)) bool touch_encoder_tapped_user(uint8_t index, uint8_t section) { return true; }
+__attribute__((weak)) bool touch_encoder_update_user(uint8_t index, bool clockwise) { return true; }
 
 static void touch_encoder_update_tapped(void) {
     // Started touching, being counter for TOUCH_TERM
@@ -214,7 +221,39 @@ static void touch_encoder_update_position(void) {
     }
 }
 
-void touch_encoder_update(void) {
+void touch_encoder_update_slave(slave_touch_status_t slave_state) {
+    if (!touch_slave_init) {
+        touch_slave_state = slave_state;
+        touch_slave_init = true;
+        return;
+    }
+
+    if (touch_slave_state.position != slave_state.position) {
+        // Did a new slide event start?
+        uint8_t mask = (1 << 7);
+        if ((touch_slave_state.taps & mask) != (slave_state.taps & mask)) {
+            touch_slave_state.position = slave_state.position;
+        }
+        touch_encoder_update_position_common(&touch_slave_state.position, slave_state.position, !touch_handness);
+    }
+
+    if (touch_slave_state.taps != slave_state.taps) {
+        if (!touch_disabled) {
+            for (uint8_t section = 0; section < TOUCH_SEGMENTS; section++) {
+                uint8_t mask = (1 << section);
+                if ((touch_slave_state.taps & mask) != (slave_state.taps & mask)) {
+                    xprintf("tap %d %d\n", !touch_handness, section);
+                    touch_encoder_tapped_kb(!touch_handness, section);
+                }
+            }
+        }
+        touch_slave_state.taps = slave_state.taps;
+    }
+}
+
+static int loop_count = 0;
+
+void touch_encoder_update(int8_t transaction_id) {
     if (!touch_initialized) return;
 #if TOUCH_UPDATE_INTERVAL > 0
     if (!timer_expired(timer_read(), touch_update_timer)) return;
@@ -248,6 +287,18 @@ void touch_encoder_update(void) {
     if ((touch_raw[0] & SLIDER_BIT) && touch_processed[3] != touch_raw[3]) {
         touch_encoder_update_position();
     }
+
+    if (is_keyboard_master()) {
+        loop_count++;
+        slave_touch_status_t slave_state;
+        if (transaction_rpc_recv(transaction_id, sizeof(slave_touch_status_t), &slave_state)) {
+            if (memcmp(&touch_slave_state, &slave_state, sizeof(slave_touch_status_t))) {
+                xprintf("ss %d %d %d\n", (int)loop_count, (int)slave_state.position, (int)slave_state.taps);
+                memcpy(&touch_slave_state, &slave_state, sizeof(slave_touch_status_t));
+                //touch_encoder_update_slave(slave_state);
+            }
+        }
+    }
 }
 
 void touch_encoder_calibrate(void) {
@@ -267,36 +318,6 @@ bool touch_encoder_toggled(void) {
     return touch_disabled;
 }
 
-void touch_encoder_get_raw(slave_touch_status_t* slave_state) {
-    memcpy(slave_state, &touch_slave_state, sizeof(slave_touch_status_t));
-}
-
-void touch_encoder_set_raw(slave_touch_status_t slave_state) {
-    if (!touch_slave_init) {
-        touch_slave_state = slave_state;
-        touch_slave_init = true;
-        return;
-    }
-
-    if (touch_slave_state.position != slave_state.position) {
-        // Did a new slide event start?
-        uint8_t mask = (1 << 7);
-        if ((touch_slave_state.taps & mask) != (slave_state.taps & mask)) {
-            touch_slave_state.position = slave_state.position;
-        }
-        touch_encoder_update_position_common(&touch_slave_state.position, slave_state.position, !touch_handness);
-    }
-
-    if (touch_slave_state.taps != slave_state.taps) {
-        if (!touch_disabled) {
-            for (uint8_t section = 0; section < TOUCH_SEGMENTS; section++) {
-                uint8_t mask = (1 << section);
-                if ((touch_slave_state.taps & mask) != (slave_state.taps & mask)) {
-                    xprintf("tap %d %d\n", !touch_handness, section);
-                    touch_encoder_tapped_kb(!touch_handness, section);
-                }
-            }
-        }
-        touch_slave_state.taps = slave_state.taps;
-    }
+void touch_encoder_slave_sync(uint8_t initiator2target_buffer_size, const void* initiator2target_buffer, uint8_t target2initiator_buffer_size, void* target2initiator_buffer) {
+    memcpy(target2initiator_buffer, &touch_slave_state, sizeof(slave_touch_status_t));
 }

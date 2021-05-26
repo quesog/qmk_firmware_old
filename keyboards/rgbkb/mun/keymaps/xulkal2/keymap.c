@@ -46,11 +46,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(
         KC_GESC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_NO,      KC_NO,   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_NO,      KC_NO,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_MPLY,    KC_MPLY, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, //MENU_BTN
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_MPLY,    MENU_BTN,KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
         KC_LSPO, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LCBR,    KC_RCBR, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC,
         KC_LCPO, KC_LGUI, KC_LALT, KC_DEL,  KC_SPC,  KC_NO,   ADJ,        FN,      KC_NO,   KC_SPC,  KC_QUOTE,KC_RALT, KC_APP,  KC_RCPC,
 
-        KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD,                                      KC_MS_WH_UP, KC_MS_WH_DOWN, KC_MS_WH_UP, KC_MS_WH_DOWN,
+        KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD,                                                          MENU_UP, MENU_DN, MENU_UP, MENU_DN,
         KC_VOLD, KC_VOLU, KC_MNXT, KC_MPLY, KC_MPRV,                                        RGB_HUI, RGB_HUD, RGB_RMOD,RGB_TOG, RGB_MOD
     ),
 
@@ -115,11 +115,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-void keyboard_post_init_user() {
-    if (!touch_encoder_toggled())
-        touch_encoder_toggle();
-}
-
 #define RGB_FUNCTION_COUNT 5
 typedef void (*rgb_matrix_f)(void);
 const rgb_matrix_f rgb_matrix_functions[RGB_FUNCTION_COUNT][2] = {
@@ -139,6 +134,7 @@ typedef struct {
 static kb_menu_status_t rgb_menu = { false, 4 };
 
 static void rgb_menu_action(bool clockwise) {
+    if (!is_keyboard_master()) return;
     if (rgb_menu.selecting)  {
         if (clockwise) {
             rgb_menu.selection = (rgb_menu.selection - 1);
@@ -206,16 +202,14 @@ static void render_icon(void) {
 
 static void render_rgb_menu(void) {
     static char buffer[53] = {0};
-    snprintf(buffer, sizeof(buffer), " Hue  %3d  Sat  %3d  Val  %3d  Spd  %3d  Mod  %3d ", 
+    snprintf(buffer, sizeof(buffer), "Hue    %3dSatur  %3dValue  %3dSpeed  %3dMode   %3d", 
     rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v, rgb_matrix_config.speed, rgb_matrix_config.mode);
 
     if (rgb_menu.selecting) {
-        buffer[rgb_menu.selection * 10] = '*';
-        buffer[4 + rgb_menu.selection * 10] = '*';
+        buffer[5 + rgb_menu.selection * 10] = '*';
     }
     else {
-        buffer[rgb_menu.selection * 10] = '>';
-        buffer[4 + rgb_menu.selection * 10] = '<';
+        buffer[5 + rgb_menu.selection * 10] = '>';
     }
     oled_write(buffer, false);
 }

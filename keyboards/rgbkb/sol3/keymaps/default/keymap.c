@@ -157,18 +157,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MENU_BTN:
             if (record->event.pressed) {
                 rgb_menu_selecting = !rgb_menu_selecting;
-                xprintf("s %d\n", rgb_menu_selecting);
             }
             return false;
         case MENU_UP:
             if (record->event.pressed) {
-                xprintf("p %d\n",1);
                 rgb_menu_action(true);
             }
             return false;
         case MENU_DN:
             if (record->event.pressed) {
-                xprintf("p %d\n",0);
                 rgb_menu_action(false);
             }
             return false;
@@ -205,18 +202,17 @@ static void render_icon(void) {
 }
 
 static void render_rgb_menu(void) {
-    oled_write_P(PSTR("     "), false);
     static char buffer[53] = {0};
-    snprintf(buffer, sizeof(buffer), " Hue  %3d  Sat  %3d  Val  %3d  Spd  %3d  Mod  %3d ",
+    snprintf(buffer, sizeof(buffer), " Hue  %3d  Sat  %3d  Val  %3d  Spd  %3d  Mod  %3d ", 
     rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v, rgb_matrix_config.speed, rgb_matrix_config.mode);
 
-    if (rgb_menu_selecting) {
-        buffer[rgb_menu_selection * 10] = '*';
-        buffer[4 + rgb_menu_selection * 10] = '*';
+    if (rgb_menu.selecting) {
+        buffer[rgb_menu.selection * 10] = '*';
+        buffer[4 + rgb_menu.selection * 10] = '*';
     }
     else {
-        buffer[rgb_menu_selection * 10] = '>';
-        buffer[4 + rgb_menu_selection * 10] = '<';
+        buffer[rgb_menu.selection * 10] = '>';
+        buffer[4 + rgb_menu.selection * 10] = '<';
     }
     oled_write(buffer, false);
 }
