@@ -251,8 +251,6 @@ void touch_encoder_update_slave(slave_touch_status_t slave_state) {
     }
 }
 
-static int loop_count = 0;
-
 void touch_encoder_update(int8_t transaction_id) {
     if (!touch_initialized) return;
 #if TOUCH_UPDATE_INTERVAL > 0
@@ -289,14 +287,10 @@ void touch_encoder_update(int8_t transaction_id) {
     }
 
     if (is_keyboard_master()) {
-        loop_count++;
         slave_touch_status_t slave_state;
         if (transaction_rpc_recv(transaction_id, sizeof(slave_touch_status_t), &slave_state)) {
-            if (memcmp(&touch_slave_state, &slave_state, sizeof(slave_touch_status_t))) {
-                xprintf("ss %d %d %d\n", (int)loop_count, (int)slave_state.position, (int)slave_state.taps);
-                memcpy(&touch_slave_state, &slave_state, sizeof(slave_touch_status_t));
-                //touch_encoder_update_slave(slave_state);
-            }
+            if (memcmp(&touch_slave_state, &slave_state, sizeof(slave_touch_status_t)))
+                touch_encoder_update_slave(slave_state);
         }
     }
 }
