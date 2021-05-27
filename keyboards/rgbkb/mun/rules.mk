@@ -3,6 +3,7 @@ MCU = STM32F303
 
 # Touch encoder needs
 SRC += ../common/touch_encoder.c
+SRC += ../common/common_oled.c
 QUANTUM_LIB_SRC += i2c_master.c
 
 # Build Options
