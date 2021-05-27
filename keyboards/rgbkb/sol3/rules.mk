@@ -4,6 +4,7 @@ MCU = STM32F303
 OPT_DEFS += -Ikeyboards/rgbkb/common
 # Touch encoder needs
 SRC += ../common/touch_encoder.c
+SRC += ../common/common_oled.c
 
 QUANTUM_LIB_SRC += i2c_master.c
 
@@ -39,7 +40,7 @@ SRC += ../common/encoder.c
 OPT_DEFS += -DENCODER_ENABLE
 
 SPLIT_KEYBOARD = yes
-SERIAL_DRIVER = usart
+SERIAL_DRIVER = usart_duplex
 DEBOUNCE_TYPE = sym_defer_pk
 LTO_ENABLE = no
 OPT = 3

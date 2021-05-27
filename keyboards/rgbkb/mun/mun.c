@@ -3,11 +3,6 @@
 #include "common_oled.h"
 #include <transactions.h>
 
-void sync_rgb_menu(void)
-{
-    if (!is_keyboard_master()) return;
-}
-
 void keyboard_post_init_kb(void)
 {
     touch_encoder_init();

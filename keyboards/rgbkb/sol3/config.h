@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT         Sol 3
 
 #define USB_POLLING_INTERVAL_MS 1
+#define DEBOUNCE 5
 
 /* Matrix Configuration - Rows are doubled up */
 #define MATRIX_ROWS 14
@@ -36,8 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROW_PINS_RIGHT { B15, B14, A8, A13, A7, C15, C15 } // TODO: s/C15/PIN_NO/
 #define MATRIX_COL_PINS_RIGHT { B9, B8, B4, A6, A3, B10, B12, B11}
 #define MATRIX_IO_DELAY 5
-
-#define SPLIT_HAND_PIN C13
 
 /* LED Turbo DIP Switch */
 #define DIP_SWITCH_PINS { A14, B13 }
@@ -58,14 +57,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DIODE_DIRECTION COL2ROW
 
 /* Split Keyboard Configuration */
-//#define EE_HANDS
+#define SPLIT_HAND_PIN C13
 #define SPLIT_USB_DETECT
 #define SPLIT_TRANSPORT_MIRROR
-#define SOFT_SERIAL_PIN A9
+#define SERIAL_USART_TX_PIN A9
+#define SERIAL_USART_RX_PIN A10
+#define SERIAL_USART_PIN_SWAP
 #define SERIAL_USART_SPEED (1 * 1024 * 1024)
-#define SERIAL_USART_DRIVER SD1
+#define SERIAL_USART_DRIVER UARTD1
 #define SERIAL_USART_TX_PAL_MODE 7
+#define SERIAL_USART_RX_PAL_MODE 7
 #define SERIAL_USART_TIMEOUT 5
+
+#define SPLIT_TRANSACTION_IDS_KB TOUCH_ENCODER_SYNC, RGB_MENU_SYNC
 
 /* RGB LED Configuration */
 #define RGB_DI_PIN          B5
@@ -84,6 +88,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGB_MATRIX_LED_PROCESS_LIMIT 10
 #define RGB_MATRIX_KEYPRESSES
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+#define RGB_DISABLE_WHEN_USB_SUSPENDED true
 
 #define WS2812_PWM_DRIVER PWMD3
 #define WS2812_PWM_CHANNEL 2
@@ -93,7 +98,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TOUCH_UPDATE_INTERVAL 33
 #define OLED_UPDATE_INTERVAL 33
-#define TAP_CODE_DELAY 1
+#define TAP_CODE_DELAY 5
 
 #ifdef AUDIO_ENABLE
 #undef AUDIO_PIN
