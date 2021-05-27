@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "common_oled.h"
 
 enum keymap_layers {
     _QWERTY,
@@ -10,7 +11,10 @@ enum keymap_layers {
 
 enum keymap_keycodes {
     // Disables touch processing
-    TCH_TOG = SAFE_RANGE
+    TCH_TOG = SAFE_RANGE,
+    MENU_BTN,
+    MENU_UP,
+    MENU_DN
 };
 
 // Default Layers
@@ -52,7 +56,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LCBR,   KC_RCBR,   KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
         KC_LCTL, KC_LGUI, KC_LALT, RGB_TOG, ADJUST,  KC_SPC,  KC_DEL,    KC_ENT,    KC_SPC,  KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,KC_RCTL,
 
-        KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD,                                                          KC_PGUP, KC_PGDN, KC_PGUP, KC_PGDN,
+        KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD,                                                          MENU_DN, MENU_UP, MENU_DN, MENU_UP,
         KC_VOLD, KC_VOLU, KC_MNXT, KC_MPLY, KC_MPRV,                                        RGB_HUI, RGB_HUD, RGB_RMOD,RGB_TOG, RGB_MOD
     ),
 
@@ -101,38 +105,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-void keyboard_post_init_user() {
-    if (!touch_encoder_toggled())
-        touch_encoder_toggle();
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
+    switch (keycode)
+    {
+        case MENU_BTN:
+            if (record->event.pressed) {
+                rgb_menu_selection();
+            }
+            return false;
+        case MENU_UP:
+            if (record->event.pressed) {
+                rgb_menu_action(true);
+            }
+            return false;
+        case MENU_DN:
+            if (record->event.pressed) {
+                rgb_menu_action(false);
+            }
+            return false;
         case TCH_TOG:
             if (record->event.pressed) {
                 touch_encoder_toggle();
             }
             return false;  // Skip all further processing of this key
         default:
-            return true;  // Process all other keycodes normally
+            return true;
     }
-}
-
-#if defined(OLED_DRIVER_ENABLE)
-static void render_icon(void) {
-    static const char PROGMEM font_icon[] = {
-        0x9b,0x9c,0x9d,0x9e,0x9f,
-        0xbb,0xbc,0xbd,0xbe,0xbf,
-        0xdb,0xdc,0xdd,0xde,0xdf,0
-    };
-    oled_write_P(font_icon, false);
-}
-
-static void render_rgb_menu(void) {
-    static char buffer[53] = {0};
-    snprintf(buffer, sizeof(buffer), "Hue   %3d Satur %3d Value %3d Speed %3d Mode  %3d ", 
-    rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v, rgb_matrix_config.speed, rgb_matrix_config.mode);
-    oled_write(buffer, false);
 }
 
 static void render_layer(void) {
@@ -140,19 +138,19 @@ static void render_layer(void) {
     oled_write_P(PSTR("Layer"), false);
     switch (get_highest_layer(layer_state)) {
         case _QWERTY:
-            oled_write_ln_P(PSTR("QWERT"), false);
+            oled_write_ln_P(PSTR("QWRTY"), false);
             break;
         case _COLEMAK:
-            oled_write_ln_P(PSTR("Clmk "), false);
+            oled_write_ln_P(PSTR("Colemk"), false);
             break;
         case _GAME:
-            oled_write_ln_P(PSTR("GAME"), false);
+            oled_write_ln_P(PSTR("Game  "), false);
             break;
         case _FN:
             oled_write_ln_P(PSTR("FN   "), false);
             break;
         case _ADJUST:
-            oled_write_ln_P(PSTR("ADJ  "), false);
+            oled_write_ln_P(PSTR("Adjst"), false);
             break;
         default:
             oled_write_ln_P(PSTR("Undef"), false);
@@ -176,23 +174,22 @@ static void render_touch(void)
 }
 
 void oled_task_user(void) {
-    if (is_keyboard_master()) {
+    if (is_keyboard_left()) {
+        render_icon();
+        oled_write_P(PSTR("     "), false);
         render_layer();
         oled_write_P(PSTR("     "), false);
         render_leds();
         oled_write_P(PSTR("     "), false);
         render_touch();
-        oled_set_cursor(0, 12);
-        render_icon();
     }
     else {
-        render_rgb_menu();
-        oled_set_cursor(0, 12);
         render_icon();
+        oled_write_P(PSTR("     "), false);
+        render_rgb_menu();
     }
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_270;
 }
-#endif
