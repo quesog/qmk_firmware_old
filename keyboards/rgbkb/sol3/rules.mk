@@ -36,13 +36,18 @@ SLEEP_LED_ENABLE = no       # Breathing sleep LED during USB suspend
 OLED_DRIVER_ENABLE = yes     # Enable the OLED Driver
 
 # ENCODER_ENABLE = no 	# We're not using the normal QMK encoder support
-SRC += ../common/encoder.c
-OPT_DEFS += -DENCODER_ENABLE
+#SRC += ../common/encoder.c
+#OPT_DEFS += -DENCODER_ENABLE
+
 
 SPLIT_KEYBOARD = yes
-SERIAL_DRIVER = usart_duplex
+SERIAL_DRIVER = usart_duplex       # usart
 DEBOUNCE_TYPE = sym_defer_pk
 LTO_ENABLE = no
 OPT = 3
 
 DEFAULT_FOLDER = rgbkb/sol3/rev1
+
+ifeq ($(strip $(SERIAL_DRIVER)), usart_duplex)
+    OPT_DEFS += -DUSE_FULL_DUPLEX
+endif

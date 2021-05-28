@@ -65,6 +65,7 @@ bool touch_encoder_update_kb(uint8_t index, bool clockwise) {
     return false;
 }
 
+#if ENCODER_ENABLE
 bool encoder_update_kb(uint8_t index, bool clockwise) {
     if (!encoder_update_user(index, clockwise))
         return false;
@@ -72,6 +73,7 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
     process_encoder_update(encoder_map[index][clockwise]);
     return false;
 }
+#endif
 
 void matrix_slave_scan_kb() {
     dip_switch_read(false);
