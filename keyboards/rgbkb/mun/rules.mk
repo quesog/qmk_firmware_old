@@ -33,7 +33,7 @@ OLED_DRIVER_ENABLE = yes    # Enable the OLED Driver
 ENCODER_ENABLE = yes
 
 SPLIT_KEYBOARD = yes
-SERIAL_DRIVER = usart_duplex
+SERIAL_DRIVER = usart_duplex       # usart
 DEBOUNCE_TYPE = sym_eager_pk
 LTO_ENABLE = no
 OPT = 3
@@ -42,3 +42,7 @@ OPT_DEFS += -DOLED_FONT_H=\"../common/glcdfont.c\"
 OPT_DEFS += -Ikeyboards/rgbkb/common
 
 DEFAULT_FOLDER = rgbkb/mun/rev1
+
+ifeq ($(strip $(SERIAL_DRIVER)), usart_duplex)
+    OPT_DEFS += -DUSE_FULL_DUPLEX
+endif
