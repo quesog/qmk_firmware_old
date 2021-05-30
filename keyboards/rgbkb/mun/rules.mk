@@ -3,6 +3,7 @@ MCU = STM32F303
 
 # Touch encoder needs
 SRC += ../common/touch_encoder.c
+SRC += ../common/common_oled.c
 QUANTUM_LIB_SRC += i2c_master.c
 
 # Build Options
@@ -32,7 +33,7 @@ OLED_DRIVER_ENABLE = yes    # Enable the OLED Driver
 ENCODER_ENABLE = yes
 
 SPLIT_KEYBOARD = yes
-SERIAL_DRIVER = usart_duplex
+SERIAL_DRIVER = usart_duplex       # usart
 DEBOUNCE_TYPE = sym_eager_pk
 LTO_ENABLE = no
 OPT = 3
@@ -44,3 +45,7 @@ CUSTOM_MATRIX = yes
 SRC += matrix.c matrix_common.c
 
 DEFAULT_FOLDER = rgbkb/mun/rev1
+
+ifeq ($(strip $(SERIAL_DRIVER)), usart_duplex)
+    OPT_DEFS += -DUSE_FULL_DUPLEX
+endif

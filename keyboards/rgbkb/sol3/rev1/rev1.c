@@ -1,6 +1,12 @@
 #include "rev1.h"
 #include "split_util.h"
 
+#define NUMBER_OF_TOUCH_ENCODERS 2
+#define TOUCH_ENCODER_OPTIONS TOUCH_SEGMENTS + 2
+
+#define NUMBER_OF_ENCODERS 12
+#define ENCODER_OPTIONS 2
+
 const encodermap_t encoder_map[NUMBER_OF_ENCODERS][ENCODER_OPTIONS] = ENCODER_MATRIX_MAP;
 const encodermap_t touch_encoder_map[NUMBER_OF_TOUCH_ENCODERS][TOUCH_ENCODER_OPTIONS] = TOUCH_ENCODER_MATRIX_MAP;
 
@@ -43,17 +49,31 @@ inline void process_encoder_update(encodermap_t pos) {
     });
 }
 
-void touch_encoder_tapped_kb(uint8_t index, uint8_t section) {
+bool touch_encoder_tapped_kb(uint8_t index, uint8_t section) {
+    if (!touch_encoder_tapped_user(index, section))
+        return false;
+
     process_encoder_update(touch_encoder_map[index][section + 2]); // Offset 2 for taps
+    return false;
 }
 
-void touch_encoder_update_kb(uint8_t index, bool clockwise) {
+bool touch_encoder_update_kb(uint8_t index, bool clockwise) {
+    if (!touch_encoder_update_user(index, clockwise))
+        return false;
+
     process_encoder_update(touch_encoder_map[index][clockwise ? 0 : 1]);
+    return false;
 }
 
-void encoder_update_kb(uint8_t index, bool clockwise) {
+#if ENCODER_ENABLE
+bool encoder_update_kb(uint8_t index, bool clockwise) {
+    if (!encoder_update_user(index, clockwise))
+        return false;
+
     process_encoder_update(encoder_map[index][clockwise]);
+    return false;
 }
+#endif
 
 void matrix_slave_scan_kb() {
     dip_switch_read(false);

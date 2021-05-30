@@ -2,6 +2,7 @@
 
 #include "quantum.h"
 #include "sol3.h"
+#include "touch_encoder.h"
 
 // clang-format off
 /* Blank ascii map to reuse
@@ -62,15 +63,11 @@
     { E9L, E9R, EAL, EAR, EBL, EBR, RSR, KC_NO } \
 }
 
-#define NUMBER_OF_TOUCH_ENCODERS 2
-#define TOUCH_ENCODER_OPTIONS TOUCH_SEGMENTS + 2
 #define TOUCH_ENCODER_MATRIX_MAP { \
     { { 0, 7 }, { 1, 7 }, { 2, 7 }, { 5, 6 }, { 6, 6 }, }, \
     { { 7, 7 }, { 8, 7 }, { 9, 7 }, {12, 6 }, {13, 6 }, }  \
 }
 
-#define NUMBER_OF_ENCODERS 12
-#define ENCODER_OPTIONS 2
 #define ENCODER_MATRIX_MAP { \
     { { 5, 0 }, { 5, 1 } }, \
     { { 5, 3 }, { 5, 2 } }, \

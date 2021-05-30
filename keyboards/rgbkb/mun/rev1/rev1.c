@@ -1,5 +1,11 @@
 #include "rev1.h"
 
+#define NUMBER_OF_TOUCH_ENCODERS 2
+#define TOUCH_ENCODER_OPTIONS TOUCH_SEGMENTS + 2
+
+#define NUMBER_OF_ENCODERS 4
+#define ENCODER_OPTIONS 2
+
 typedef struct PACKED {
     uint8_t r;
     uint8_t c;
@@ -42,13 +48,21 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
     return false;
 }
 
-void touch_encoder_update_kb(uint8_t index, bool clockwise) {
+bool touch_encoder_update_kb(uint8_t index, bool clockwise) {
+    if (!touch_encoder_update_user(index, clockwise))
+        return false;
+
     // Mapping clockwise (typically increase) to zero, and counter clockwise (decrease) to 1
     process_encoder_matrix(touch_encoder_map[index][clockwise ? 0 : 1]);
+    return false;
 }
 
-void touch_encoder_tapped_kb(uint8_t index, uint8_t section) {
+bool touch_encoder_tapped_kb(uint8_t index, uint8_t section) {
+    if (!touch_encoder_tapped_user(index, section))
+        return false;
+
     process_encoder_matrix(touch_encoder_map[index][section + 2]);
+    return false;
 }
 
 #ifdef RGB_MATRIX_ENABLE

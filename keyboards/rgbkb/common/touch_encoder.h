@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 void touch_encoder_init(void);
-void touch_encoder_update(void);
+void touch_encoder_update(int8_t transaction_id);
 
 void touch_encoder_calibrate(void);
 bool touch_encoder_calibrating(void);
@@ -47,22 +47,15 @@ void touch_encoder_toggle(void);
 bool touch_encoder_toggled(void);
 
 // Called when touch encoder is tapped, weak function overridable by the kb
-void touch_encoder_tapped_kb(uint8_t index, uint8_t section);
+bool touch_encoder_tapped_kb(uint8_t index, uint8_t section);
 
 // Called when touch encoder is slid, weak function overridable by the kb
-void touch_encoder_update_kb(uint8_t index, bool clockwise);
+bool touch_encoder_update_kb(uint8_t index, bool clockwise);
 
 // Called when touch encoder is tapped, weak function overridable by the user
-void touch_encoder_tapped_user(uint8_t index, uint8_t section);
+bool touch_encoder_tapped_user(uint8_t index, uint8_t section);
 
 // Called when touch encoder is slid, weak function overridable by the user
-void touch_encoder_update_user(uint8_t index, bool clockwise);
+bool touch_encoder_update_user(uint8_t index, bool clockwise);
 
-// For split transport only
-typedef struct {
-    uint8_t position;
-    uint8_t taps;
-} slave_touch_status_t;
-
-void touch_encoder_get_raw(slave_touch_status_t* slave_state);
-void touch_encoder_set_raw(slave_touch_status_t slave_state);
+void touch_encoder_slave_sync(uint8_t initiator2target_buffer_size, const void* initiator2target_buffer, uint8_t target2initiator_buffer_size, void* target2initiator_buffer);

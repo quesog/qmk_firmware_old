@@ -27,6 +27,7 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "common_oled.h"
 
 enum sol_layers {
     _QWERTY,
@@ -37,12 +38,8 @@ enum sol_layers {
 };
 
 enum sol_keycodes {
-    QWERTY = SAFE_RANGE,
-    COLEMAK,
-    GAME,
-
     // Disables touch processing
-    TCH_TOG,
+    TCH_TOG = SAFE_RANGE,
     MENU_BTN,
     MENU_UP,
     MENU_DN,
@@ -66,9 +63,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSFT,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LCBR,                  KC_RCBR, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_SFTENT,
         KC_LCTL,  KC_LGUI, KC_LALT, RGB_TOG, ADJUST,  KC_SPC,  KC_PGDN, KC_DEL, KC_ENT,  KC_PGUP, KC_SPC,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_RCTL,
 
-        KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU,                                     KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU,
-        KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU,                                     KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU,
-        KC_VOLD, KC_VOLU, KC_MNXT, KC_MPLY, KC_MPRV,                                                       KC_VOLD, KC_VOLU, KC_MNXT, KC_MPLY, KC_MPRV
+        KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU,                                     MENU_DN, MENU_UP, MENU_DN, MENU_UP, MENU_DN, MENU_UP,
+        KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU, KC_VOLD, KC_VOLU,                                     MENU_DN, MENU_UP, MENU_DN, MENU_UP, MENU_DN, MENU_UP,
+        RGB_HUI, RGB_HUD, RGB_RMOD,RGB_TOG, RGB_MOD,                                                       KC_VOLD, KC_VOLU, KC_MNXT, KC_MPLY, KC_MPRV
     ),
 
     [_COLEMAK] = LAYOUT(
@@ -121,54 +118,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-#define RGB_FUNCTION_COUNT 5
-typedef void (*rgb_matrix_f)(void);
-const rgb_matrix_f rgb_matrix_functions[RGB_FUNCTION_COUNT][2] = {
-    { rgb_matrix_increase_hue,      rgb_matrix_decrease_hue     },
-    { rgb_matrix_increase_sat,      rgb_matrix_decrease_sat     },
-    { rgb_matrix_increase_val,      rgb_matrix_decrease_val     },
-    { rgb_matrix_increase_speed,    rgb_matrix_decrease_speed   },
-    { rgb_matrix_step,              rgb_matrix_step_reverse     }
-};
-// clang-format on
-
-static bool rgb_menu_selecting = false;
-static uint8_t rgb_menu_selection = 4;
-
-static void rgb_menu_action(bool clockwise) {
-    if (rgb_menu_selecting)  {
-        if (clockwise) {
-            rgb_menu_selection = (rgb_menu_selection - 1);
-            if (rgb_menu_selection >= RGB_FUNCTION_COUNT)
-                rgb_menu_selection = RGB_FUNCTION_COUNT - 1;
-        }
-        else {
-            rgb_menu_selection = (rgb_menu_selection + 1) % RGB_FUNCTION_COUNT;
-        }
-    }
-    else {
-        (*rgb_matrix_functions[rgb_menu_selection][clockwise])();
-    }
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode)
     {
         case MENU_BTN:
             if (record->event.pressed) {
-                rgb_menu_selecting = !rgb_menu_selecting;
-                xprintf("s %d\n", rgb_menu_selecting);
+                rgb_menu_selection();
             }
             return false;
         case MENU_UP:
             if (record->event.pressed) {
-                xprintf("p %d\n",1);
                 rgb_menu_action(true);
             }
             return false;
         case MENU_DN:
             if (record->event.pressed) {
-                xprintf("p %d\n",0);
                 rgb_menu_action(false);
             }
             return false;
@@ -179,7 +143,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case TCH_TOG:
             if (record->event.pressed) {
-                //  touch_encoder_toggle();
+                touch_encoder_toggle();
             }
             return false;  // Skip all further processing of this key
         default:
@@ -187,56 +151,63 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-static void render_logo(void) {
-    static const char PROGMEM font_logo[] = {
-        0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,0x90,0x91,0x92,0x93,0x94,
-        0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,0xb0,0xb1,0xb2,0xb3,0xb4,
-        0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,0xd0,0xd1,0xd2,0xd3,0xd4,0};
-    oled_write_P(font_logo, false);
-}
-
-static void render_icon(void) {
-    static const char PROGMEM font_icon[] = {
-        0x9b,0x9c,0x9d,0x9e,0x9f,
-        0xbb,0xbc,0xbd,0xbe,0xbf,
-        0xdb,0xdc,0xdd,0xde,0xdf,0
-    };
-    oled_write_P(font_icon, false);
-}
-
-static void render_rgb_menu(void) {
-    oled_write_P(PSTR("     "), false);
-    static char buffer[53] = {0};
-    snprintf(buffer, sizeof(buffer), " Hue  %3d  Sat  %3d  Val  %3d  Spd  %3d  Mod  %3d ",
-    rgb_matrix_config.hsv.h, rgb_matrix_config.hsv.s, rgb_matrix_config.hsv.v, rgb_matrix_config.speed, rgb_matrix_config.mode);
-
-    if (rgb_menu_selecting) {
-        buffer[rgb_menu_selection * 10] = '*';
-        buffer[4 + rgb_menu_selection * 10] = '*';
+static void render_layer(void) {
+    // Host Keyboard Layer Status
+    oled_write_P(PSTR("Layer"), false);
+    switch (get_highest_layer(layer_state)) {
+        case _QWERTY:
+            oled_write_ln_P(PSTR("QWRTY"), false);
+            break;
+        case _COLEMAK:
+            oled_write_ln_P(PSTR("Colemk"), false);
+            break;
+        case _GAME:
+            oled_write_ln_P(PSTR("Game  "), false);
+            break;
+        case _FN:
+            oled_write_ln_P(PSTR("FN   "), false);
+            break;
+        case _ADJUST:
+            oled_write_ln_P(PSTR("Adjst"), false);
+            break;
+        default:
+            oled_write_ln_P(PSTR("Undef"), false);
     }
-    else {
-        buffer[rgb_menu_selection * 10] = '>';
-        buffer[4 + rgb_menu_selection * 10] = '<';
-    }
-    oled_write(buffer, false);
 }
 
+static void render_leds(void)
+{
+    // Host Keyboard LED Status
+    led_t led_state = host_keyboard_led_state();
+    oled_write_P(led_state.num_lock ? PSTR("NUMLK")     : PSTR("     "), false);
+    oled_write_P(led_state.caps_lock ? PSTR("CAPLK")    : PSTR("     "), false);
+    oled_write_P(led_state.scroll_lock ? PSTR("SCRLK")  : PSTR("     "), false);
+}
+
+static void render_touch(void)
+{
+    // Host Touch LED Status
+    oled_write_P(!touch_encoder_toggled() ? PSTR("TOUCH")  : PSTR("     "), false);
+    oled_write_P(touch_encoder_calibrating() ? PSTR("CLBRT")  : PSTR("     "), false);
+}
 
 void oled_task_user(void) {
-    if (is_keyboard_master()) {
+    if (is_keyboard_left()) {
         render_icon();
-        //render_layer();
-        //render_leds();
-        render_rgb_menu();
+        oled_write_P(PSTR("     "), false);
+        render_layer();
+        oled_write_P(PSTR("     "), false);
+        render_leds();
+        oled_write_P(PSTR("     "), false);
+        render_touch();
     }
     else {
-        render_logo();
-        oled_scroll_left();
+        render_icon();
+        oled_write_P(PSTR("     "), false);
+        render_rgb_menu();
     }
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (is_keyboard_master())
-        return OLED_ROTATION_270;
-    return OLED_ROTATION_180;
+    return OLED_ROTATION_270;
 }
