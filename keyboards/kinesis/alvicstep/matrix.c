@@ -109,7 +109,6 @@ void matrix_init(void)
 
 bool matrix_scan(void)
 {
-
     for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
         select_rows(i);
         uint8_t row = read_row(i);

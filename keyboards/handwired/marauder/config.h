@@ -44,7 +44,6 @@
 #define DIODE_DIRECTION COL2ROW
 #define LAYER_STATE_8BIT
 #define USB_POLLING_INTERVAL_MS 1 //1000Hz polling rate
-#define QMK_KEYS_PER_SCAN 12 // moar gaming code
 #define RGB_DI_PIN D3
 #ifdef RGB_DI_PIN
     #define RGBLED_NUM 7
