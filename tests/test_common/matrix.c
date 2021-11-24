@@ -18,7 +18,8 @@
 #include "test_matrix.h"
 #include <string.h>
 
-static matrix_row_t matrix[MATRIX_ROWS] = {};
+matrix_row_t matrix[MATRIX_ROWS] = {};
+static matrix_row_t input_matrix[MATRIX_ROWS] = {};
 
 void matrix_init(void) {
     clear_all_keys();
@@ -26,8 +27,12 @@ void matrix_init(void) {
 }
 
 bool matrix_scan(void) {
+    bool changed = memcmp(input_matrix, matrix, sizeof(matrix)) != 0;
+    if (changed) memcpy(matrix, input_matrix, sizeof(input_matrix));
+
     matrix_scan_quantum();
-    return true;
+
+    return changed;
 }
 
 matrix_row_t matrix_get_row(uint8_t row) { return matrix[row]; }
@@ -38,10 +43,12 @@ void matrix_init_kb(void) {}
 
 void matrix_scan_kb(void) {}
 
-void press_key(uint8_t col, uint8_t row) { matrix[row] |= 1 << col; }
+void press_key(uint8_t col, uint8_t row) { input_matrix[row] |= 1 << col; }
 
-void release_key(uint8_t col, uint8_t row) { matrix[row] &= ~(1 << col); }
+void release_key(uint8_t col, uint8_t row) { input_matrix[row] &= ~(1 << col); }
 
-void clear_all_keys(void) { memset(matrix, 0, sizeof(matrix)); }
+void clear_all_keys(void) {
+    memset(input_matrix, 0, sizeof(input_matrix));
+}
 
 void led_set(uint8_t usb_led) {}
