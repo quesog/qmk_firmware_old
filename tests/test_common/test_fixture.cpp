@@ -55,7 +55,10 @@ void TestFixture::SetUpTestCase() {
 
 void TestFixture::TearDownTestCase() {}
 
-TestFixture::TestFixture() { m_this = this; }
+TestFixture::TestFixture() {
+    m_this = this;
+    timer_clear();
+}
 
 TestFixture::~TestFixture() {
     test_logger.info() << "TestFixture clean-up start." << std::endl;

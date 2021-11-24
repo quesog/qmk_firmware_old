@@ -48,9 +48,17 @@ static inline bool IS_NOEVENT(keyevent_t event) { return event.time == 0 || (eve
 static inline bool IS_PRESSED(keyevent_t event) { return (!IS_NOEVENT(event) && event.pressed); }
 static inline bool IS_RELEASED(keyevent_t event) { return (!IS_NOEVENT(event) && !event.pressed); }
 
-/* Tick event */
-#define TICK \
+/**
+ * @brief Constructs a internal tick event that is used to drive the internal QMK state machine.
+ */
+#define TICK_EVENT \
     (keyevent_t) { .key = (keypos_t){.row = 255, .col = 255}, .pressed = false, .time = (timer_read() | 1) }
+
+/**
+ * @brief Constructs a key event for a pressed or released key.
+ */
+#define KEY_EVENT(ROW, COL, PRESSED) \
+    (keyevent_t) { .key = (keypos_t){.row = ROW, .col = COL}, .pressed = PRESSED, .time = (timer_read() | 1) }
 
 /* it runs once at early stage of startup before keyboard_init. */
 void keyboard_setup(void);

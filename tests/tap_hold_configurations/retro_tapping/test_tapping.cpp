@@ -38,9 +38,6 @@ TEST_F(Tapping, HoldA_SHFT_T_KeyReportsShift) {
     testing::Mock::VerifyAndClearExpectations(&driver);
 
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_LSFT)));
-    run_one_scan_loop();
-    testing::Mock::VerifyAndClearExpectations(&driver);
-
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport()));
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_P)));
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport()));
