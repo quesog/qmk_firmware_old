@@ -242,7 +242,7 @@ bool matrix_scan(void)
     }
 
     matrix_scan_quantum();
-    return true;
+    return false;
 }
 
 void matrix_print(void){

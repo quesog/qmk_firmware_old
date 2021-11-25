@@ -15,10 +15,11 @@
  */
 
 #include "matrix.h"
+#include "debounce.h"
 #include "test_matrix.h"
 #include <string.h>
 
-matrix_row_t matrix[MATRIX_ROWS] = {};
+matrix_row_t        matrix[MATRIX_ROWS]       = {};
 static matrix_row_t input_matrix[MATRIX_ROWS] = {};
 
 void matrix_init(void) {
@@ -28,7 +29,8 @@ void matrix_init(void) {
 
 bool matrix_scan(void) {
     bool changed = memcmp(input_matrix, matrix, sizeof(matrix)) != 0;
-    if (changed) memcpy(matrix, input_matrix, sizeof(input_matrix));
+
+    changed = debounce(input_matrix, matrix, MATRIX_ROWS, changed);
 
     matrix_scan_quantum();
 
@@ -47,8 +49,6 @@ void press_key(uint8_t col, uint8_t row) { input_matrix[row] |= 1 << col; }
 
 void release_key(uint8_t col, uint8_t row) { input_matrix[row] &= ~(1 << col); }
 
-void clear_all_keys(void) {
-    memset(input_matrix, 0, sizeof(input_matrix));
-}
+void clear_all_keys(void) { memset(input_matrix, 0, sizeof(input_matrix)); }
 
 void led_set(uint8_t usb_led) {}

@@ -210,7 +210,7 @@ bool matrix_scan(void) {
     changed |= read_cols_on_row(raw_matrix, current_row);
   }
 
-  debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
+  changed = debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
 
   matrix_scan_quantum();
 

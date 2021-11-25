@@ -224,7 +224,7 @@ bool matrix_scan(void) {
     MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP(); MATRIX_DEBUG_SCAN_START();
 
     // debounce raw_matrix[] to matrix[]
-    debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
+    changed = debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
     MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP();
 
     MATRIX_DEBUG_SCAN_START();

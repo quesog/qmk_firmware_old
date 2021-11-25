@@ -259,7 +259,7 @@ bool matrix_scan(void) {
         unselect_rows();
     }
 
-    debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
+    changed = debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
     matrix_scan_quantum();
 
     enableInterrupts();
@@ -270,7 +270,7 @@ bool matrix_scan(void) {
 		  if (matrix_is_on(r, c)) xprintf("r:%d c:%d \n", r, c);
 #endif
 
-    return true;
+    return changed;
 }
 
 inline bool matrix_is_on(uint8_t row, uint8_t col) { return (matrix[row] & ((matrix_row_t)1 << col)); }

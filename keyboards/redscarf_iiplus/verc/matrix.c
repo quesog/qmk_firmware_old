@@ -377,8 +377,8 @@ bool matrix_scan(void)
   }
 #endif
 
-  debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
+  changed = debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
 
   matrix_scan_quantum();
-  return true;
+  return changed;
 }

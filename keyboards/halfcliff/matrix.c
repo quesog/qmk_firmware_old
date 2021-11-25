@@ -270,7 +270,7 @@ bool matrix_scan(void) {
         }
     }
 
-    debounce(raw_matrix, matrix + thisHand, ROWS_PER_HAND, local_changed);
+    local_changed = debounce(raw_matrix, matrix + thisHand, ROWS_PER_HAND, local_changed);
 
     bool remote_changed = matrix_post_scan();
     return (local_changed || remote_changed);

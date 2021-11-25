@@ -89,7 +89,7 @@ bool matrix_scan(void)
     }
   }
 
-  debounce(matrix_debouncing, matrix, matrix_rows(), changed);
+  changed = debounce(matrix_debouncing, matrix, matrix_rows(), changed);
   matrix_scan_quantum();
 
   return changed;

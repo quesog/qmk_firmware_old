@@ -70,7 +70,7 @@ static const uint8_t num_in_binary[8][3] = {
 static void select_col_analog(uint8_t col);
 static void mux_pin_control(const uint8_t binary[]);
 void debounce_init(uint8_t num_rows);
-void debounce(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, bool changed);
+bool debounce(matrix_row_t raw[], matrix_row_t cooked[], uint8_t num_rows, bool changed);
 
 
 __attribute__ ((weak))
@@ -227,7 +227,7 @@ bool matrix_scan(void)
         changed |= read_cols_on_row(raw_matrix, current_row);
     }
 
-    debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
+    changed = debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
 
     matrix_scan_quantum();
     return changed;
