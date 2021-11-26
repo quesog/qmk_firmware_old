@@ -115,7 +115,7 @@ extern "C"
         }
     }
 
-    uint8_t matrix_scan(void) {
+    bool matrix_scan(void) {
         static uint16_t last_time_stamp1 = 0;
         static uint16_t last_time_stamp2 = 0;
         static uint16_t last_time_stamp3 = 0;
@@ -169,7 +169,7 @@ extern "C"
                 led_set(host_keyboard_leds());
             }
         }
-        return 1;
+        return true;
     }
 
     bool matrix_is_on(uint8_t row, uint8_t col) {

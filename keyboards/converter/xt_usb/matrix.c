@@ -96,7 +96,7 @@ static uint8_t move_e0code(uint8_t code) {
     return 0x00;
 }
 
-uint8_t matrix_scan(void) {
+bool matrix_scan(void) {
     static enum {
         XT_STATE_INIT,
         XT_STATE_E0,
@@ -109,7 +109,7 @@ uint8_t matrix_scan(void) {
     uint8_t code = xt_host_recv();
 
     if (!code) {
-        return 0;
+        return false;
     }
 
     xprintf("%02X ", code);
@@ -190,7 +190,7 @@ uint8_t matrix_scan(void) {
 
     matrix_scan_quantum();
 
-    return 1;
+    return true;
 }
 
 inline

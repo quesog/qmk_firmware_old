@@ -298,7 +298,7 @@ void matrix_init(void) {
     matrix_init_quantum();
 }
 
-uint8_t matrix_scan(void) {
+bool matrix_scan(void) {
     bool changed = false;
     MATRIX_DEBUG_PIN_INIT();
 
@@ -325,5 +325,5 @@ uint8_t matrix_scan(void) {
     MATRIX_DEBUG_SCAN_START();
     matrix_scan_quantum();
     MATRIX_DEBUG_SCAN_END();
-    return (uint8_t)changed;
+    return changed;
 }

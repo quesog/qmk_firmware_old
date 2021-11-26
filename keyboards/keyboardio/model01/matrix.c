@@ -80,10 +80,10 @@ void matrix_init(void) {
   matrix_init_quantum();
 }
 
-uint8_t matrix_scan(void) {
-  uint8_t ret = 0;
-  ret |= i2c_read_hand(LEFT);
-  ret |= i2c_read_hand(RIGHT);
+bool matrix_scan(void) {
+  bool ret = 0;
+  ret |= (bool)i2c_read_hand(LEFT);
+  ret |= (bool)i2c_read_hand(RIGHT);
   matrix_scan_quantum();
   return ret;
 }

@@ -73,7 +73,7 @@ void matrix_init(void) {
   matrix_init_quantum();
 }
 
-uint8_t matrix_scan(void) {
+bool matrix_scan(void) {
   for (uint8_t col = 0; col < MATRIX_COLS; col++) {
     select_col(col);
     _delay_us(3);
@@ -107,7 +107,7 @@ uint8_t matrix_scan(void) {
   }
 
   matrix_scan_quantum();
-  return 1;
+  return true;
 }
 
 inline matrix_row_t matrix_get_row(uint8_t row) {

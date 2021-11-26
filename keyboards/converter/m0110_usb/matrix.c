@@ -76,7 +76,7 @@ void matrix_init(void)
     return;
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
     uint8_t key;
 
@@ -97,7 +97,7 @@ uint8_t matrix_scan(void)
     }
     
     matrix_scan_quantum();
-    return 1;
+    return true;
 }
 
 void matrix_print(void){

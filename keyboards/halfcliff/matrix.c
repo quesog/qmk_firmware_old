@@ -250,7 +250,7 @@ bool matrix_post_scan(void) {
     return changed;
 }
 
-uint8_t matrix_scan(void) {
+bool matrix_scan(void) {
     bool local_changed = false;
     static matrix_row_t temp_raw_matrix[MATRIX_ROWS];  // temp raw values
 
@@ -273,5 +273,5 @@ uint8_t matrix_scan(void) {
     debounce(raw_matrix, matrix + thisHand, ROWS_PER_HAND, local_changed);
 
     bool remote_changed = matrix_post_scan();
-    return (uint8_t)(local_changed || remote_changed);
+    return (local_changed || remote_changed);
 }

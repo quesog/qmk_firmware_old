@@ -192,7 +192,7 @@ int serial_transaction(void) {
 }
 #endif
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
     if (is_helix_master()) {
         matrix_master_scan();
@@ -207,7 +207,7 @@ uint8_t matrix_scan(void)
 
         matrix_scan_quantum();
     }
-    return 1;
+    return true;
 }
 
 

@@ -361,7 +361,7 @@ void matrix_init(void) {
     matrix_init_quantum();
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
   bool changed = false;
 
@@ -380,5 +380,5 @@ uint8_t matrix_scan(void)
   debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
 
   matrix_scan_quantum();
-  return 1;
+  return true;
 }

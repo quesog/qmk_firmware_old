@@ -128,7 +128,7 @@ void matrix_init(void) {
     matrix_init_quantum();
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
     if (mcp23018_status) {
         /* if there was an error */
@@ -169,7 +169,7 @@ uint8_t matrix_scan(void)
 #   endif
 
     matrix_scan_quantum();
-    return 1;
+    return true;
 }
 
 inline

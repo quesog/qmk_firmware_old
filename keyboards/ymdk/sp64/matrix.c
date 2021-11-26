@@ -77,7 +77,7 @@ void matrix_init(void)
   matrix_init_quantum();
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
 #ifdef RIGHT_HALF
   // Then the keyboard
@@ -135,7 +135,7 @@ uint8_t matrix_scan(void)
       if (matrix_is_on(r, c)) xprintf("r:%d c:%d \n", r, c);
 #endif
 
-  return (uint8_t)changed;
+  return changed;
 }
 
 inline

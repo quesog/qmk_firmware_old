@@ -107,7 +107,7 @@ void matrix_init(void)
 	
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
 
     for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
@@ -133,7 +133,7 @@ uint8_t matrix_scan(void)
         }
     }
     matrix_scan_quantum();
-    return 1;
+    return true;
 }
 
 inline

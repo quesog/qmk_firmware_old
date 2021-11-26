@@ -20,23 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "matrix.h"
 #include "uart.h"
 
-void matrix_init_custom(void) {
-    uart_init(500000);
-}
+void matrix_init_custom(void) { uart_init(500000); }
 
 bool matrix_scan_custom(matrix_row_t current_matrix[]) {
     uint32_t timeout = 0;
-    bool changed = false;
+    bool     changed = false;
 
-    //the s character requests the RF remote slave to send the matrix information
+    // the s character requests the RF remote slave to send the matrix information
     uart_write('s');
 
-    //trust the external keystates, erase the last set of data
+    // trust the external keystates, erase the last set of data
     uint8_t uart_data[11] = {0};
 
-    //there are 10 bytes corresponding to 1w columns, and an end byte
+    // there are 10 bytes corresponding to 1w columns, and an end byte
     for (uint8_t i = 0; i < 11; i++) {
-        //wait for the serial data, timeout if it's been too long
+        // wait for the serial data, timeout if it's been too long
         while (!uart_available()) {
             timeout++;
             if (timeout > 10000) {
@@ -46,12 +44,12 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
         uart_data[i] = uart_read();
     }
 
-    //check for the end packet, the key state bytes use the LSBs, so 0xE0
-    //will only show up here if the correct bytes were recieved
+    // check for the end packet, the key state bytes use the LSBs, so 0xE0
+    // will only show up here if the correct bytes were recieved
     if (uart_data[10] == 0xE0) {
-        //shifting and transferring the keystates to the QMK matrix variable
+        // shifting and transferring the keystates to the QMK matrix variable
         for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
-            matrix_row_t current_row = (uint16_t) uart_data[i * 2] | (uint16_t) uart_data[i * 2 + 1] << 5;
+            matrix_row_t current_row = (uint16_t)uart_data[i * 2] | (uint16_t)uart_data[i * 2 + 1] << 5;
             if (current_matrix[i] != current_row) {
                 changed = true;
             }

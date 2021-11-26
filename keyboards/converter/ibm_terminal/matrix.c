@@ -72,7 +72,7 @@ void matrix_init(void)
     return;
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
 
     // scan code reading states
@@ -160,7 +160,7 @@ uint8_t matrix_scan(void)
             }
             break;
     }
-    return 1;
+    return true;
 }
 
 inline

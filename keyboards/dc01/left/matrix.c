@@ -160,7 +160,7 @@ void matrix_init(void) {
     matrix_init_quantum();
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
 
 #if (DIODE_DIRECTION == COL2ROW)
@@ -227,7 +227,7 @@ if (i2c_transaction(SLAVE_I2C_ADDRESS_NUMPAD, 0x1FFFF, 11)) {
 }
 
     matrix_scan_quantum();
-    return 1;
+    return true;
 }
 
 inline

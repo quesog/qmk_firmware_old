@@ -135,5 +135,5 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
             changed = true;
         }
     }
-    return (uint8_t)changed;
+    return changed;
 }

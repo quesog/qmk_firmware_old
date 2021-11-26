@@ -167,7 +167,7 @@ void matrix_init () {
     Matrix_Reset() ;
 }
 
-uint8_t matrix_scan(void)  {
+bool matrix_scan(void)  {
 
     // the first byte of the keyboard's output data can be ignored
     Matrix_ThrowByte();
@@ -207,7 +207,7 @@ uint8_t matrix_scan(void)  {
     Matrix_Reset() ;
     
     matrix_scan_quantum() ;
-    return 1;
+    return true;
 }
 
 inline

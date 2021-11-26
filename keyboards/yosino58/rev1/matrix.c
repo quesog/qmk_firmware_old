@@ -200,7 +200,7 @@ int serial_transaction(int master_changed) {
 }
 #endif
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
     if (is_master) {
         matrix_master_scan();
@@ -211,7 +211,7 @@ uint8_t matrix_scan(void)
                (void *)serial_master_buffer, SERIAL_MASTER_BUFFER_LENGTH);
         matrix_scan_quantum();
     }
-    return 1;
+    return true;
 }
 
 

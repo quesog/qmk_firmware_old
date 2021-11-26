@@ -219,7 +219,7 @@ void matrix_init(void) {
 }
 
 // modified for per col read matrix scan
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
     bool changed = false;
 
@@ -230,11 +230,11 @@ uint8_t matrix_scan(void)
     debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
 
     matrix_scan_quantum();
-    return (uint8_t)changed;
+    return changed;
 }
 
 /*
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
   bool changed = false;
 

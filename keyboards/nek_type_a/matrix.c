@@ -153,7 +153,7 @@ void matrix_init(void) {
     set_output(OUTPUT_AUTO);
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
 
 #if (DIODE_DIRECTION == COL2ROW)
@@ -202,7 +202,7 @@ uint8_t matrix_scan(void)
 #   endif
 
     matrix_scan_quantum();
-    return 1;
+    return true;
 }
 
 inline

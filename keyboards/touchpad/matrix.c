@@ -210,7 +210,7 @@ uint8_t isTouchChangeDetected(void) {
   return !readPin(D2);
 }
 
-uint8_t matrix_scan(void) {
+bool matrix_scan(void) {
   if (isTouchChangeDetected()) {
     uint16_t dataIn = touchDetectionRoutine();
     if ((dataIn & 0b111100010001) > 0 && (dataIn & 0b000011101110) > 0) {
@@ -263,8 +263,7 @@ uint8_t matrix_scan(void) {
 
   matrix_scan_quantum();
 
-  return 1;
-
+  return true;
 }
 
 bool matrix_is_on(uint8_t row, uint8_t col) {

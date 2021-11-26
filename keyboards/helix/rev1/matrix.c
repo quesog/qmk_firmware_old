@@ -112,7 +112,7 @@ void matrix_init(void)
     matrix_init_quantum();
 }
 
-uint8_t _matrix_scan(void)
+bool _matrix_scan(void)
 {
     // Right hand is stored after the left in the matirx so, we need to offset it
     int offset = isLeftHand ? 0 : (ROWS_PER_HAND);
@@ -138,7 +138,7 @@ uint8_t _matrix_scan(void)
         }
     }
 
-    return 1;
+    return true;
 }
 
 #ifdef USE_MATRIX_I2C
@@ -190,9 +190,9 @@ int serial_transaction(void) {
 }
 #endif
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
-    int ret = _matrix_scan();
+    bool changed = _matrix_scan();
 
 
 
@@ -219,7 +219,7 @@ uint8_t matrix_scan(void)
         error_count = 0;
     }
     matrix_scan_quantum();
-    return ret;
+    return changed;
 }
 
 void matrix_slave_scan(void) {

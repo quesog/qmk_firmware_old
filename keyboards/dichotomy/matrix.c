@@ -97,7 +97,7 @@ void matrix_init(void) {
     uart_init(1000000);
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
     //xprintf("\r\nTRYING TO SCAN");
 
@@ -190,7 +190,7 @@ uint8_t matrix_scan(void)
     //matrix_print();
 
     matrix_scan_quantum();
-    return 1;
+    return true;
 }
 
 inline

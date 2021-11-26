@@ -127,7 +127,7 @@ void matrix_power_up(void) {
     }
 }
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
     if (mcp23018_status) { // if there was an error
         if (++mcp23018_reset_loop == 0) {
@@ -171,7 +171,7 @@ uint8_t matrix_scan(void)
 
     matrix_scan_quantum();
 
-    return 1;
+    return true;
 }
 
 inline

@@ -287,18 +287,11 @@ void matrix_init(void)
 }
 
 
-uint8_t matrix_scan(void)
+bool matrix_scan(void)
 {
     uint8_t code;
     code = uart_read();
     if (!code) {
-/*         
-        disconnect_counter ++;
-        if (disconnect_counter > MAXDROP) {
-            //  set all keys off
-             for (uint8_t i=0; i < MATRIX_ROWS; i++) matrix[i] = 0x00; 
-        }
-*/
         // check if the keyboard is asleep. 
         if (timer_elapsed(last_activity) > SLEEP_TIMEOUT) {
 #if(HANDSPRING ==0 )
@@ -306,9 +299,8 @@ uint8_t matrix_scan(void)
 #else
             handspring_reset();
 #endif
-            return 0;
-        } 
-
+            return false;
+        }
     }
 
    last_activity = timer_read();
@@ -320,10 +312,10 @@ uint8_t matrix_scan(void)
     switch (code) {
         case 0xFD:  // unexpected reset byte 2
              print("rstD ");
-            return 0;
+             return false;
         case 0xFA:  // unexpected reset
             print("rstA ");
-            return 0;
+            return false;
     }
 
     if (KEYUP(code)) {
@@ -333,7 +325,7 @@ uint8_t matrix_scan(void)
             // but that could defeat sticky keys. 
             // BUG? dropping this byte. 
             last_upKey=0;
-            return 0;
+            return false;
         }
         // release
         if (matrix_is_on(ROW(code), COL(code))) {
@@ -349,7 +341,7 @@ uint8_t matrix_scan(void)
     }
 
     matrix_scan_quantum();
-    return code;
+    return true;
 }
 
 inline

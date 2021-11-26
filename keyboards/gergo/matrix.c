@@ -181,7 +181,7 @@ static inline bool store_raw_matrix_row(uint8_t index) {
 
 
 
-uint8_t matrix_scan(void) {
+bool matrix_scan(void) {
     // TODO: Find what is trashing interrupts
     enableInterrupts();
 
@@ -270,7 +270,7 @@ uint8_t matrix_scan(void) {
 		  if (matrix_is_on(r, c)) xprintf("r:%d c:%d \n", r, c);
 #endif
 
-    return 1;
+    return true;
 }
 
 inline bool matrix_is_on(uint8_t row, uint8_t col) { return (matrix[row] & ((matrix_row_t)1 << col)); }
