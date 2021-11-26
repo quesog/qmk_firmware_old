@@ -28,6 +28,7 @@
 /* key matrix size */
 #define MATRIX_ROWS 10
 #define MATRIX_COLS 6
+#define LEGACY_MATRIX_SCAN
 
 #undef MATRIX_ROW_PINS
 #undef MATRIX_COL_PINS

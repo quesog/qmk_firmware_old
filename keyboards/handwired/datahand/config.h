@@ -28,6 +28,7 @@
 /* key matrix size */
 #define MATRIX_ROWS 13
 #define MATRIX_COLS 4
+#define LEGACY_MATRIX_SCAN
 
 //#define DIODE_DIRECTION
 

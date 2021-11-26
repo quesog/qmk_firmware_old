@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 8   // Row0 - Row7 in the schematic
 #define MATRIX_COLS 18  // ColA - ColR in the schematic
+#define LEGACY_MATRIX_SCAN
 
 /*
  * Keyboard Matrix Assignments

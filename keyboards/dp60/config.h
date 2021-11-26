@@ -27,6 +27,7 @@
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 15
+#define LEGACY_MATRIX_SCAN
 #define UNUSED_PINS
 #define DIODE_DIRECTION COL2ROW
 

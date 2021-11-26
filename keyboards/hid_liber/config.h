@@ -29,6 +29,7 @@
 /* key matrix size */
 #define MATRIX_ROWS 18
 #define MATRIX_COLS 8
+#define LEGACY_MATRIX_SCAN
 
 // HID Liberation Device uses custom matrix code to accomodate a 74HC238 3 to 8 decoder on pins B1, B2 and B3.
 //#define DIODE_DIRECTION

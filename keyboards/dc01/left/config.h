@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 21
 #define MATRIX_COLS_SCANNED 6
+#define LEGACY_MATRIX_SCAN
 
 /*
  * Keyboard Matrix Assignments

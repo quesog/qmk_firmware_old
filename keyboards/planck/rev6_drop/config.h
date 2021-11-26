@@ -28,6 +28,7 @@
 /* key matrix size */
 #define MATRIX_ROWS 8
 #define MATRIX_COLS 6
+#define LEGACY_MATRIX_SCAN
 
 /*
  * Keyboard Matrix Assignments

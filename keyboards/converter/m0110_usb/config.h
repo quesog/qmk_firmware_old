@@ -30,6 +30,7 @@ Ported to QMK by Techsock <info@techsock.com>
 /* matrix size */
 #define MATRIX_ROWS 14
 #define MATRIX_COLS 8
+#define LEGACY_MATRIX_SCAN
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 #define LOCKING_SUPPORT_ENABLE
@@ -54,5 +55,3 @@ Ported to QMK by Techsock <info@techsock.com>
 #define M0110_DATA_PIN          PIND
 #define M0110_DATA_DDR          DDRD
 #define M0110_DATA_BIT          0
-
-

@@ -17,6 +17,7 @@
 /* key matrix size */
 #define MATRIX_ROWS 6
 #define MATRIX_COLS 16
+#define LEGACY_MATRIX_SCAN
 
 #define DEF_PIN(port, pin) (((port) << 8) | pin)
 #define GET_PORT(pp) (((pp) >> 8) & 0xFF)

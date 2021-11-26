@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 19
+#define LEGACY_MATRIX_SCAN
 
 //This is all fake and not used
 #define MATRIX_COL_PINS { B11, B10, B1, B0, A7, A6, A5, A4, A3, A2, A1, A0, C15, C14, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN }

@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DIODE_DIRECTION COL2ROW
 #define MATRIX_ROWS 6
 #define MATRIX_COLS 12
+#define LEGACY_MATRIX_SCAN
 #define COL_EXPANDED { true, true, true, true, true, true, false, false, false, false, false, false}
 #define MATRIX_ONBOARD_ROW_PINS { F7, F6, F5, F4, F1, F0 }
 #define MATRIX_ONBOARD_COL_PINS { 0, 0, 0, 0, 0, 0, B6, B7, D6, D2, D3, C6 }

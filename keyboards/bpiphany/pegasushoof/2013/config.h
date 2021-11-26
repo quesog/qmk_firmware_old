@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 8
 #define MATRIX_COLS 18
+#define LEGACY_MATRIX_SCAN
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW

@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 6
 #define MATRIX_COLS 18
+#define LEGACY_MATRIX_SCAN
 
 /* left columns are all onboard, right columns all on expander */
 #define COL_EXPANDED { false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true}

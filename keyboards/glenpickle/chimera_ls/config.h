@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 12
+#define LEGACY_MATRIX_SCAN
 
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST

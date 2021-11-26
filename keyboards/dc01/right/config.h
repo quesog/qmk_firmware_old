@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 8
+#define LEGACY_MATRIX_SCAN
 
 /*
  * Keyboard Matrix Assignments

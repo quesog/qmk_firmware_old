@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 16
 #define MATRIX_COLS 6
+#define LEGACY_MATRIX_SCAN
 
 /* number of backlight levels */
 #define BACKLIGHT_LEVELS 3

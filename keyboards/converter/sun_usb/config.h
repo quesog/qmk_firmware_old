@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* matrix size */
 #define MATRIX_ROWS 16
 #define MATRIX_COLS 8
+#define LEGACY_MATRIX_SCAN
 
 /* key combination for command */
 #define IS_COMMAND() ( \

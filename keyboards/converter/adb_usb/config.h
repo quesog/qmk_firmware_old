@@ -28,6 +28,7 @@ Ported to QMK by Peter Roe <pete@13bit.me>
 /* matrix size */
 #define MATRIX_ROWS 16  // keycode bit: 3-0
 #define MATRIX_COLS 8   // keycode bit: 6-4
+#define LEGACY_MATRIX_SCAN
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 #define LOCKING_SUPPORT_ENABLE

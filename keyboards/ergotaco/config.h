@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 12
 #define MATRIX_ROWS_PER_SIDE (MATRIX_ROWS / 2)
 #define MATRIX_COLS 1
+#define LEGACY_MATRIX_SCAN
 
 #define MOUSEKEY_INTERVAL       20
 #define MOUSEKEY_DELAY          0
