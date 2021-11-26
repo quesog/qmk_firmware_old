@@ -300,7 +300,7 @@ __attribute__((weak)) bool transport_master_if_connected(matrix_row_t master_mat
 }
 #endif
 
-uint8_t matrix_scan(void) {
+bool matrix_scan(void) {
     matrix_row_t curr_matrix[MATRIX_ROWS] = {0};
 
 #if defined(DIRECT_PINS) || (DIODE_DIRECTION == COL2ROW)
@@ -326,5 +326,5 @@ uint8_t matrix_scan(void) {
     debounce(raw_matrix, matrix, ROWS_PER_HAND, changed);
     matrix_scan_quantum();
 #endif
-    return (uint8_t)changed;
+    return changed;
 }
