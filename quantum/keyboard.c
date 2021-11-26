@@ -434,7 +434,20 @@ static inline void generate_tick_event(void) {
  */
 static bool matrix_task(void) {
     static matrix_row_t matrix_previous[MATRIX_ROWS];
-    const bool          matrix_changed = matrix_scan();
+
+#if defined(LEGACY_MATRIX_SCAN)
+#    pragma message "Since breaking change Q1 2022 QMK depends on matrix_scan() to signal if the keyboard \
+matrix has changed. Your keyboard uses a custom matrix scanning implementation that is not up to date. \
+Please update the source files or contact the keyboard maintainers to update. Your keyboard will still \
+function correctly as there is a workaround applied."
+    matrix_scan();
+    bool matrix_changed = false;
+    for (uint8_t row = 0; row < MATRIX_ROWS && !matrix_changed; row++) {
+        matrix_changed |= matrix_previous[row] ^ matrix_get_row(row);
+    }
+#else
+    const bool matrix_changed = matrix_scan();
+#endif
 
     matrix_scan_perf_task();
 
