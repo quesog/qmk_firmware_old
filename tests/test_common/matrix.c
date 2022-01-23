@@ -38,9 +38,11 @@ void matrix_init_kb(void) {}
 
 void matrix_scan_kb(void) {}
 
-void press_key(uint8_t col, uint8_t row) { matrix[row] |= 1 << col; }
+void press_key(uint8_t col, uint8_t row) { matrix[row] |= (matrix_row_t)1 << col; }
 
-void release_key(uint8_t col, uint8_t row) { matrix[row] &= ~(1 << col); }
+void release_key(uint8_t col, uint8_t row) { matrix[row] &= ~((matrix_row_t)1 << col); }
+
+bool matrix_is_on(uint8_t row, uint8_t col) { return (matrix[row] & ((matrix_row_t)1 << col)); }
 
 void clear_all_keys(void) { memset(matrix, 0, sizeof(matrix)); }
 

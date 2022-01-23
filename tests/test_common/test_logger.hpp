@@ -29,6 +29,7 @@ class TestLogger : public std::ostream {
     void reset();
 
    private:
+    TestLogger& timestamp();
     std::stringbuf m_log;
 };
 

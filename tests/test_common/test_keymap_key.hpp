@@ -43,4 +43,5 @@ struct KeymapKey {
         assert(position.col <= MATRIX_COLS);
         assert(position.row <= MATRIX_ROWS);
     }
+    uint32_t timestamp_pressed;
 };

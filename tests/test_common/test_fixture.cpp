@@ -12,6 +12,7 @@
 #include "test_logger.hpp"
 #include "test_matrix.h"
 #include "test_keymap_key.hpp"
+#include "timer.h"
 
 extern "C" {
 #include "action.h"
@@ -41,6 +42,7 @@ extern "C" uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t position) {
 }
 
 void TestFixture::SetUpTestCase() {
+    test_logger.info() << "Tapping Term is " << +TAPPING_TERM << "ms" << std::endl;
     test_logger.info() << "TestFixture setup-up start." << std::endl;
 
     // The following is enough to bootstrap the values set in main
@@ -55,7 +57,10 @@ void TestFixture::SetUpTestCase() {
 
 void TestFixture::TearDownTestCase() {}
 
-TestFixture::TestFixture() { m_this = this; }
+TestFixture::TestFixture() {
+    m_this = this;
+    timer_clear();
+}
 
 TestFixture::~TestFixture() {
     test_logger.info() << "TestFixture clean-up start." << std::endl;
@@ -83,11 +88,9 @@ TestFixture::~TestFixture() {
     EXPECT_CALL(driver, send_keyboard_mock(_)).Times(0);
     idle_for(TAPPING_TERM * 10);
     testing::Mock::VerifyAndClearExpectations(&driver);
-
     m_this = nullptr;
 
     test_logger.info() << "TestFixture clean-up end." << std::endl;
-
     print_test_log();
 }
 
@@ -142,14 +145,13 @@ void TestFixture::get_keycode(const layer_t layer, const keypos_t position, uint
     FAIL() << "No key is mapped for layer " << +layer << " and (column,row) " << +position.col << "," << +position.row << ")";
 }
 
-void TestFixture::run_one_scan_loop() {
-    keyboard_task();
-    advance_time(1);
-}
+void TestFixture::run_one_scan_loop() { this->idle_for(1); }
 
 void TestFixture::idle_for(unsigned time) {
+    test_logger.trace() << "Running " << +time << " keyboard task loop(s)" << std::endl;
     for (unsigned i = 0; i < time; i++) {
-        run_one_scan_loop();
+        keyboard_task();
+        advance_time(1);
     }
 }
 
