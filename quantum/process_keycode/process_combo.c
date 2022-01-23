@@ -75,8 +75,6 @@ static queued_combo_t combo_buffer[COMBO_BUFFER_LENGTH];
 
 #define INCREMENT_MOD(i) i = (i + 1) % COMBO_BUFFER_LENGTH
 
-#define COMBO_KEY_POS ((keypos_t){.col = 254, .row = 254})
-
 #ifndef EXTRA_SHORT_COMBOS
 /* flags are their own elements in combo_t struct. */
 #    define COMBO_ACTIVE(combo) (combo->active)
@@ -129,9 +127,10 @@ static inline void release_combo(uint16_t combo_index, combo_t *combo) {
         keyrecord_t record = {
             .event =
                 {
-                    .key     = COMBO_KEY_POS,
-                    .time    = timer_read() | 1,
+                    .key     = {.col = 0, .row = 0},
+                    .time    = timer_read(),
                     .pressed = false,
+                    .valid   = false,
                 },
             .keycode = combo->keycode,
         };
@@ -204,7 +203,7 @@ static inline void dump_key_buffer(void) {
         queued_record_t *qrecord = &key_buffer[key_buffer_i];
         keyrecord_t *    record  = &qrecord->record;
 
-        if (IS_NOEVENT(record->event)) {
+        if (!record->event.valid) {
             continue;
         }
 
@@ -217,7 +216,7 @@ static inline void dump_key_buffer(void) {
             process_record(record);
 #endif
         }
-        record->event.time = 0;
+        record->event.valid = false;
     }
 
     key_buffer_next = key_buffer_size = 0;
@@ -300,7 +299,7 @@ void apply_combo(uint16_t combo_index, combo_t *combo) {
         if (ALL_COMBO_KEYS_ARE_DOWN(state, key_count)) {
             // this in the end executes the combo when the key_buffer is dumped.
             record->keycode   = combo->keycode;
-            record->event.key = COMBO_KEY_POS;
+            record->event.key = (keypos_t){.col = 0, .row = 0};
 
             qrecord->combo_index = combo_index;
             ACTIVATE_COMBO(combo);
@@ -309,7 +308,7 @@ void apply_combo(uint16_t combo_index, combo_t *combo) {
         } else {
             // key was part of the combo but not the last one, "disable" it
             // by making it a TICK event.
-            record->event.time = 0;
+            record->event.valid = false;
         }
     }
     drop_combo_from_buffer(combo_index);

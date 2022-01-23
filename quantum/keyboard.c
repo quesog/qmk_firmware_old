@@ -437,9 +437,7 @@ bool matrix_scan_task(void) {
             for (uint8_t c = 0; c < MATRIX_COLS; c++, col_mask <<= 1) {
                 if (matrix_change & col_mask) {
                     if (should_process_keypress()) {
-                        action_exec((keyevent_t){
-                            .key = (keypos_t){.row = r, .col = c}, .pressed = (matrix_row & col_mask), .time = (timer_read() | 1) /* time should not be 0 */
-                        });
+                        action_exec(KEY_EVENT(r, c, matrix_row & col_mask));
                     }
                     // record a processed key
                     matrix_prev[r] ^= col_mask;
@@ -461,7 +459,7 @@ bool matrix_scan_task(void) {
     // we can get here with some keys processed now.
     if (!keys_processed)
 #endif
-        action_exec(TICK);
+        action_exec(TICK_EVENT);
 
 MATRIX_LOOP_END:
 

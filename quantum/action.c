@@ -68,7 +68,7 @@ __attribute__((weak)) bool pre_process_record_quantum(keyrecord_t *record) { ret
  * FIXME: Needs documentation.
  */
 void action_exec(keyevent_t event) {
-    if (!IS_NOEVENT(event)) {
+    if (event.valid) {
         dprint("\n---- action_exec: start -----\n");
         dprint("EVENT: ");
         debug_event(event);
@@ -84,7 +84,7 @@ void action_exec(keyevent_t event) {
     }
 
 #ifdef SWAP_HANDS_ENABLE
-    if (!IS_NOEVENT(event)) {
+    if (event.valid) {
         process_hand_swap(&event);
     }
 #endif
@@ -115,14 +115,14 @@ void action_exec(keyevent_t event) {
         retroshift_poll_time(&event);
     }
 #    endif
-    if (IS_NOEVENT(record.event) || pre_process_record_quantum(&record)) {
+    if (!record.event.valid || pre_process_record_quantum(&record)) {
         action_tapping_process(record);
     }
 #else
-    if (IS_NOEVENT(record.event) || pre_process_record_quantum(&record)) {
+    if (!record.event.valid || pre_process_record_quantum(&record)) {
         process_record(&record);
     }
-    if (!IS_NOEVENT(record.event)) {
+    if (record.event.valid) {
         dprint("processed: ");
         debug_record(record);
         dprintln();
@@ -201,7 +201,7 @@ void process_record_tap_hint(keyrecord_t *record) {
  * FIXME: Needs documentation.
  */
 void process_record(keyrecord_t *record) {
-    if (IS_NOEVENT(record->event)) {
+    if (!record->event.valid) {
         return;
     }
 
@@ -702,7 +702,7 @@ void process_action(keyrecord_t *record, action_t action) {
                         } else {
                             wait_ms(TAP_CODE_DELAY);
                             unregister_code(action.swap.code);
-                            *record = (keyrecord_t){};  // hack: reset tap mode
+                            *record = (keyrecord_t){0};  // hack: reset tap mode
                         }
                     } else {
                         if (swap_held && !event.pressed) {
@@ -834,10 +834,9 @@ __attribute__((weak)) void register_code(uint8_t code) {
     }
 #endif
 
-    else if
-        IS_KEY(code) {
-            // TODO: should push command_proc out of this block?
-            if (command_proc(code)) return;
+    else if IS_KEY (code) {
+        // TODO: should push command_proc out of this block?
+        if (command_proc(code)) return;
 
 #ifndef NO_ACTION_ONESHOT
 /* TODO: remove
@@ -854,35 +853,33 @@ __attribute__((weak)) void register_code(uint8_t code) {
         } else
 */
 #endif
-            {
-                // Force a new key press if the key is already pressed
-                // without this, keys with the same keycode, but different
-                // modifiers will be reported incorrectly, see issue #1708
-                if (is_key_pressed(keyboard_report, code)) {
-                    del_key(code);
-                    send_keyboard_report();
-                }
-                add_key(code);
+        {
+            // Force a new key press if the key is already pressed
+            // without this, keys with the same keycode, but different
+            // modifiers will be reported incorrectly, see issue #1708
+            if (is_key_pressed(keyboard_report, code)) {
+                del_key(code);
                 send_keyboard_report();
             }
-        }
-    else if
-        IS_MOD(code) {
-            add_mods(MOD_BIT(code));
+            add_key(code);
             send_keyboard_report();
         }
+    } else if IS_MOD (code) {
+        add_mods(MOD_BIT(code));
+        send_keyboard_report();
+    }
 #ifdef EXTRAKEY_ENABLE
-    else if
-        IS_SYSTEM(code) { host_system_send(KEYCODE2SYSTEM(code)); }
-    else if
-        IS_CONSUMER(code) { host_consumer_send(KEYCODE2CONSUMER(code)); }
+    else if IS_SYSTEM (code) {
+        host_system_send(KEYCODE2SYSTEM(code));
+    } else if IS_CONSUMER (code) {
+        host_consumer_send(KEYCODE2CONSUMER(code));
+    }
 #endif
 #ifdef MOUSEKEY_ENABLE
-    else if
-        IS_MOUSEKEY(code) {
-            mousekey_on(code);
-            mousekey_send();
-        }
+    else if IS_MOUSEKEY (code) {
+        mousekey_on(code);
+        mousekey_send();
+    }
 #endif
 }
 
@@ -927,26 +924,22 @@ __attribute__((weak)) void unregister_code(uint8_t code) {
     }
 #endif
 
-    else if
-        IS_KEY(code) {
-            del_key(code);
-            send_keyboard_report();
-        }
-    else if
-        IS_MOD(code) {
-            del_mods(MOD_BIT(code));
-            send_keyboard_report();
-        }
-    else if
-        IS_SYSTEM(code) { host_system_send(0); }
-    else if
-        IS_CONSUMER(code) { host_consumer_send(0); }
+    else if IS_KEY (code) {
+        del_key(code);
+        send_keyboard_report();
+    } else if IS_MOD (code) {
+        del_mods(MOD_BIT(code));
+        send_keyboard_report();
+    } else if IS_SYSTEM (code) {
+        host_system_send(0);
+    } else if IS_CONSUMER (code) {
+        host_consumer_send(0);
+    }
 #ifdef MOUSEKEY_ENABLE
-    else if
-        IS_MOUSEKEY(code) {
-            mousekey_off(code);
-            mousekey_send();
-        }
+    else if IS_MOUSEKEY (code) {
+        mousekey_off(code);
+        mousekey_send();
+    }
 #endif
 }
 

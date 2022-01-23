@@ -33,24 +33,28 @@ typedef struct {
 /* key event */
 typedef struct {
     keypos_t key;
-    bool     pressed;
     uint16_t time;
+    bool     pressed : 1;
+    bool     valid : 1;
 } keyevent_t;
 
 /* equivalent test of keypos_t */
 #define KEYEQ(keya, keyb) ((keya).row == (keyb).row && (keya).col == (keyb).col)
 
-/* Rules for No Event:
- * 1) (time == 0) to handle (keyevent_t){} as empty event
- * 2) Matrix(255, 255) to make TICK event available
- */
-static inline bool IS_NOEVENT(keyevent_t event) { return event.time == 0 || (event.key.row == 255 && event.key.col == 255); }
-static inline bool IS_PRESSED(keyevent_t event) { return (!IS_NOEVENT(event) && event.pressed); }
-static inline bool IS_RELEASED(keyevent_t event) { return (!IS_NOEVENT(event) && !event.pressed); }
+static inline bool IS_PRESSED(keyevent_t event) { return event.valid && event.pressed; }
+static inline bool IS_RELEASED(keyevent_t event) { return event.valid && !event.pressed; }
 
-/* Tick event */
-#define TICK \
-    (keyevent_t) { .key = (keypos_t){.row = 255, .col = 255}, .pressed = false, .time = (timer_read() | 1) }
+/**
+ * @brief Constructs a internal tick event that is used to drive the internal QMK state machine.
+ */
+#define TICK_EVENT \
+    (keyevent_t) { .key = (keypos_t){.row = 0, .col = 0}, .pressed = false, .valid = false, .time = timer_read() }
+
+/**
+ * @brief Constructs a key event for a pressed or released key.
+ */
+#define KEY_EVENT(ROW, COL, PRESSED) \
+    (keyevent_t) { .key = (keypos_t){.row = ROW, .col = COL}, .pressed = PRESSED, .valid = true, .time = timer_read() }
 
 /* it runs once at early stage of startup before keyboard_init. */
 void keyboard_setup(void);
