@@ -41,7 +41,6 @@ TEST_F(RetroTapping, tap_and_hold_mod_tap_hold_key) {
     testing::Mock::VerifyAndClearExpectations(&driver);
 
     /* Release mod-tap-hold key. */
-    /* TODO: Why is LSHIFT send at all? */
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_LSHIFT)));
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport()));
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_P)));

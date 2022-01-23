@@ -62,7 +62,7 @@ TEST_F(DefaultTapHold, tap_regular_key_while_mod_tap_key_is_held) {
     testing::Mock::VerifyAndClearExpectations(&driver);
 
     /* Idle for tapping term of mod tap hold key. */
-    idle_for(TAPPING_TERM - 3);
+    idle_for(TAPPING_TERM);
     testing::Mock::VerifyAndClearExpectations(&driver);
 }
 

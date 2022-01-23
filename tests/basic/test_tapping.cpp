@@ -36,14 +36,13 @@ TEST_F(Tapping, TapA_SHFT_T_KeyReportsKey) {
     key_shift_hold_p_tap.press();
     EXPECT_CALL(driver, send_keyboard_mock(_)).Times(0);
     run_one_scan_loop();
+    testing::Mock::VerifyAndClearExpectations(&driver);
 
-    // First we get the key press
     key_shift_hold_p_tap.release();
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_P)));
-
-    // Then the release
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport()));
     run_one_scan_loop();
+    testing::Mock::VerifyAndClearExpectations(&driver);
 }
 
 TEST_F(Tapping, HoldA_SHFT_T_KeyReportsShift) {
@@ -54,17 +53,15 @@ TEST_F(Tapping, HoldA_SHFT_T_KeyReportsShift) {
     set_keymap({mod_tap_hold_key});
 
     mod_tap_hold_key.press();
-
-    // Tapping keys does nothing on press
-    EXPECT_CALL(driver, send_keyboard_mock(_)).Times(0);
     idle_for(TAPPING_TERM);
-
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_LSFT)));
     run_one_scan_loop();
+    testing::Mock::VerifyAndClearExpectations(&driver);
 
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport()));
     mod_tap_hold_key.release();
     run_one_scan_loop();
+    testing::Mock::VerifyAndClearExpectations(&driver);
 }
 
 TEST_F(Tapping, ANewTapWithinTappingTermIsBuggy) {
@@ -80,44 +77,49 @@ TEST_F(Tapping, ANewTapWithinTappingTermIsBuggy) {
     EXPECT_CALL(driver, send_keyboard_mock(_)).Times(0);
     run_one_scan_loop();
     key_shift_hold_p_tap.release();
+    testing::Mock::VerifyAndClearExpectations(&driver);
 
     // First we get the key press
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_P)));
     // Then the release
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport()));
     run_one_scan_loop();
+    testing::Mock::VerifyAndClearExpectations(&driver);
 
     // This sends KC_P, even if it should do nothing
     key_shift_hold_p_tap.press();
     // This test should not succed if everything works correctly
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_P)));
     run_one_scan_loop();
+    testing::Mock::VerifyAndClearExpectations(&driver);
 
     key_shift_hold_p_tap.release();
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport()));
     idle_for(TAPPING_TERM + 1);
+    testing::Mock::VerifyAndClearExpectations(&driver);
 
     // On the other hand, nothing is sent if we are outside the tapping term
     key_shift_hold_p_tap.press();
     EXPECT_CALL(driver, send_keyboard_mock(_)).Times(0);
     run_one_scan_loop();
     key_shift_hold_p_tap.release();
+    testing::Mock::VerifyAndClearExpectations(&driver);
 
     // First we get the key press
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_P)));
     // Then the release
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport()));
-    idle_for(TAPPING_TERM + 1);
-
-    // Now we are geting into strange territory, as the hold registers too early here
-    // But the stranges part is:
-    // If TAPPING_TERM + 1 above is changed to TAPPING_TERM or TAPPING_TERM + 2 it doesn't
-    key_shift_hold_p_tap.press();
-    // Shouldn't be called here really
-    EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_LEFT_SHIFT))).Times(1);
     idle_for(TAPPING_TERM);
+    testing::Mock::VerifyAndClearExpectations(&driver);
 
+    key_shift_hold_p_tap.press();
+    EXPECT_CALL(driver, send_keyboard_mock(_)).Times(0);
+    idle_for(TAPPING_TERM);
+    testing::Mock::VerifyAndClearExpectations(&driver);
+
+    EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport(KC_LEFT_SHIFT))).Times(1);
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport()));
     key_shift_hold_p_tap.release();
     run_one_scan_loop();
+    testing::Mock::VerifyAndClearExpectations(&driver);
 }
