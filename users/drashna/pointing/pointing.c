@@ -99,7 +99,7 @@ bool process_record_pointing(uint16_t keycode, keyrecord_t* record) {
             mouse_timer = timer_read();
             break;
         default:
-            if (IS_NOEVENT(record->event)) break;
+            if (!record->event.valid)) break;
             if ((keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX) && (((keycode >> 0x8) & 0xF) == _MOUSE)) {
                 record->event.pressed ? mouse_keycode_tracker++ : mouse_keycode_tracker--;
                 mouse_timer = timer_read();

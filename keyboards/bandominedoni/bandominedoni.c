@@ -16,8 +16,9 @@
 
 #include "bandominedoni.h"
 
-#ifdef RGB_MATRIX_ENABLE
+// clang-format off
 
+#ifdef RGB_MATRIX_ENABLE
 led_config_t g_led_config = {
     {
         {     75,     46,     45,     44,     43,     42, NO_LED }, \
@@ -68,6 +69,8 @@ led_config_t g_led_config = {
 };
 #endif
 
+// clang-format on
+
 #if defined(SPLIT_HAND_MATRIX_GRID)
 static uint8_t peek_matrix_intersection(pin_t out_pin, pin_t in_pin) {
     setPinInputHigh(in_pin);
@@ -87,7 +90,7 @@ static uint8_t peek_matrix_intersection(pin_t out_pin, pin_t in_pin) {
 //  reason: bandoMIneDonI has no space on right hand side to use "SPLIT_HAND_MATRIX_GRID".
 //          However, It enables to decide the handedness by the HW by adding one condition: "not to press any keys (especially r30) dusing startup."
 bool is_keyboard_left(void) {
-static enum { UNKNOWN, LEFT, RIGHT } hand_side = UNKNOWN;
+    static enum { UNKNOWN, LEFT, RIGHT } hand_side = UNKNOWN;
 
     // only check once, as this is called often
     if (hand_side == UNKNOWN) {
@@ -119,41 +122,33 @@ static enum { UNKNOWN, LEFT, RIGHT } hand_side = UNKNOWN;
 }
 
 #ifdef ENCODER_ENABLE
-#   ifdef ENCODERS
+#    ifdef ENCODERS
 static uint8_t  encoder_state[ENCODERS] = {0};
 static keypos_t encoder_cw[ENCODERS]    = ENCODERS_CW_KEY;
 static keypos_t encoder_ccw[ENCODERS]   = ENCODERS_CCW_KEY;
-#   endif
+#    endif
 
 void encoder_action_unregister(void) {
-#   ifdef ENCODERS
+#    ifdef ENCODERS
     for (int index = 0; index < ENCODERS; ++index) {
         if (encoder_state[index]) {
-            keyevent_t encoder_event = (keyevent_t) {
-                .key = encoder_state[index] >> 1 ? encoder_cw[index] : encoder_ccw[index],
-                .pressed = false,
-                .time = (timer_read() | 1)
-            };
-            encoder_state[index] = 0;
+            keyevent_t encoder_event = (keyevent_t){.key = encoder_state[index] >> 1 ? encoder_cw[index] : encoder_ccw[index], .pressed = false, .time = timer_read(), .valid = true};
+            encoder_state[index]     = 0;
             action_exec(encoder_event);
         }
     }
-#   endif
+#    endif
 }
 
 void encoder_action_register(uint8_t index, bool clockwise) {
-#   ifdef ENCODERS
-    keyevent_t encoder_event = (keyevent_t) {
-        .key = clockwise ? encoder_cw[index] : encoder_ccw[index],
-        .pressed = true,
-        .time = (timer_read() | 1)
-    };
-    encoder_state[index] = (clockwise ^ 1) | (clockwise << 1);
-#       ifdef CONSOLE_ENABLE
+#    ifdef ENCODERS
+    keyevent_t encoder_event = (keyevent_t){.key = clockwise ? encoder_cw[index] : encoder_ccw[index], .pressed = true, .time = timer_read(), .valid = true};
+    encoder_state[index]     = (clockwise ^ 1) | (clockwise << 1);
+#        ifdef CONSOLE_ENABLE
     uprintf("encoder_action_register index = %u, clockwise = %u, row = %u, col = %u\n", index, clockwise, encoder_event.key.row, encoder_event.key.col);
-#       endif
+#        endif
     action_exec(encoder_event);
-#   endif
+#    endif
 }
 
 void matrix_scan_kb(void) {
