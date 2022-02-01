@@ -4,6 +4,7 @@ RISC-V = yes
 ifeq ($(strip $(RISC-V)), yes)
     MCU                =   GD32VF103
     BOARD              =   SIPEED_LONGAN_NANO
+    BOOTLOADER         =   gd32v-dfu
     LTO_ENABLE         =   yes
     EXTRAFLAGS         += -Ofast
     USE_PROCESS_STACKSIZE = 2048
@@ -12,6 +13,7 @@ ifeq ($(strip $(RISC-V)), yes)
 else
     MCU        =   STM32F303
     BOARD      =   GENERIC_STM32_F303XC
+    BOOTLOADER =   stm32-dfu
     LTO_ENABLE =   yes
     EXTRAFLAGS += -Ofast
 endif
