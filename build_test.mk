@@ -36,11 +36,10 @@ CREATE_MAP := no
 VPATH += \
 	$(LIB_PATH)/googletest \
 	$(LIB_PATH)/googlemock \
-	$(LIB_PATH)/printf
+	$(COMMON_VPATH)
 
 all: elf
 
-VPATH += $(COMMON_VPATH)
 PLATFORM:=TEST
 PLATFORM_KEY:=test
 BOOTLOADER_TYPE:=none
@@ -61,6 +60,7 @@ include $(TMK_PATH)/protocol.mk
 include $(QUANTUM_PATH)/debounce/tests/rules.mk
 include $(QUANTUM_PATH)/encoder/tests/rules.mk
 include $(QUANTUM_PATH)/sequencer/tests/rules.mk
+include $(QUANTUM_PATH)/logging/print.mk
 include $(PLATFORM_PATH)/test/rules.mk
 ifneq ($(filter $(FULL_TESTS),$(TEST)),)
 include build_full_test.mk
@@ -68,7 +68,6 @@ endif
 
 $(TEST)_SRC += \
 	tests/test_common/main.c \
-	$(LIB_PATH)/printf/printf.c \
 	$(QUANTUM_PATH)/logging/print.c
 
 $(TEST_OBJ)/$(TEST)_SRC := $($(TEST)_SRC)

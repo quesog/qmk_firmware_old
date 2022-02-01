@@ -327,7 +327,8 @@ SHARED_CFLAGS = -fomit-frame-pointer \
                 -ffunction-sections \
                 -fdata-sections \
                 -fno-common \
-                -fshort-wchar
+                -fshort-wchar \
+                -fno-builtin-printf
 
 # Shared Linker flags for all toolchains
 SHARED_LDFLAGS = -T $(LDSCRIPT) \

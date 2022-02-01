@@ -40,6 +40,12 @@ void print_set_sendchar(sendchar_func_t func);
 #        include "printf.h"  // lib/printf/printf.h
 
 // Create user & normal print defines
+#        define printf printf_
+#        define sprintf sprintf_
+#        define vsprintf vsprintf_
+#        define snprintf snprintf_
+#        define vsnprintf vsnprintf_
+#        define vprintf vprintf_
 #        define print(s) printf(s)
 #        define println(s) printf(s "\r\n")
 #        define xprintf printf

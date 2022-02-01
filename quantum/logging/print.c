@@ -24,4 +24,4 @@ static sendchar_func_t func = null_sendchar_func;
 
 void print_set_sendchar(sendchar_func_t send) { func = send; }
 
-void _putchar(char character) { func(character); }
+void putchar_(char character) { func(character); }
