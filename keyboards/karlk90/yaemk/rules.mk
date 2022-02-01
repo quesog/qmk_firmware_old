@@ -37,7 +37,9 @@ MOUSEKEY_ENABLE                    = yes
 NKRO_ENABLE                        = yes
 OLED_ENABLE                        = yes
 OLED_DRIVER                        = SSD1306
-REGISTER_MULTIPLE_KEYEVENTS_ENABLE = yes
+# REGISTER_MULTIPLE_KEYEVENTS_ENABLE = yes
+# Disabled for now as this feature needs a
+# rebase on QMK develop and has some bugs
 RGB_MATRIX_ENABLE                  = yes
 RGB_MATRIX_DRIVER                  = WS2812
 SERIAL_DRIVER                      = usart
