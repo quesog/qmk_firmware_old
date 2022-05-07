@@ -36,7 +36,7 @@ class TestFixture : public testing::Test {
     void add_key(const KeymapKey key);
 
     const KeymapKey* find_key(const layer_t layer_t, const keypos_t position) const;
-    void                     get_keycode(const layer_t layer, const keypos_t position, uint16_t* result) const;
+    void             get_keycode(const layer_t layer, const keypos_t position, uint16_t* result) const;
 
     void run_one_scan_loop();
     void idle_for(unsigned ms);

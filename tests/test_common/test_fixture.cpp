@@ -28,6 +28,10 @@ void set_time(uint32_t t);
 void advance_time(uint32_t ms);
 }
 
+#if defined(DYNAMIC_TAPPING_TERM_ENABLE)
+extern uint16_t g_tapping_term;
+#endif
+
 using testing::_;
 
 /* This is used for dynamic dispatching keymap_key_to_keycode calls to the current active test_fixture. */
@@ -57,8 +61,15 @@ void TestFixture::SetUpTestCase() {
 void TestFixture::TearDownTestCase() {}
 
 TestFixture::TestFixture() {
+#if defined(DYNAMIC_TAPPING_TERM_ENABLE)
+    uint16_t tapping_term = g_tapping_term;
+#else
+    uint16_t tapping_term = TAPPING_TERM;
+#endif
+
     m_this = this;
     timer_clear();
+    test_logger.info() << "Tapping Term is " << +tapping_term << "ms" << std::endl;
 }
 
 TestFixture::~TestFixture() {
@@ -87,11 +98,9 @@ TestFixture::~TestFixture() {
     EXPECT_CALL(driver, send_keyboard_mock(_)).Times(0);
     idle_for(TAPPING_TERM * 10);
     testing::Mock::VerifyAndClearExpectations(&driver);
-
     m_this = nullptr;
 
     test_logger.info() << "TestFixture clean-up end." << std::endl;
-
     print_test_log();
 }
 
@@ -147,13 +156,14 @@ void TestFixture::get_keycode(const layer_t layer, const keypos_t position, uint
 }
 
 void TestFixture::run_one_scan_loop() {
-    keyboard_task();
-    advance_time(1);
+    this->idle_for(1);
 }
 
 void TestFixture::idle_for(unsigned time) {
+    test_logger.trace() << "Running " << +time << " keyboard task loop(s)" << std::endl;
     for (unsigned i = 0; i < time; i++) {
-        run_one_scan_loop();
+        keyboard_task();
+        advance_time(1);
     }
 }
 
@@ -161,6 +171,7 @@ void TestFixture::print_test_log() const {
     const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
     if (HasFailure()) {
         std::cerr << test_info->test_case_name() << "." << test_info->name() << " failed!" << std::endl;
+        test_logger.print_header();
         test_logger.print_log();
     }
     test_logger.reset();
