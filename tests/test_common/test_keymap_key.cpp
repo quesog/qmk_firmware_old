@@ -31,7 +31,7 @@ void KeymapKey::press() {
 }
 
 void KeymapKey::release() {
-    EXPECT_TRUE(matrix_is_on(this->position.row, this->position.col)) << "Tried to release key " << this->name << "that wasn't pressed before! Check the test code." << std::endl;
+    EXPECT_TRUE(matrix_is_on(this->position.row, this->position.col)) << "Tried to release key " << this->name << " that wasn't pressed before! Check the test code." << std::endl;
 
     release_key(this->position.col, this->position.row);
     uint32_t now = timer_read32();
