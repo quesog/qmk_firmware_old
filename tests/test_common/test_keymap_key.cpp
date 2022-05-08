@@ -23,8 +23,7 @@
 #include "timer.h"
 
 void KeymapKey::press() {
-    EXPECT_FALSE(matrix_is_on(position.row, position.col)) << "Tried to press key (" << +this->position.col << "," << +this->position.row << ") "
-                                                           << "was already pressed! Check the test code." << std::endl;
+    EXPECT_FALSE(matrix_is_on(position.row, position.col)) << "Tried to press key " << this->name << " that was already pressed! Check the test code." << std::endl;
 
     press_key(this->position.col, this->position.row);
     this->timestamp_pressed = timer_read32();
