@@ -29,7 +29,7 @@ class AutoShift : public TestFixture {};
 TEST_F(AutoShift, key_release_before_timeout) {
     TestDriver driver;
     InSequence s;
-    auto       regular_key = KeymapKey(0, 2, 0, KC_A);
+    auto       regular_key = KEYMAP_KEY(0, 2, 0, KC_A);
 
     set_keymap({regular_key});
 
@@ -50,7 +50,7 @@ TEST_F(AutoShift, key_release_before_timeout) {
 TEST_F(AutoShift, key_release_after_timeout) {
     TestDriver driver;
     InSequence s;
-    auto       regular_key = KeymapKey(0, 2, 0, KC_A);
+    auto       regular_key = KEYMAP_KEY(0, 2, 0, KC_A);
 
     set_keymap({regular_key});
 

@@ -126,7 +126,7 @@ TEST_F(ActionLayer, LayerOff) {
 
 TEST_F(ActionLayer, MomentaryLayerDoesNothing) {
     TestDriver driver;
-    KeymapKey  layer_key = KeymapKey{0, 0, 0, MO(1)};
+    auto       layer_key = KEYMAP_KEY(0, 0, 0, MO(1));
 
     set_keymap({layer_key});
 
@@ -144,11 +144,11 @@ TEST_F(ActionLayer, MomentaryLayerDoesNothing) {
 
 TEST_F(ActionLayer, MomentaryLayerWithKeypress) {
     TestDriver driver;
-    KeymapKey  layer_key = KeymapKey{0, 0, 0, MO(1)};
+    auto       layer_key = KEYMAP_KEY(0, 0, 0, MO(1));
 
     /* These keys must have the same position in the matrix, only the layer is different. */
-    KeymapKey regular_key = KeymapKey{0, 1, 0, KC_A};
-    set_keymap({layer_key, regular_key, KeymapKey{1, 1, 0, KC_B}});
+    auto regular_key = KEYMAP_KEY(0, 1, 0, KC_A);
+    set_keymap({layer_key, regular_key, KEYMAP_KEY(1, 1, 0, KC_B)});
 
     /* Press MO. */
     EXPECT_CALL(driver, send_keyboard_mock(_)).Times(0);
@@ -183,7 +183,7 @@ TEST_F(ActionLayer, ToggleLayerDoesNothing) {
     GTEST_SKIP() << "TODO: Toggle layer does not activate the expected layer on key press but on release.";
 
     TestDriver driver;
-    KeymapKey  layer_key = KeymapKey{0, 0, 0, TG(1)};
+    auto       layer_key = KEYMAP_KEY(0, 0, 0, TG(1));
 
     set_keymap({layer_key});
 
@@ -206,8 +206,8 @@ TEST_F(ActionLayer, ToggleLayerUpAndDown) {
     GTEST_SKIP() << "TODO: Toggle layer does not activate the expected layer on key press but on release.";
 
     TestDriver driver;
-    KeymapKey  toggle_layer_1_on_layer_0 = KeymapKey{0, 0, 0, TG(1)};
-    KeymapKey  toggle_layer_0_on_layer_1 = KeymapKey{1, 1, 0, TG(0)};
+    auto       toggle_layer_1_on_layer_0 = KEYMAP_KEY(0, 0, 0, TG(1));
+    auto       toggle_layer_0_on_layer_1 = KEYMAP_KEY(1, 1, 0, TG(0));
 
     set_keymap({toggle_layer_1_on_layer_0, toggle_layer_0_on_layer_1});
 
@@ -242,7 +242,7 @@ TEST_F(ActionLayer, LayerTapToggleDoesNothing) {
     GTEST_SKIP() << "TODO: Tap toggle layer does not activate the expected layer on key press.";
 
     TestDriver driver;
-    KeymapKey  layer_key = KeymapKey{0, 0, 0, TT(1)};
+    auto       layer_key = KEYMAP_KEY(0, 0, 0, TT(1));
 
     set_keymap({layer_key});
 
@@ -264,11 +264,11 @@ TEST_F(ActionLayer, LayerTapToggleWithKeypress) {
     GTEST_SKIP() << "TODO: Tap toggle layer does not activate the expected layer on key press.";
 
     TestDriver driver;
-    KeymapKey  layer_key = KeymapKey{0, 0, 0, TT(1)};
+    auto       layer_key = KEYMAP_KEY(0, 0, 0, TT(1));
 
     /* These keys must have the same position in the matrix, only the layer is different. */
-    KeymapKey regular_key = KeymapKey{0, 1, 0, KC_A};
-    set_keymap({layer_key, regular_key, KeymapKey{1, 1, 0, KC_B}});
+    auto regular_key = KEYMAP_KEY(0, 1, 0, KC_A);
+    set_keymap({layer_key, regular_key, KEYMAP_KEY(1, 1, 0, KC_B)});
 
     /* Press TT. */
     EXPECT_CALL(driver, send_keyboard_mock(KeyboardReport())).Times(0);
@@ -300,11 +300,11 @@ TEST_F(ActionLayer, LayerTapToggleWithToggleWithKeypress) {
     GTEST_SKIP() << "TODO: Tap toggle layer does not activate the expected layer on key press.";
 
     TestDriver driver;
-    KeymapKey  layer_key = KeymapKey{0, 0, 0, TT(1)};
+    auto       layer_key = KEYMAP_KEY(0, 0, 0, TT(1));
 
     /* These keys must have the same position in the matrix, only the layer is different. */
-    KeymapKey regular_key = KeymapKey{0, 1, 0, KC_A};
-    set_keymap({layer_key, regular_key, KeymapKey{1, 1, 0, KC_B}});
+    auto regular_key = KEYMAP_KEY(0, 1, 0, KC_A);
+    set_keymap({layer_key, regular_key, KEYMAP_KEY(1, 1, 0, KC_B)});
 
     /* Tap TT five times . */
     EXPECT_CALL(driver, send_keyboard_mock(_)).Times(0);
@@ -364,8 +364,8 @@ TEST_F(ActionLayer, LayerTapReleasedBeforeKeypressReleaseWithModifiers) {
     TestDriver driver;
     InSequence s;
 
-    KeymapKey layer_0_key_0 = KeymapKey{0, 0, 0, LT(1, KC_T)};
-    KeymapKey layer_1_key_1 = KeymapKey{1, 1, 0, RALT(KC_9)};
+    auto layer_0_key_0 = KEYMAP_KEY(0, 0, 0, LT(1, KC_T));
+    auto layer_1_key_1 = KEYMAP_KEY(1, 1, 0, RALT(KC_9));
 
     set_keymap({layer_0_key_0, layer_1_key_1});
 

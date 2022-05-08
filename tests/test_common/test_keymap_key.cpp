@@ -24,18 +24,17 @@
 
 void KeymapKey::press() {
     EXPECT_FALSE(matrix_is_on(position.row, position.col)) << "Tried to press key (" << +this->position.col << "," << +this->position.row << ") "
-                                                           << "that wasn't pressed before! Check the test code." << std::endl;
+                                                           << "was already pressed! Check the test code." << std::endl;
 
     press_key(this->position.col, this->position.row);
     this->timestamp_pressed = timer_read32();
-    test_logger.trace() << "Key pressed:  (" << +this->position.col << "," << +this->position.row << ")" << std::endl;
+    test_logger.trace() << this->name << " pressed" << std::endl;
 }
 
 void KeymapKey::release() {
-    EXPECT_TRUE(matrix_is_on(this->position.row, this->position.col)) << "Tried to release key (" << +this->position.col << "," << +this->position.row << ") "
-                                                                      << "that wasn't pressed before! Check the test code." << std::endl;
+    EXPECT_TRUE(matrix_is_on(this->position.row, this->position.col)) << "Tried to release key " << this->name << "that wasn't pressed before! Check the test code." << std::endl;
 
     release_key(this->position.col, this->position.row);
     uint32_t now = timer_read32();
-    test_logger.trace() << "Key released: (" << +this->position.col << "," << +this->position.row << ") was pressed for " << now - this->timestamp_pressed << "ms" << std::endl;
+    test_logger.trace() << this->name << " released, was pressed for " << now - this->timestamp_pressed << "ms" << std::endl;
 }

@@ -30,7 +30,7 @@ TEST_F(KeyPress, SendKeyboardIsNotCalledWhenNoKeyIsPressed) {
 
 TEST_F(KeyPress, CorrectKeyIsReportedWhenPressed) {
     TestDriver driver;
-    auto       key = KeymapKey(0, 0, 0, KC_A);
+    auto       key = KEYMAP_KEY(0, 0, 0, KC_A);
 
     set_keymap({key});
 
@@ -45,7 +45,7 @@ TEST_F(KeyPress, CorrectKeyIsReportedWhenPressed) {
 
 TEST_F(KeyPress, ANonMappedKeyDoesNothing) {
     TestDriver driver;
-    auto       key = KeymapKey(0, 0, 0, KC_NO);
+    auto       key = KEYMAP_KEY(0, 0, 0, KC_NO);
 
     set_keymap({key});
 
@@ -57,8 +57,8 @@ TEST_F(KeyPress, ANonMappedKeyDoesNothing) {
 
 TEST_F(KeyPress, CorrectKeysAreReportedWhenTwoKeysArePressed) {
     TestDriver driver;
-    auto       key_b = KeymapKey(0, 0, 0, KC_B);
-    auto       key_c = KeymapKey(0, 1, 1, KC_C);
+    auto       key_b = KEYMAP_KEY(0, 0, 0, KC_B);
+    auto       key_c = KEYMAP_KEY(0, 1, 1, KC_C);
 
     set_keymap({key_b, key_c});
 
@@ -84,8 +84,8 @@ TEST_F(KeyPress, CorrectKeysAreReportedWhenTwoKeysArePressed) {
 
 TEST_F(KeyPress, LeftShiftIsReportedCorrectly) {
     TestDriver driver;
-    auto       key_a    = KeymapKey(0, 0, 0, KC_A);
-    auto       key_lsft = KeymapKey(0, 3, 0, KC_LEFT_SHIFT);
+    auto       key_a    = KEYMAP_KEY(0, 0, 0, KC_A);
+    auto       key_lsft = KEYMAP_KEY(0, 3, 0, KC_LEFT_SHIFT);
 
     set_keymap({key_a, key_lsft});
 
@@ -110,8 +110,8 @@ TEST_F(KeyPress, LeftShiftIsReportedCorrectly) {
 
 TEST_F(KeyPress, PressLeftShiftAndControl) {
     TestDriver driver;
-    auto       key_lsft  = KeymapKey(0, 3, 0, KC_LEFT_SHIFT);
-    auto       key_lctrl = KeymapKey(0, 5, 0, KC_LEFT_CTRL);
+    auto       key_lsft  = KEYMAP_KEY(0, 3, 0, KC_LEFT_SHIFT);
+    auto       key_lctrl = KEYMAP_KEY(0, 5, 0, KC_LEFT_CTRL);
 
     set_keymap({key_lctrl, key_lsft});
 
@@ -138,8 +138,8 @@ TEST_F(KeyPress, PressLeftShiftAndControl) {
 
 TEST_F(KeyPress, LeftAndRightShiftCanBePressedAtTheSameTime) {
     TestDriver driver;
-    auto       key_lsft = KeymapKey(0, 3, 0, KC_LEFT_SHIFT);
-    auto       key_rsft = KeymapKey(0, 4, 0, KC_RIGHT_SHIFT);
+    auto       key_lsft = KEYMAP_KEY(0, 3, 0, KC_LEFT_SHIFT);
+    auto       key_rsft = KEYMAP_KEY(0, 4, 0, KC_RIGHT_SHIFT);
 
     set_keymap({key_rsft, key_lsft});
 
@@ -165,7 +165,7 @@ TEST_F(KeyPress, LeftAndRightShiftCanBePressedAtTheSameTime) {
 
 TEST_F(KeyPress, RightShiftLeftControlAndCharWithTheSameKey) {
     TestDriver driver;
-    auto       combo_key = KeymapKey(0, 0, 0, RSFT(LCTL(KC_O)));
+    auto       combo_key = KEYMAP_KEY(0, 0, 0, RSFT(LCTL(KC_O)));
 
     set_keymap({combo_key});
 
@@ -188,8 +188,8 @@ TEST_F(KeyPress, RightShiftLeftControlAndCharWithTheSameKey) {
 TEST_F(KeyPress, PressPlusEqualReleaseBeforePress) {
     TestDriver driver;
     InSequence s;
-    auto       key_plus = KeymapKey(0, 1, 1, KC_PLUS);
-    auto       key_eql  = KeymapKey(0, 0, 1, KC_EQUAL);
+    auto       key_plus = KEYMAP_KEY(0, 1, 1, KC_PLUS);
+    auto       key_eql  = KEYMAP_KEY(0, 0, 1, KC_EQUAL);
 
     set_keymap({key_plus, key_eql});
 
@@ -219,8 +219,8 @@ TEST_F(KeyPress, PressPlusEqualReleaseBeforePress) {
 TEST_F(KeyPress, PressPlusEqualDontReleaseBeforePress) {
     TestDriver driver;
     InSequence s;
-    auto       key_plus = KeymapKey(0, 1, 1, KC_PLUS);
-    auto       key_eql  = KeymapKey(0, 0, 1, KC_EQUAL);
+    auto       key_plus = KEYMAP_KEY(0, 1, 1, KC_PLUS);
+    auto       key_eql  = KEYMAP_KEY(0, 0, 1, KC_EQUAL);
 
     set_keymap({key_plus, key_eql});
 
@@ -251,8 +251,8 @@ TEST_F(KeyPress, PressPlusEqualDontReleaseBeforePress) {
 TEST_F(KeyPress, PressEqualPlusReleaseBeforePress) {
     TestDriver driver;
     InSequence s;
-    auto       key_plus = KeymapKey(0, 1, 1, KC_PLUS);
-    auto       key_eql  = KeymapKey(0, 0, 1, KC_EQUAL);
+    auto       key_plus = KEYMAP_KEY(0, 1, 1, KC_PLUS);
+    auto       key_eql  = KEYMAP_KEY(0, 0, 1, KC_EQUAL);
 
     set_keymap({key_plus, key_eql});
 
@@ -282,8 +282,8 @@ TEST_F(KeyPress, PressEqualPlusReleaseBeforePress) {
 TEST_F(KeyPress, PressEqualPlusDontReleaseBeforePress) {
     TestDriver driver;
     InSequence s;
-    auto       key_plus = KeymapKey(0, 1, 1, KC_PLUS);
-    auto       key_eql  = KeymapKey(0, 0, 1, KC_EQUAL);
+    auto       key_plus = KEYMAP_KEY(0, 1, 1, KC_PLUS);
+    auto       key_eql  = KEYMAP_KEY(0, 0, 1, KC_EQUAL);
 
     set_keymap({key_plus, key_eql});
 

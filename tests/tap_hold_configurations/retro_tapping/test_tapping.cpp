@@ -28,7 +28,7 @@ class Tapping : public TestFixture {};
 TEST_F(Tapping, HoldA_SHFT_T_KeyReportsShift) {
     TestDriver driver;
     InSequence s;
-    auto       mod_tap_hold_key = KeymapKey(0, 7, 0, SFT_T(KC_P));
+    auto       mod_tap_hold_key = KEYMAP_KEY(0, 7, 0, SFT_T(KC_P));
 
     set_keymap({mod_tap_hold_key});
 
@@ -52,7 +52,7 @@ TEST_F(Tapping, HoldA_SHFT_T_KeyReportsShift) {
 TEST_F(Tapping, ANewTapWithinTappingTermIsBuggy) {
     TestDriver driver;
     InSequence s;
-    auto       key_shift_hold_p_tap = KeymapKey(0, 7, 0, SFT_T(KC_P));
+    auto       key_shift_hold_p_tap = KEYMAP_KEY(0, 7, 0, SFT_T(KC_P));
 
     set_keymap({key_shift_hold_p_tap});
 

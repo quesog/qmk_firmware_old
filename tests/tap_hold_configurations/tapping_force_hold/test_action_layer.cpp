@@ -24,11 +24,11 @@ class ActionLayer : public TestFixture {};
 
 TEST_F(ActionLayer, LayerTapToggleWithToggleWithKeypress) {
     TestDriver driver;
-    KeymapKey  layer_key = KeymapKey{0, 0, 0, TT(1)};
+    auto       layer_key = KEYMAP_KEY(0, 0, 0, TT(1));
 
     /* These keys must have the same position in the matrix, only the layer is different. */
-    KeymapKey regular_key = KeymapKey{0, 1, 0, KC_A};
-    set_keymap({layer_key, regular_key, KeymapKey{1, 1, 0, KC_B}});
+    auto regular_key = KEYMAP_KEY(0, 1, 0, KC_A);
+    set_keymap({layer_key, regular_key, KEYMAP_KEY(1, 1, 0, KC_B)});
 
     /* Tap TT five times . */
     /* TODO: Tapping Force Hold breaks TT */

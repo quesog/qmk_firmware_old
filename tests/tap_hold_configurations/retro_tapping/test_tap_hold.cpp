@@ -30,7 +30,7 @@ class RetroTapping : public TestFixture {};
 TEST_F(RetroTapping, tap_and_hold_mod_tap_hold_key) {
     TestDriver driver;
     InSequence s;
-    auto       mod_tap_hold_key = KeymapKey(0, 1, 0, SFT_T(KC_P));
+    auto       mod_tap_hold_key = KEYMAP_KEY(0, 1, 0, SFT_T(KC_P));
 
     set_keymap({mod_tap_hold_key});
 

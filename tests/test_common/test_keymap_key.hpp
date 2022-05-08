@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <cstddef>
 extern "C" {
 #include "keyboard.h"
 #include "test_matrix.h"
@@ -25,11 +26,15 @@ extern "C" {
 
 typedef uint8_t layer_t;
 
+#define KEYMAP_KEY(LAYER, COL, ROW, KEYCODE) KeymapKey(LAYER, COL, ROW, KEYCODE, #KEYCODE)
+#define KEYMAP_KEY_EXPLICIT_REPORT_CODE(LAYER, COL, ROW, KEYCODE, REPORT_CODE) KeymapKey(LAYER, COL, ROW, KEYCODE, #KEYCODE, REPORT_CODE)
+
 struct KeymapKey {
-    KeymapKey(layer_t layer, uint8_t col, uint8_t row, uint16_t keycode) : layer(layer), position({.col = col, .row = row}), code(keycode), report_code(keycode) {
+    KeymapKey(layer_t layer, uint8_t col, uint8_t row, uint16_t keycode, char* name) : layer(layer), position({.col = col, .row = row}), code(keycode), report_code(keycode), name(name) {
         validate();
     }
-    KeymapKey(layer_t layer, uint8_t col, uint8_t row, uint16_t keycode, uint16_t report_code) : layer(layer), position({.col = col, .row = row}), code(keycode), report_code(report_code) {
+
+    KeymapKey(layer_t layer, uint8_t col, uint8_t row, uint16_t keycode, char* name, uint16_t report_code) : layer(layer), position({.col = col, .row = row}), code(keycode), report_code(report_code), name(name) {
         validate();
     }
 
@@ -39,6 +44,7 @@ struct KeymapKey {
     const layer_t  layer;
     const keypos_t position;
     const uint16_t code;
+    const char*    name;
     /* Sometimes the keycode does not match the code that is send in the usb report, so we provide it here. */
     const uint16_t report_code;
 
@@ -46,6 +52,7 @@ struct KeymapKey {
     void validate() {
         assert(position.col <= MATRIX_COLS);
         assert(position.row <= MATRIX_ROWS);
+        assert(name != nullptr);
     }
     uint32_t timestamp_pressed;
 };

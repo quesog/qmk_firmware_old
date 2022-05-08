@@ -26,7 +26,7 @@ class OneShotParametrizedTestFixture : public ::testing::WithParamInterface<std:
 
 TEST_F(OneShot, OSMWithoutAdditionalKeypressDoesNothing) {
     TestDriver driver;
-    auto       osm_key = KeymapKey(0, 0, 0, OSM(MOD_LSFT), KC_LSFT);
+    auto       osm_key = KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_LSFT), KC_LSFT);
 
     set_keymap({osm_key});
 
@@ -51,8 +51,8 @@ TEST_F(OneShot, OSMWithoutAdditionalKeypressDoesNothing) {
 
 TEST_P(OneShotParametrizedTestFixture, OSMExpiredDoesNothing) {
     TestDriver driver;
-    KeymapKey  osm_key     = GetParam().first;
-    KeymapKey  regular_key = GetParam().second;
+    auto       osm_key     = GetParam().first;
+    auto       regular_key = GetParam().second;
 
     set_keymap({osm_key, regular_key});
 
@@ -81,8 +81,8 @@ TEST_P(OneShotParametrizedTestFixture, OSMExpiredDoesNothing) {
 
 TEST_P(OneShotParametrizedTestFixture, OSMWithAdditionalKeypress) {
     TestDriver driver;
-    KeymapKey  osm_key     = GetParam().first;
-    KeymapKey  regular_key = GetParam().second;
+    auto       osm_key     = GetParam().first;
+    auto       regular_key = GetParam().second;
 
     set_keymap({osm_key, regular_key});
 
@@ -111,8 +111,8 @@ TEST_P(OneShotParametrizedTestFixture, OSMAsRegularModifierWithAdditionalKeypres
     TestDriver          driver;
     testing::InSequence s;
 
-    KeymapKey osm_key     = GetParam().first;
-    KeymapKey regular_key = GetParam().second;
+    auto osm_key     = GetParam().first;
+    auto regular_key = GetParam().second;
 
     set_keymap({osm_key, regular_key});
 
@@ -149,22 +149,22 @@ INSTANTIATE_TEST_CASE_P(
     OneShotParametrizedTestFixture,
     ::testing::Values(
         /* first is osm key, second is regular key. */
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_LSFT), KC_LSFT}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_LCTL), KC_LCTL}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_LALT), KC_LALT}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_LGUI), KC_LGUI}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_RCTL), KC_RCTL}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_RSFT), KC_RSFT}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_RALT), KC_RALT}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_RGUI), KC_RGUI}, KeymapKey{0, 1, 1, KC_A})
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_LSFT), KC_LSFT), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_LCTL), KC_LCTL), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_LALT), KC_LALT), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_LGUI), KC_LGUI), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_RCTL), KC_RCTL), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_RSFT), KC_RSFT), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_RALT), KC_RALT), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_RGUI), KC_RGUI), KEYMAP_KEY(0, 1, 1, KC_A))
         ));
 // clang-format on
 
 TEST_F(OneShot, OSLWithAdditionalKeypress) {
     TestDriver driver;
     InSequence s;
-    KeymapKey  osl_key     = KeymapKey{0, 0, 0, OSL(1)};
-    KeymapKey  regular_key = KeymapKey{1, 1, 0, KC_A};
+    auto       osl_key     = KEYMAP_KEY(0, 0, 0, OSL(1));
+    auto       regular_key = KEYMAP_KEY(1, 1, 0, KC_A);
 
     set_keymap({osl_key, regular_key});
 

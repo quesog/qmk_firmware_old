@@ -15,9 +15,15 @@
  */
 
 #include "keyboard_report_util.hpp"
+#include <cstdint>
 #include <vector>
 #include <algorithm>
+#include <map>
+#include <keycode.h>
+#include <sys/types.h>
 using namespace testing;
+
+extern std::map<int, std::string> KEYCODE_IDENTIFIER;
 
 namespace {
 std::vector<uint8_t> get_keys(const report_keyboard_t& report) {
@@ -36,6 +42,18 @@ std::vector<uint8_t> get_keys(const report_keyboard_t& report) {
     std::sort(result.begin(), result.end());
     return result;
 }
+
+std::vector<uint8_t> get_mods(const report_keyboard_t& report) {
+    std::vector<uint8_t> result;
+    for (size_t i = 0; i < 8; i++) {
+        if (report.mods & (1 << i)) {
+            uint8_t code = KC_LEFT_CTRL + i;
+            result.emplace_back(code);
+        }
+    }
+    std::sort(result.begin(), result.end());
+    return result;
+}
 } // namespace
 
 bool operator==(const report_keyboard_t& lhs, const report_keyboard_t& rhs) {
@@ -46,19 +64,28 @@ bool operator==(const report_keyboard_t& lhs, const report_keyboard_t& rhs) {
 
 std::ostream& operator<<(std::ostream& stream, const report_keyboard_t& report) {
     auto keys = get_keys(report);
-
-    // TODO: This should probably print friendly names for the keys
-    stream << "Keyboard Report: Mods (" << (uint32_t)report.mods << ") Keys (";
+    stream << "Report send: Keys [";
 
     for (auto key = keys.cbegin(); key != keys.cend();) {
-        stream << +(*key);
+        stream << KEYCODE_IDENTIFIER.at(*key);
         key++;
         if (key != keys.cend()) {
             stream << ",";
         }
     }
 
-    return stream << ")" << std::endl;
+    stream << "] Mods [";
+
+    auto mods = get_mods(report);
+    for (auto mod = mods.cbegin(); mod != mods.cend();) {
+        stream << KEYCODE_IDENTIFIER.at(*mod);
+        mod++;
+        if (mod != mods.cend()) {
+            stream << ",";
+        }
+    }
+
+    return stream << "]" << std::endl;
 }
 
 KeyboardReportMatcher::KeyboardReportMatcher(const std::vector<uint8_t>& keys) {

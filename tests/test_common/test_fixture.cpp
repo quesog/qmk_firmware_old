@@ -160,7 +160,7 @@ void TestFixture::run_one_scan_loop() {
 }
 
 void TestFixture::idle_for(unsigned time) {
-    test_logger.trace() << "Running " << +time << " keyboard task loop(s)" << std::endl;
+    test_logger.trace() << +time << " keyboard task " << (time > 1 ? "loops" : "loop") << std::endl;
     for (unsigned i = 0; i < time; i++) {
         keyboard_task();
         advance_time(1);

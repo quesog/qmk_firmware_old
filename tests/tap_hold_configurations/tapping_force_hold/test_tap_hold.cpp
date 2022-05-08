@@ -30,8 +30,8 @@ class TappingForceHold : public TestFixture {};
 TEST_F(TappingForceHold, tap_regular_key_while_mod_tap_key_is_held) {
     TestDriver driver;
     InSequence s;
-    auto       mod_tap_hold_key = KeymapKey(0, 1, 0, SFT_T(KC_P));
-    auto       regular_key      = KeymapKey(0, 2, 0, KC_A);
+    auto       mod_tap_hold_key = KEYMAP_KEY(0, 1, 0, SFT_T(KC_P));
+    auto       regular_key      = KEYMAP_KEY(0, 2, 0, KC_A);
 
     set_keymap({mod_tap_hold_key, regular_key});
 
@@ -70,8 +70,8 @@ TEST_F(TappingForceHold, tap_regular_key_while_mod_tap_key_is_held) {
 TEST_F(TappingForceHold, tap_mod_tap_key_while_mod_tap_key_is_held) {
     TestDriver driver;
     InSequence s;
-    auto       first_mod_tap_hold_key  = KeymapKey(0, 1, 0, SFT_T(KC_P));
-    auto       second_mod_tap_hold_key = KeymapKey(0, 2, 0, RSFT_T(KC_A));
+    auto       first_mod_tap_hold_key  = KEYMAP_KEY(0, 1, 0, SFT_T(KC_P));
+    auto       second_mod_tap_hold_key = KEYMAP_KEY(0, 2, 0, RSFT_T(KC_A));
 
     set_keymap({first_mod_tap_hold_key, second_mod_tap_hold_key});
 
@@ -110,9 +110,9 @@ TEST_F(TappingForceHold, tap_mod_tap_key_while_mod_tap_key_is_held) {
 TEST_F(TappingForceHold, tap_regular_key_while_layer_tap_key_is_held) {
     TestDriver driver;
     InSequence s;
-    auto       layer_tap_hold_key = KeymapKey(0, 1, 0, LT(1, KC_P));
-    auto       regular_key        = KeymapKey(0, 2, 0, KC_A);
-    auto       layer_key          = KeymapKey(1, 2, 0, KC_B);
+    auto       layer_tap_hold_key = KEYMAP_KEY(0, 1, 0, LT(1, KC_P));
+    auto       regular_key        = KEYMAP_KEY(0, 2, 0, KC_A);
+    auto       layer_key          = KEYMAP_KEY(1, 2, 0, KC_B);
 
     set_keymap({layer_tap_hold_key, regular_key, layer_key});
 
@@ -147,7 +147,7 @@ TEST_F(TappingForceHold, tap_regular_key_while_layer_tap_key_is_held) {
 TEST_F(TappingForceHold, tap_mod_tap_hold_key_two_times) {
     TestDriver driver;
     InSequence s;
-    auto       mod_tap_hold_key = KeymapKey(0, 1, 0, SFT_T(KC_P));
+    auto       mod_tap_hold_key = KEYMAP_KEY(0, 1, 0, SFT_T(KC_P));
 
     set_keymap({mod_tap_hold_key});
 
@@ -181,7 +181,7 @@ TEST_F(TappingForceHold, tap_mod_tap_hold_key_two_times) {
 TEST_F(TappingForceHold, tap_mod_tap_hold_key_twice_and_hold_on_second_time) {
     TestDriver driver;
     InSequence s;
-    auto       mod_tap_hold_key = KeymapKey(0, 1, 0, SFT_T(KC_P));
+    auto       mod_tap_hold_key = KEYMAP_KEY(0, 1, 0, SFT_T(KC_P));
 
     set_keymap({mod_tap_hold_key});
 

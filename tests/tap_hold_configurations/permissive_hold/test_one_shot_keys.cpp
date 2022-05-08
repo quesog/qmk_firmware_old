@@ -64,13 +64,13 @@ INSTANTIATE_TEST_CASE_P(
     OneShotParametrizedTestFixture,
     ::testing::Values(
         /* first is osm key, second is regular key. */
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_LSFT), KC_LSFT}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_LCTL), KC_LCTL}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_LALT), KC_LALT}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_LGUI), KC_LGUI}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_RCTL), KC_RCTL}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_RSFT), KC_RSFT}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_RALT), KC_RALT}, KeymapKey{0, 1, 1, KC_A}),
-        std::make_pair(KeymapKey{0, 0, 0, OSM(MOD_RGUI), KC_RGUI}, KeymapKey{0, 1, 1, KC_A})
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_LSFT), KC_LSFT), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_LCTL), KC_LCTL), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_LALT), KC_LALT), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_LGUI), KC_LGUI), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_RCTL), KC_RCTL), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_RSFT), KC_RSFT), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_RALT), KC_RALT), KEYMAP_KEY(0, 1, 1, KC_A)),
+        std::make_pair(KEYMAP_KEY_EXPLICIT_REPORT_CODE(0, 0, 0, OSM(MOD_RGUI), KC_RGUI), KEYMAP_KEY(0, 1, 1, KC_A))
         ));
 // clang-format on
