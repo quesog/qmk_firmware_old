@@ -8,17 +8,19 @@
 #define MANUFACTURER QuesoG
 #define PRODUCT Handwired Ergodox
 
-// #define MASTER_RIGHT
+#define MASTER_RIGHT
 
 // Double the actual rows (5 for each half)
 #define MATRIX_ROWS 10
 #define MATRIX_COLS 9
 
-#define MATRIX_ROW_PINS { GP29, GP28, GP27, GP26, GP18 }
-#define MATRIX_COL_PINS { GP1, GP2, GP3, GP4, GP5, GP6, GP7, GP8, GP9 }
+// On the Raspberry Pi Pico RP2040
+#define MATRIX_ROW_PINS { GP28, GP27, GP26, GP22, GP21 }
+#define MATRIX_COL_PINS { GP7, GP8, GP9, GP10, GP11, GP12, GP13, GP14, GP15 }
 
-#define MATRIX_ROW_PINS_RIGHT { GP28, GP27, GP26, GP22, GP21 }
-#define MATRIX_COL_PINS_RIGHT { GP7, GP8, GP9, GP10, GP11, GP12, GP13, GP14, GP15 }
+// On the AdaFruit KB2040
+#define MATRIX_ROW_PINS_RIGHT { GP29, GP28, GP27, GP26, GP18 }
+#define MATRIX_COL_PINS_RIGHT { GP1, GP2, GP3, GP4, GP5, GP6, GP7, GP8, GP9 }
 
 #define DIODE_DIRECTION COL2ROW
 
